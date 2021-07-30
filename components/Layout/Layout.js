@@ -1,19 +1,12 @@
-import React, { createRef } from "react";
-import HeadTags from "./HeadTags";
-import Navbar from "./Navbar";
-import {
-  Container,
-  Visibility,
-  Grid,
-  Sticky,
-  Ref,
-  Segment
-} from "semantic-ui-react";
-import nprogress from "nprogress";
-import Router, { useRouter } from "next/router";
-import SideMenu from "./SideMenu";
-import Search from "./Search";
-import MobileHeader from "./MobileHeader"
+import React, { createRef } from 'react'
+import HeadTags from './HeadTags'
+import Navbar from './Navbar'
+import { Container, Visibility, Grid, Sticky, Ref, Segment } from 'semantic-ui-react'
+import nprogress from 'nprogress'
+import Router, { useRouter } from 'next/router'
+import SideMenu from './SideMenu'
+import Search from './Search'
+import MobileHeader from './MobileHeader'
 import { createMedia } from '@artsy/fresnel'
 
 const appMedia = createMedia({
@@ -29,21 +22,21 @@ const mediaStyles = appMedia.createMediaStyle()
 const { Media, MediaContextProvider } = appMedia
 
 function Layout({ children, user }) {
-  const contextRef = createRef();
+  const contextRef = createRef()
   const router = useRouter()
 
   const messagesRoute = router.pathname === '/messages'
 
-  Router.onRouteChangeStart = () => nprogress.start();
-  Router.onRouteChangeComplete = () => nprogress.done();
-  Router.onRouteChangeError = () => nprogress.done();
+  Router.onRouteChangeStart = () => nprogress.start()
+  Router.onRouteChangeComplete = () => nprogress.done()
+  Router.onRouteChangeError = () => nprogress.done()
 
   return (
     <>
       <HeadTags />
       {user ? (
         <>
-          {!messagesRoute ?
+          {!messagesRoute ? (
             <>
               <style>{mediaStyles}</style>
               <MediaContextProvider>
@@ -51,7 +44,11 @@ function Layout({ children, user }) {
                   <Media greaterThanOrEqual="computer">
                     <Ref innerRef={contextRef}>
                       <Grid>
-                        <Grid.Column style={{ paddingRight: '0' }} floated="left" width={2}>
+                        <Grid.Column
+                          style={{ paddingRight: '0' }}
+                          floated="left"
+                          width={2}
+                        >
                           <Sticky context={contextRef}>
                             <SideMenu user={user} pc />
                           </Sticky>
@@ -73,7 +70,7 @@ function Layout({ children, user }) {
                   <Media between={['tablet', 'computer']}>
                     <Ref innerRef={contextRef}>
                       <Grid>
-                        <Grid.Column style={{ paddingRight: '0' }} >
+                        <Grid.Column style={{ paddingRight: '0' }}>
                           <Sticky context={contextRef}>
                             <SideMenu user={user} tablet />
                           </Sticky>
@@ -88,7 +85,7 @@ function Layout({ children, user }) {
                   <Media between={['mobile', 'tablet']}>
                     <Ref innerRef={contextRef}>
                       <Grid>
-                        <Grid.Column style={{ paddingRight: '0' }} width={2} >
+                        <Grid.Column style={{ paddingRight: '0' }} width={2}>
                           <Sticky context={contextRef}>
                             <SideMenu user={user} tablet />
                           </Sticky>
@@ -101,32 +98,40 @@ function Layout({ children, user }) {
                   </Media>
 
                   <Media between={['zero', 'mobile']}>
-                    <MobileHeader user={user} />
                     <Grid>
-                      <Grid.Column>{children}</Grid.Column>
+                      <Grid.Column
+                        style={
+                          router.pathname === '/'
+                            ? { paddingLeft: '0', paddingRight: '0' }
+                            : {}
+                        }
+                      >
+                        <MobileHeader user={user} />
+                        {children}
+                      </Grid.Column>
                     </Grid>
                   </Media>
                 </div>
               </MediaContextProvider>
-            </> :
-            <Grid padded={false}>
-              <Grid.Column width={16}>
-
+            </>
+          ) : (
+            <Grid>
+              <Grid.Column style={{ paddingRight: '0' }} width={16}>
                 {children}
-
               </Grid.Column>
-            </Grid>}
+            </Grid>
+          )}
         </>
       ) : (
         <>
           <Navbar />
-          <Container text style={{ paddingTop: "1rem" }}>
+          <Container text style={{ paddingTop: '1rem' }}>
             {children}
           </Container>
         </>
       )}
     </>
-  );
+  )
 }
 
-export default Layout;
+export default Layout

@@ -4,15 +4,12 @@ import axios from 'axios'
 import baseUrl from '../utils/baseUrl'
 import CreatePost from '../components/Post/CreatePost'
 import CardPost from '../components/Post/CardPost'
-import { Segment } from 'semantic-ui-react'
+import { Grid, Segment } from 'semantic-ui-react'
 import { parseCookies } from 'nookies'
 import { NoPosts } from '../components/Layout/NoData'
 import { PostDeleteToastr } from '../components/Layout/Toastr'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import {
-  PlaceHolderPosts,
-  EndMessage
-} from '../components/Layout/PlaceHolderGroup'
+import { PlaceHolderPosts, EndMessage } from '../components/Layout/PlaceHolderGroup'
 import cookie from 'js-cookie'
 import getUserInfo from '../utils/getUserInfo'
 import MessageNotificationModal from '../components/Home/MessageNotificationModal'
