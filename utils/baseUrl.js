@@ -1,3 +1,6 @@
-const baseUrl = 'http://192.168.29.36:3000';
+const baseUrl =
+  process.env.NODE_ENV === 'production'
+    ? 'https://numstagram.herokuapp.com'
+    : 'http://192.168.29.36:3000'
 
-module.exports = baseUrl;
+module.exports = baseUrl
