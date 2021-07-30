@@ -13,7 +13,7 @@ const {
   loadMessages,
   sendMsg,
   setMsgToUnread,
-  deleteMsg,
+  deleteMsg
 } = require('./utilsServer/messageActions')
 
 connectDb()
@@ -46,7 +46,7 @@ io.on('connection', (socket) => {
     }
     console.log('Users:\n', users)
     io.emit('connectedUsers', {
-      users,
+      users
     })
     setInterval(() => {
       let users = []
@@ -58,28 +58,24 @@ io.on('connection', (socket) => {
         }
       }
       socket.emit('connectedUsers', {
-        users,
+        users
       })
     }, 15 * 1000)
   })
 
   socket.on('disconnect', () => {
     console.log(socket.username + ' disconnected')
-    console.log('here')
     let users = []
     const sockets = io.sockets.sockets
     for (var socketId in sockets) {
       let connectedSocket = io.sockets.connected[socketId]
-      if (
-        socket.id !== socketId &&
-        connectedSocket.username !== socket.username
-      ) {
+      if (socket.id !== socketId && connectedSocket.username !== socket.username) {
         let userId = connectedSocket.username
         userId && users.push({ userId, socketId })
       }
     }
     io.emit('connectedUsers', {
-      users,
+      users
     })
   })
 
@@ -112,21 +108,18 @@ io.on('connection', (socket) => {
     }
   })
 
-  socket.on(
-    'sendMsgFromNotification',
-    async ({ userId, msgSendToUserId, msg }) => {
-      const { newMsg, error } = await sendMsg(userId, msgSendToUserId, msg)
-      const receiverSocket = findConnectedUser(msgSendToUserId)
-      if (receiverSocket) {
-        io.to(receiverSocket).emit('newMsgReceived', { newMsg })
-      } else {
-        await setMsgToUnread(msgSendToUserId)
-      }
-      if (!error) {
-        socket.emit('msgSentFromNotification')
-      }
-    },
-  )
+  socket.on('sendMsgFromNotification', async ({ userId, msgSendToUserId, msg }) => {
+    const { newMsg, error } = await sendMsg(userId, msgSendToUserId, msg)
+    const receiverSocket = findConnectedUser(msgSendToUserId)
+    if (receiverSocket) {
+      io.to(receiverSocket).emit('newMsgReceived', { newMsg })
+    } else {
+      await setMsgToUnread(msgSendToUserId)
+    }
+    if (!error) {
+      socket.emit('msgSentFromNotification')
+    }
+  })
 })
 
 nextApp.prepare().then(() => {

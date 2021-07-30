@@ -25,7 +25,6 @@ router.get('/', authMiddleware, async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
-  console.log('here')
   const { email, password } = req.body.user
 
   if (!isEmail(email)) return res.status(401).send('Invalid Email')
@@ -49,15 +48,10 @@ router.post('/', async (req, res) => {
     }
 
     const payload = { userId: user._id }
-    jwt.sign(
-      payload,
-      process.env.JWT_SECRET,
-      { expiresIn: '30d' },
-      (err, token) => {
-        if (err) throw err
-        res.status(200).json(token)
-      }
-    )
+    jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '30d' }, (err, token) => {
+      if (err) throw err
+      res.status(200).json(token)
+    })
   } catch (error) {
     console.error(error)
     return res.status(500).send(`Server error`)

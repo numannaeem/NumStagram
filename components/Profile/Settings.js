@@ -1,23 +1,28 @@
-import React, { useState, useEffect, useRef } from "react";
-import { List, Divider, Message, Checkbox, Form, Button } from "semantic-ui-react";
-import catchErrors from "../../utils/catchErrors";
-import { passwordUpdate, toggleMessagePopup } from "../../utils/profileActions";
+import React, { useState, useEffect, useRef } from 'react'
+import { List, Divider, Message, Checkbox, Form, Button } from 'semantic-ui-react'
+import catchErrors from '../../utils/catchErrors'
+import {
+  deleteAccount,
+  passwordUpdate,
+  toggleMessagePopup
+} from '../../utils/profileActions'
 
 function Settings({ newMessagePopup }) {
-  const [passwordFields, showPasswordFields] = useState(false);
+  const [passwordFields, showPasswordFields] = useState(false)
+  const [showDeleteButton, setShowDeleteButton] = useState(false)
 
-  const [popupSetting, setPopupSetting] = useState(newMessagePopup);
+  const [popupSetting, setPopupSetting] = useState(newMessagePopup)
 
-  const [success, setSuccess] = useState(false);
+  const [success, setSuccess] = useState(false)
   const [popupError, setPopupError] = useState(null)
 
   useEffect(() => {
-    success && setTimeout(() => setSuccess(false), 3000);
-  }, [success]);
+    success && setTimeout(() => setSuccess(false), 3000)
+  }, [success])
 
   useEffect(() => {
-    popupError && setTimeout(() => setPopupError(null), 3000);
-  }, [popupError]);
+    popupError && setTimeout(() => setPopupError(null), 3000)
+  }, [popupError])
 
   return (
     <>
@@ -27,19 +32,22 @@ function Settings({ newMessagePopup }) {
           <Divider hidden />
         </>
       )}
-      {popupError &&
+      {popupError && (
         <>
           <Message icon="meh" error header="Oops!" content={popupError} />
           <Divider hidden />
         </>
-      }
+      )}
 
       <List size="huge">
         <List.Item>
           <List.Icon name="user secret" size="large" verticalAlign="middle" />
           <List.Content>
             <List.Header
-              onClick={() => showPasswordFields(!passwordFields)}
+              onClick={() => {
+                setShowDeleteButton(false)
+                showPasswordFields(!passwordFields)
+              }}
               as="a"
               content="Update Password"
             />
@@ -58,13 +66,10 @@ function Settings({ newMessagePopup }) {
           <List.Icon name="paper plane outline" size="large" verticalAlign="middle" />
 
           <List.Content>
-            <List.Header
-              as="a"
-              content="Show New Message Popup?"
-            />
+            <List.Header style={{ color: '#4183c4' }} content="Show New Message Popup?" />
           </List.Content>
 
-          <div style={{ marginTop: "10px" }}>
+          <div style={{ marginTop: '10px' }}>
             Control whether a pop-up should appear when you recieve a new message.
             <br />
             <br />
@@ -74,8 +79,7 @@ function Settings({ newMessagePopup }) {
               onChange={() => {
                 try {
                   toggleMessagePopup(popupSetting, setPopupSetting, setSuccess)
-                }
-                catch (error) {
+                } catch (error) {
                   setPopupError(catchErrors(error))
                 }
               }}
@@ -84,55 +88,112 @@ function Settings({ newMessagePopup }) {
         </List.Item>
 
         <Divider />
+        <List.Item>
+          <List.Icon color="red" name="trash" size="large" verticalAlign="middle" />
+          <List.Content>
+            <List.Header
+              style={{ color: 'red', cursor: 'pointer' }}
+              onClick={() => {
+                showPasswordFields(false)
+                setShowDeleteButton((prev) => !prev)
+              }}
+              content="Delete Account"
+            />
+          </List.Content>
+
+          {showDeleteButton && (
+            <DeleteAccount setShowDeleteButton={setShowDeleteButton} />
+          )}
+        </List.Item>
       </List>
     </>
-  );
+  )
+}
+
+const DeleteAccount = ({ setShowDeleteButton }) => {
+  const [loading, setLoading] = useState(false)
+  return (
+    <div style={{ marginTop: '10px' }}>
+      <p>
+        Are you sure? <span style={{ color: 'red' }}>This action is irreversible!</span>
+      </p>
+      <Button
+        disabled={loading}
+        compact
+        icon="exclamation circle"
+        color="red"
+        content="Yes, I'm sure"
+        onClick={async () => {
+          try {
+            setLoading(true)
+            await deleteAccount()
+          } catch (error) {
+            window.alert('Something went wrong. Please try again later.')
+          }
+          setLoading(false)
+        }}
+      />
+
+      <Button
+        disabled={loading}
+        compact
+        content="Cancel"
+        onClick={() => setShowDeleteButton(false)}
+      />
+      {loading && (
+        <>
+          <p style={{ marginTop: '10px' }}>Deleting your account...</p>
+          <p style={{ color: 'gray' }}>
+            We're sad to see you go 🙁 <br />
+            <b>Come back soon!</b>
+          </p>
+        </>
+      )}
+    </div>
+  )
 }
 
 const UpdatePassword = ({ setSuccess, showPasswordFields }) => {
-  const [loading, setLoading] = useState(false);
-  const [errorMsg, setError] = useState(null);
+  const [loading, setLoading] = useState(false)
+  const [errorMsg, setError] = useState(null)
 
   const [userPasswords, setUserPasswords] = useState({
-    currentPassword: "",
-    newPassword: ""
-  });
+    currentPassword: '',
+    newPassword: ''
+  })
   const [typed, showTyped] = useState({
     field1: false,
     field2: false
-  });
+  })
 
-  const { field1, field2 } = typed;
+  const { field1, field2 } = typed
 
-  const { currentPassword, newPassword } = userPasswords;
+  const { currentPassword, newPassword } = userPasswords
 
-  const handleChange = e => {
-    const { name, value } = e.target;
-    setUserPasswords(prev => ({ ...prev, [name]: value }));
-  };
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setUserPasswords((prev) => ({ ...prev, [name]: value }))
+  }
 
   useEffect(() => {
-    errorMsg && setTimeout(() => setError(null), 5000);
-  }, [errorMsg]);
+    errorMsg && setTimeout(() => setError(null), 5000)
+  }, [errorMsg])
 
   return (
     <>
       <Form
         error={errorMsg !== null}
         loading={loading}
-        onSubmit={async e => {
-          e.preventDefault();
-          setLoading(true);
+        onSubmit={async (e) => {
+          e.preventDefault()
+          setLoading(true)
           try {
-
-            await passwordUpdate(setSuccess, userPasswords);
-            showPasswordFields(false);
-
+            await passwordUpdate(setSuccess, userPasswords)
+            showPasswordFields(false)
           } catch (error) {
             setError(catchErrors(error))
           }
-          setLoading(false);
-
+          setLoading(false)
         }}
       >
         <List.List>
@@ -140,12 +201,12 @@ const UpdatePassword = ({ setSuccess, showPasswordFields }) => {
             <Form.Input
               fluid
               icon={{
-                name: "eye",
+                name: 'eye',
                 circular: true,
                 link: true,
-                onClick: () => showTyped(prev => ({ ...prev, field1: !field1 }))
+                onClick: () => showTyped((prev) => ({ ...prev, field1: !field1 }))
               }}
-              type={field1 ? "text" : "password"}
+              type={field1 ? 'text' : 'password'}
               iconPosition="left"
               label="Current Password"
               placeholder="Enter current Password"
@@ -157,12 +218,12 @@ const UpdatePassword = ({ setSuccess, showPasswordFields }) => {
             <Form.Input
               fluid
               icon={{
-                name: "eye",
+                name: 'eye',
                 circular: true,
                 link: true,
-                onClick: () => showTyped(prev => ({ ...prev, field2: !field2 }))
+                onClick: () => showTyped((prev) => ({ ...prev, field2: !field2 }))
               }}
-              type={field2 ? "text" : "password"}
+              type={field2 ? 'text' : 'password'}
               iconPosition="left"
               label="New Password"
               placeholder="Enter New Password"
@@ -174,9 +235,9 @@ const UpdatePassword = ({ setSuccess, showPasswordFields }) => {
             {/* BUTTONS */}
 
             <Button
-              disabled={loading || currentPassword === "" || newPassword === ""}
+              disabled={loading || currentPassword === '' || newPassword === ''}
               compact
-              icon="configure"
+              icon="check"
               type="submit"
               color="teal"
               content="Confirm"
@@ -185,7 +246,6 @@ const UpdatePassword = ({ setSuccess, showPasswordFields }) => {
             <Button
               disabled={loading}
               compact
-              icon="cancel"
               type="button"
               content="Cancel"
               onClick={() => showPasswordFields(false)}
@@ -197,7 +257,7 @@ const UpdatePassword = ({ setSuccess, showPasswordFields }) => {
       </Form>
       <Divider hidden />
     </>
-  );
-};
+  )
+}
 
-export default Settings;
+export default Settings

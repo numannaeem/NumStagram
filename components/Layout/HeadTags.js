@@ -1,4 +1,4 @@
-import Head from "next/head";
+import Head from 'next/head'
 
 const HeadTags = () => (
   <>
@@ -12,8 +12,8 @@ const HeadTags = () => (
       <link rel="stylesheet" type="text/css" href="/styles.css" />
       <link rel="stylesheet" type="text/css" href="/nprogress.css" />
 
-      <title>Mini Social Media</title>
+      <title>NumStagram</title>
     </Head>
   </>
-);
-export default HeadTags;
+)
+export default HeadTags
