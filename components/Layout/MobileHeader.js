@@ -10,7 +10,16 @@ function MobileHeader({ user: { unreadNotification, email, unreadMessage, userna
 
   return (
     <>
-      <Menu style={{ position: 'sticky', top: '0', zIndex: '10000' }} fluid borderless>
+      <Menu
+        style={{
+          position: 'sticky',
+          top: '0',
+          zIndex: '1030',
+          boxShadow: '0 1px 10px 1px gray'
+        }}
+        fluid
+        borderless
+      >
         <Container text>
           <Link href="/">
             <Menu.Item header active={isActive('/')}>

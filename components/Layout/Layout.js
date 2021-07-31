@@ -99,13 +99,7 @@ function Layout({ children, user }) {
 
                   <Media between={['zero', 'mobile']}>
                     <Grid>
-                      <Grid.Column
-                        style={
-                          router.pathname === '/'
-                            ? { paddingLeft: '0', paddingRight: '0' }
-                            : {}
-                        }
-                      >
+                      <Grid.Column style={{ paddingLeft: '0', paddingRight: '0' }}>
                         <MobileHeader user={user} />
                         {children}
                       </Grid.Column>

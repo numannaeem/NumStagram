@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import axios from 'axios'
 import baseUrl from '../utils/baseUrl'
 import { parseCookies } from 'nookies'
-import { Divider, Grid } from 'semantic-ui-react'
+import { Divider, Grid, Segment } from 'semantic-ui-react'
 import { NoProfilePosts, NoProfile } from '../components/Layout/NoData'
 import CardPost from '../components/Post/CardPost'
 import cookie from 'js-cookie'
@@ -25,7 +25,11 @@ function ProfilePage({
   userFollowStats
 }) {
   if (errorLoading) {
-    return <NoProfile />
+    return (
+      <Segment style={{ borderTop: 'none' }}>
+        <NoProfile />
+      </Segment>
+    )
   }
   const router = useRouter()
 
@@ -65,21 +69,19 @@ function ProfilePage({
   }, [showToastr])
 
   return (
-    <>
+    <Segment style={{ borderTop: 'none' }}>
       {showToastr && <PostDeleteToastr />}
 
       <Grid stackable>
         <Grid.Row>
-          <Grid.Column>
-            <ProfileMenuTabs
-              activeItem={activeItem}
-              handleItemClick={handleItemClick}
-              followersLength={followersLength}
-              followingLength={followingLength}
-              ownAccount={ownAccount}
-              loggedUserFollowStats={loggedUserFollowStats}
-            />
-          </Grid.Column>
+          <ProfileMenuTabs
+            activeItem={activeItem}
+            handleItemClick={handleItemClick}
+            followersLength={followersLength}
+            followingLength={followingLength}
+            ownAccount={ownAccount}
+            loggedUserFollowStats={loggedUserFollowStats}
+          />
         </Grid.Row>
 
         <Grid.Row>
@@ -137,7 +139,7 @@ function ProfilePage({
           </Grid.Column>
         </Grid.Row>
       </Grid>
-    </>
+    </Segment>
   )
 }
 

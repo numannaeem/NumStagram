@@ -42,6 +42,10 @@ body {
   object-fit: contain;
 }
 
+.ui.icon.input {
+  width: inherit; /*for search*/
+}
+
 @media only screen and (max-width: 767px) {
   .ui.modal .content > .image {
     margin-right: 1em !important;

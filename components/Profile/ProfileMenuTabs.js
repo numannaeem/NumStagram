@@ -10,7 +10,7 @@ function ProfileMenuTabs({
   loggedUserFollowStats
 }) {
   return (
-    <div style={{ overflowX: 'auto' }}>
+    <div style={{ width: '100%', overflowX: 'auto' }}>
       <Menu fluid pointing secondary>
         <Menu.Item
           name="profile"

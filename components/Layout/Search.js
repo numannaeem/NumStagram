@@ -1,69 +1,77 @@
-import React, { useState } from "react";
-import { List, Image, Search } from "semantic-ui-react";
-import axios from "axios";
-import cookie from "js-cookie";
-import Router from "next/router";
-import baseUrl from "../../utils/baseUrl";
-let cancel;
+import React, { useState } from 'react'
+import { List, Image, Search } from 'semantic-ui-react'
+import axios from 'axios'
+import cookie from 'js-cookie'
+import Router from 'next/router'
+import baseUrl from '../../utils/baseUrl'
+let cancel
 
 function SearchComponent(props) {
-  const [text, setText] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [results, setResults] = useState([]);
+  const [text, setText] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [results, setResults] = useState([])
 
-  const handleChange = async e => {
-    const { value } = e.target;
-    setText(value);
+  const handleChange = async (e) => {
+    const { value } = e.target
+    setText(value)
 
-    if (value?.trim().length === 0) return setResults([]);
+    if (value?.trim().length === 0) return setResults([])
 
     if (value && value.length) {
-      setLoading(true);
+      setLoading(true)
 
       try {
-        cancel && cancel();
-        const CancelToken = axios.CancelToken;
-        const token = cookie.get("token");
+        cancel && cancel()
+        const CancelToken = axios.CancelToken
+        const token = cookie.get('token')
 
         const res = await axios.get(`${baseUrl}/api/search/${value}`, {
           headers: { Authorization: token },
-          cancelToken: new CancelToken(canceler => {
-            cancel = canceler;
+          cancelToken: new CancelToken((canceler) => {
+            cancel = canceler
           })
-        });
+        })
 
         if (res.data.length === 0) {
-          setLoading(false);
-          return setResults([]);
+          setLoading(false)
+          return setResults([])
         }
 
-        setResults(res.data);
+        setResults(
+          res.data.map((r) => ({
+            _id: r._id,
+            name: r.name,
+            profilePicUrl: r.profilePicUrl,
+            username: r.username
+          }))
+        )
       } catch (error) {
-        console.log("Error Searching");
+        console.log('Error Searching')
       }
 
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <Search
+      style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
       onBlur={() => {
-        results.length > 0 && setResults([]);
-        loading && setLoading(false);
-        setText("");
+        results.length > 0 && setResults([])
+        loading && setLoading(false)
+        setText('')
       }}
-      size={props.size || "large"}
+      size={props.size || 'large'}
       fluid
       loading={loading}
       value={text}
       resultRenderer={ResultRenderer}
       results={results}
       onSearchChange={handleChange}
-      minCharacters={1}
+      minCharacters={2}
       onResultSelect={(e, data) => Router.push(`/${data.result.username}`)}
     />
-  );
+  )
 }
 
 const ResultRenderer = ({ _id, profilePicUrl, name }) => {
@@ -72,7 +80,7 @@ const ResultRenderer = ({ _id, profilePicUrl, name }) => {
       <Image src={profilePicUrl} alt="ProfilePic" className="results-image" />
       <List.Content header={name} />
     </List.Item>
-  );
-};
+  )
+}
 
-export default SearchComponent;
+export default SearchComponent
