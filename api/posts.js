@@ -42,14 +42,24 @@ router.post('/', authMiddleware, async (req, res) => {
 
 router.get('/', authMiddleware, async (req, res) => {
   try {
+    const { userId } = req
     const { pageNumber } = req.query
-
+    const user = await UserModel.findById(userId)
     const number = Number(pageNumber)
     const size = 8
-    const { userId } = req
-    const loggedUser = await FollowerModel.findOne({ user: userId }).select('-followers')
     let posts = []
     const skips = size * (number - 1)
+    if (user.role === 'root') {
+      posts = await PostModel.find()
+        .skip(skips)
+        .limit(size)
+        .sort({ createdAt: -1 })
+        .populate('user')
+        .populate('comments.user')
+      return res.json(posts)
+    }
+
+    const loggedUser = await FollowerModel.findOne({ user: userId }).select('-followers')
 
     if (loggedUser.following.length > 0) {
       posts = await PostModel.find({

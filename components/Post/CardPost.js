@@ -58,9 +58,9 @@ function CardPost({ post, user, setPosts, setShowToastr }) {
           )}
         </Modal.Content>
       </Modal>
+
       <Modal
         basic
-        size="large"
         open={showImageModal}
         onClose={() => setShowImageModal(false)}
         closeIcon
@@ -74,7 +74,7 @@ function CardPost({ post, user, setPosts, setShowToastr }) {
           {post.picUrl && (
             <Image
               src={post.picUrl}
-              style={{ cursor: 'pointer' }}
+              style={{ cursor: 'pointer', maxHeight: '70vh', overflow: 'hidden' }}
               floated="left"
               wrapped
               ui={false}

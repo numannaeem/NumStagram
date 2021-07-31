@@ -1,23 +1,24 @@
-const express = require("express");
-const router = express.Router();
-const authMiddleware = require("../middleware/authMiddleware");
-const UserModel = require("../models/UserModel");
+const express = require('express')
+const router = express.Router()
+const authMiddleware = require('../middleware/authMiddleware')
+const UserModel = require('../models/UserModel')
 
-router.get("/:searchText", authMiddleware, async (req, res) => {
+router.get('/:searchText', authMiddleware, async (req, res) => {
   try {
-    const { searchText } = req.params;
+    const { searchText } = req.params
 
-    if (searchText.length === 0) return;
+    if (searchText.length === 0) return
 
     const results = await UserModel.find({
-      name: { $regex: searchText, $options: "i" }
-    });
+      name: { $regex: searchText, $options: 'i' },
+      role: 'user'
+    })
 
-    return res.status(200).json(results);
+    return res.status(200).json(results)
   } catch (error) {
-    console.error(error);
-    return res.status(500).send(`Server error`);
+    console.error(error)
+    return res.status(500).send(`Server error`)
   }
-});
+})
 
-module.exports = router;
+module.exports = router

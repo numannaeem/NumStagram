@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import { Comment, Icon } from "semantic-ui-react";
-import calculateTime from "../../utils/calculateTime";
-import { deleteComment } from "../../utils/postActions";
+import React, { useState } from 'react'
+import { Comment, Icon } from 'semantic-ui-react'
+import calculateTime from '../../utils/calculateTime'
+import { deleteComment } from '../../utils/postActions'
 
 function PostComments({ comment, user, setComments, postId }) {
-  const [disabled, setDisabled] = useState(false);
+  const [disabled, setDisabled] = useState(false)
 
   return (
     <>
@@ -21,15 +21,15 @@ function PostComments({ comment, user, setComments, postId }) {
 
             <Comment.Actions>
               <Comment.Action>
-                {(user.role === "root" || comment.user._id === user._id) && (
+                {(user.role === 'root' || comment.user._id === user._id) && (
                   <Icon
                     disabled={disabled}
                     color="red"
                     name="trash"
                     onClick={async () => {
-                      setDisabled(true);
-                      await deleteComment(postId, comment._id, setComments);
-                      setDisabled(false);
+                      setDisabled(true)
+                      await deleteComment(postId, comment._id, setComments)
+                      setDisabled(false)
                     }}
                   />
                 )}
@@ -39,7 +39,7 @@ function PostComments({ comment, user, setComments, postId }) {
         </Comment>
       </Comment.Group>
     </>
-  );
+  )
 }
 
-export default PostComments;
+export default PostComments

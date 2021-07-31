@@ -4,14 +4,7 @@ import axios from 'axios'
 import baseUrl from '../utils/baseUrl'
 import { parseCookies } from 'nookies'
 import { useRouter } from 'next/router'
-import {
-  Segment,
-  Header,
-  Divider,
-  Comment,
-  Grid,
-  List
-} from 'semantic-ui-react'
+import { Segment, Header, Divider, Comment, Grid, List } from 'semantic-ui-react'
 import Chat from '../components/Chats/Chat'
 import ChatListSearch from '../components/Chats/ChatListSearch'
 import { NoMessages } from '../components/Layout/NoData'
@@ -88,9 +81,7 @@ function Messages({ chatsData, user }) {
           setMessages((prev) => [...prev, newMsg])
 
           setChats((prev) => {
-            const previousChat = prev.find(
-              (chat) => chat.messagesWith === newMsg.sender
-            )
+            const previousChat = prev.find((chat) => chat.messagesWith === newMsg.sender)
             previousChat.lastMessage = newMsg.msg
             previousChat.date = newMsg.date
 
@@ -102,8 +93,7 @@ function Messages({ chatsData, user }) {
         //
         else {
           const ifPreviouslyMessaged =
-            (await chats.filter((chat) => chat.messagesWith === newMsg.sender)
-              .length) > 0
+            (await chats.filter((chat) => chat.messagesWith === newMsg.sender).length) > 0
           if (ifPreviouslyMessaged) {
             setChats((prev) => {
               const previousChat = prev.find(
@@ -141,6 +131,10 @@ function Messages({ chatsData, user }) {
       socket.current.emit('join', { userId: user._id })
       socket.current.on('connectedUsers', ({ users }) => {
         setConnectedUsers(users)
+        setBannerData((prev) => ({
+          ...prev,
+          online: Boolean(users.filter((u) => u.userId === openChatId?.current).length)
+        }))
       })
 
       if (chats.length > 0 && !router.query.message) {
@@ -171,9 +165,7 @@ function Messages({ chatsData, user }) {
       })
 
       socket.current.on('msgDeleted', () => {
-        setMessages((prev) =>
-          prev.filter((message) => message._id !== messageId)
-        )
+        setMessages((prev) => prev.filter((message) => message._id !== messageId))
       })
     }
   }
@@ -205,11 +197,11 @@ function Messages({ chatsData, user }) {
       socket.current.on('messagesLoaded', async ({ chat }) => {
         setMessages(chat.messages)
         setBannerData({
+          username: chat.messagesWith.username,
           name: chat.messagesWith.name,
           profilePicUrl: chat.messagesWith.profilePicUrl,
           online: Boolean(
-            connectedUsers?.filter((u) => u.userId === chat.messagesWith._id)
-              .length
+            connectedUsers?.filter((u) => u.userId === chat.messagesWith._id).length
           )
         })
 
@@ -230,42 +222,33 @@ function Messages({ chatsData, user }) {
     <>
       <Segment padded basic size="large" style={{ marginTop: '5px' }}>
         <a href="/">
-          <Header
-            icon="angle left"
-            content="Go Back"
-            style={{ cursor: 'pointer' }}
-          />
+          <Header icon="angle left" content="Go Back" style={{ cursor: 'pointer' }} />
         </a>
         <Divider hidden />
 
         {chats?.length ? (
           <>
             <Grid stackable columns={2}>
-              <Grid.Column width={5}>
-                <div style={{ marginBottom: '10px', width: '100%' }}>
-                  <ChatListSearch
-                    user={user}
-                    chats={chats}
-                    setChats={setChats}
-                  />
-                </div>
-                <Comment.Group size="big">
-                  <Segment
-                    raised
-                    style={{ overflow: 'auto', maxHeight: '32rem' }}
-                  >
-                    <List divided selection>
-                      {chats.map((chat, i) => (
-                        <Chat
-                          key={i}
-                          chat={chat}
-                          connectedUsers={connectedUsers}
-                          deleteChat={deleteChat}
-                        />
-                      ))}
-                    </List>
-                  </Segment>
-                </Comment.Group>
+              <Grid.Column stretched width={5}>
+                <Segment style={{ backgroundColor: '#39a09c73' }}>
+                  <div style={{ marginBottom: '10px' }}>
+                    <ChatListSearch user={user} chats={chats} setChats={setChats} />
+                  </div>
+                  <Comment.Group size="big">
+                    <Segment raised style={{ overflow: 'auto', maxHeight: '32rem' }}>
+                      <List divided selection>
+                        {chats.map((chat, i) => (
+                          <Chat
+                            key={i}
+                            chat={chat}
+                            connectedUsers={connectedUsers}
+                            deleteChat={deleteChat}
+                          />
+                        ))}
+                      </List>
+                    </Segment>
+                  </Comment.Group>
+                </Segment>
               </Grid.Column>
 
               <Grid.Column width={11}>
@@ -273,6 +256,7 @@ function Messages({ chatsData, user }) {
                   <>
                     <div
                       style={{
+                        padding: '0 2px',
                         width: '100%',
                         overflow: 'auto',
                         overflowX: 'hidden',

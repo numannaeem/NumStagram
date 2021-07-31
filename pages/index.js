@@ -111,7 +111,7 @@ function Index({ user, postsData, errorLoading }) {
         />
       )}
 
-      <Segment>
+      <Segment style={{ borderTop: 'none' }}>
         <CreatePost user={user} setPosts={setPosts} />
 
         <InfiniteScroll
