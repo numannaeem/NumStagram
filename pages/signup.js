@@ -1,13 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Form, Button, Message, Segment, Divider } from 'semantic-ui-react'
 import CommonInputs from '../components/Common/CommonInputs'
-import ImageDropDiv from '../components/Common/ImageDropDiv'
 import { HeaderMessage, FooterMessage } from '../components/Common/WelcomeMessage'
 import axios from 'axios'
 import baseUrl from '../utils/baseUrl'
 import { registerUser } from '../utils/authUser'
 import uploadPic from '../utils/uploadPicToCloudinary'
-import CropImageModal from '../components/Common/CropImageModal'
 import SignupImage from '../components/Common/SignupImage'
 const regexUserName = /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/
 let cancel
