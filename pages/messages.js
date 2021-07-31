@@ -291,7 +291,7 @@ function Messages({ chatsData, user }) {
         ) : (
           <>
             <NoMessages />
-            <div style={{ marginBottom: '10px', width: '100%' }}>
+            <div style={{ marginBottom: '10px', maxWidth: '500px' }}>
               <ChatListSearch user={user} chats={chats} setChats={setChats} />
             </div>
           </>

@@ -112,34 +112,58 @@ function Settings({ newMessagePopup }) {
 
 const DeleteAccount = ({ setShowDeleteButton }) => {
   const [loading, setLoading] = useState(false)
+  const [password, setPassword] = useState('')
+  const [show, setShow] = useState(false)
   return (
     <div style={{ marginTop: '10px' }}>
       <p>
-        Are you sure? <span style={{ color: 'red' }}>This action is irreversible!</span>
+        Are you sure?{' '}
+        <small style={{ color: 'red' }}>
+          <b>This action is irreversible!</b>
+        </small>
       </p>
-      <Button
-        disabled={loading}
-        compact
-        icon="exclamation circle"
-        color="red"
-        content="Yes, I'm sure"
-        onClick={async () => {
+      <Form
+        onSubmit={async () => {
           try {
             setLoading(true)
-            await deleteAccount()
+            await deleteAccount(password)
           } catch (error) {
             window.alert('Something went wrong. Please try again later.')
           }
           setLoading(false)
         }}
-      />
+      >
+        <Form.Input
+          icon={{
+            name: 'eye',
+            circular: true,
+            link: true,
+            onClick: () => setShow((prev) => !prev)
+          }}
+          type={show ? 'text' : 'password'}
+          iconPosition="left"
+          placeholder="Enter password to confirm"
+          name="password"
+          onChange={(e) => setPassword(e.target.value)}
+          value={password}
+        />
+        <Button
+          disabled={loading}
+          compact
+          icon="exclamation circle"
+          color="red"
+          content="Yes, I'm sure"
+          type="submit"
+        />
 
-      <Button
-        disabled={loading}
-        compact
-        content="Cancel"
-        onClick={() => setShowDeleteButton(false)}
-      />
+        <Button
+          disabled={loading}
+          type="button"
+          compact
+          content="Cancel"
+          onClick={() => setShowDeleteButton(false)}
+        />
+      </Form>
       {loading && (
         <>
           <p style={{ marginTop: '10px' }}>Deleting your account...</p>

@@ -72,9 +72,9 @@ export const toggleMessagePopup = async (popupSetting, setPopupSetting, setSucce
   }
 }
 
-export const deleteAccount = async () => {
+export const deleteAccount = async (password) => {
   try {
-    await Axios.delete('/')
+    await Axios.post('/delete', { password })
     Cookies.remove('token')
     Cookies.remove('userEmail')
     Router.push('/login')

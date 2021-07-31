@@ -1,49 +1,53 @@
-import React from "react";
-import { Form, Segment, Image, Icon, Header, Button } from "semantic-ui-react";
+import React from 'react'
+import { Form, Segment, Image, Icon, Header, Button } from 'semantic-ui-react'
 
 function ImageDropDiv({
   highlighted,
   setHighlighted,
-  inputRef,
   handleChange,
   mediaPreview,
   setMediaPreview,
-  setMedia,
+  setMedia
 }) {
   return (
     <>
       <Form.Field>
         <Segment placeholder basic secondary>
           <input
-            style={{ display: "none" }}
+            style={{ display: 'none' }}
             type="file"
             accept="image/*"
             onChange={handleChange}
             name="media"
-            ref={inputRef}
           />
 
           <div
-            onDragOver={e => {
-              e.preventDefault();
-              setHighlighted(true);
+            onDragOver={(e) => {
+              e.preventDefault()
+              setHighlighted(true)
             }}
-            onDragLeave={e => {
-              e.preventDefault();
-              setHighlighted(false);
+            onDragLeave={(e) => {
+              e.preventDefault()
+              setHighlighted(false)
             }}
-            onDrop={e => {
-              e.preventDefault();
-              setHighlighted(true);
+            onDrop={(e) => {
+              e.preventDefault()
+              setHighlighted(true)
 
-              const droppedFile = Array.from(e.dataTransfer.files);
-              setMedia(droppedFile[0]);
-              setMediaPreview(URL.createObjectURL(droppedFile[0]));
-            }}>
+              const droppedFile = Array.from(e.dataTransfer.files)
+              setMedia(droppedFile[0])
+              setMediaPreview(URL.createObjectURL(droppedFile[0]))
+            }}
+          >
             {mediaPreview === null ? (
               <>
-                <Segment {...(highlighted && { color: "green" })} style={{ cursor: "pointer" }}
-                  placeholder basic onClick={() => inputRef.current.click()}>
+                <Segment
+                  {...(highlighted && { color: 'green' })}
+                  style={{ cursor: 'pointer' }}
+                  placeholder
+                  basic
+                  onClick={() => inputRef.current.click()}
+                >
                   <Header icon>
                     <Icon name="file image outline" />
                     Drag and drop or Click to upload image
@@ -57,11 +61,12 @@ function ImageDropDiv({
                     src={mediaPreview}
                     size="medium"
                     centered
-                    style={{ cursor: "pointer" }}
+                    style={{ cursor: 'pointer' }}
                     onClick={() => inputRef.current.click()}
                   />
                 </Segment>
-                <Button content="Clear image"
+                <Button
+                  content="Clear image"
                   color="red"
                   icon="delete"
                   basic
@@ -69,14 +74,15 @@ function ImageDropDiv({
                   onClick={() => {
                     setMedia(null)
                     setMediaPreview(null)
-                  }} />
+                  }}
+                />
               </>
             )}
           </div>
         </Segment>
       </Form.Field>
     </>
-  );
+  )
 }
 
-export default ImageDropDiv;
+export default ImageDropDiv

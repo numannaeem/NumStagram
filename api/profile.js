@@ -235,9 +235,15 @@ router.post('/settings/messagePopup', authMiddleware, async (req, res) => {
 })
 
 //DELETE the user
-router.delete('/', authMiddleware, async (req, res) => {
+router.post('/delete', authMiddleware, async (req, res) => {
   try {
     const { userId } = req
+    const { password } = req.body
+    const user = await UserModel.findById(userId).select('+password')
+    const isPassword = await bcrypt.compare(password, user.password)
+    if (!isPassword) {
+      return res.status(401).send('Incorrect password')
+    }
     console.log(`Deleting UserID: ${userId}`)
     await NotificationModel.deleteOne({ user: userId })
     await NotificationModel.updateMany(

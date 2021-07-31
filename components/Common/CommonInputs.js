@@ -1,5 +1,5 @@
-import React from "react";
-import { Form, Button, Message, TextArea, Divider } from "semantic-ui-react";
+import React from 'react'
+import { Form, Button, Message, TextArea, Divider } from 'semantic-ui-react'
 
 function CommonInputs({
   user: { bio, facebook, instagram, youtube, twitter },
@@ -20,15 +20,14 @@ function CommonInputs({
 
       <Button
         content="Add Social Links"
-        color="red"
-        icon="at"
+        icon={showSocialLinks ? 'caret up' : 'caret down'}
+        color="basic"
         type="button"
         onClick={() => setShowSocialLinks(!showSocialLinks)}
       />
 
       {showSocialLinks && (
         <>
-          <Divider />
           <Message
             icon="attention"
             info
@@ -67,11 +66,10 @@ function CommonInputs({
             value={youtube}
             onChange={handleChange}
           />
-
         </>
       )}
     </>
-  );
+  )
 }
 
-export default CommonInputs;
+export default CommonInputs
