@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { Feed, Segment, Divider, Container, Button } from "semantic-ui-react";
-import axios from "axios";
-import baseUrl from "../utils/baseUrl";
-import { parseCookies } from "nookies";
-import cookie from "js-cookie";
-import { NoNotifications } from "../components/Layout/NoData";
-import LikeNotification from "../components/Notifications/LikeNotification";
-import CommentNotification from "../components/Notifications/CommentNotification";
-import FollowerNotification from "../components/Notifications/FollowerNotification";
+import React, { useEffect, useState } from 'react'
+import { Feed, Segment, Divider, Container, Button } from 'semantic-ui-react'
+import axios from 'axios'
+import baseUrl from '../utils/baseUrl'
+import { parseCookies } from 'nookies'
+import cookie from 'js-cookie'
+import { NoNotifications } from '../components/Layout/NoData'
+import LikeNotification from '../components/Notifications/LikeNotification'
+import CommentNotification from '../components/Notifications/CommentNotification'
+import FollowerNotification from '../components/Notifications/FollowerNotification'
 
-function Notifications({ notifications, errorLoading, userFollowStats }) {
+function Notifications({ notifications, userFollowStats }) {
   const [notifs, setNotifs] = useState(notifications)
-  const [loggedUserFollowStats, setUserFollowStats] = useState(userFollowStats);
+  const [loggedUserFollowStats, setUserFollowStats] = useState(userFollowStats)
   const [deleting, setDeleting] = useState(false)
 
   useEffect(() => {
@@ -20,19 +20,21 @@ function Notifications({ notifications, errorLoading, userFollowStats }) {
         await axios.post(
           `${baseUrl}/api/notifications`,
           {},
-          { headers: { Authorization: cookie.get("token") } }
-        );
+          { headers: { Authorization: cookie.get('token') } }
+        )
       } catch (error) {
-        window.alert(error);
+        window.alert(error)
       }
-    };
+    }
 
-    notificationsRead();
-  }, []);
+    notificationsRead()
+  }, [])
 
   const clearNotifications = async () => {
     try {
-      await axios.delete(`${baseUrl}/api/notifications`, { headers: { Authorization: cookie.get('token') } })
+      await axios.delete(`${baseUrl}/api/notifications`, {
+        headers: { Authorization: cookie.get('token') }
+      })
       setNotifs([])
     } catch (error) {
       window.alert(error)
@@ -41,34 +43,37 @@ function Notifications({ notifications, errorLoading, userFollowStats }) {
 
   return (
     <>
-      <Container style={{ marginTop: "1.5rem" }}>
+      <Container style={{ marginTop: '1.5rem' }}>
         {notifs.length > 0 ? (
           <Segment color="teal" raised>
             <div
               style={{
-                minHeight: "80vh",
-                overflow: "auto",
-                position: "relative",
-                width: "100%"
+                minHeight: '80vh',
+                overflow: 'auto',
+                position: 'relative',
+                width: '100%'
               }}
             >
               <Feed size="small">
-                {notifs.map(notification => {
-                  if (notification.type === "newLike" && notification.post !== null)
+                {notifs.map((notification) => {
+                  if (notification.type === 'newLike' && notification.post !== null)
                     return (
                       <LikeNotification
                         key={notification._id}
                         notification={notification}
                       />
                     )
-                  else if (notification.type === "newComment" && notification.post !== null)
+                  else if (
+                    notification.type === 'newComment' &&
+                    notification.post !== null
+                  )
                     return (
                       <CommentNotification
                         key={notification._id}
                         notification={notification}
                       />
                     )
-                  else if (notification.type === "newFollower")
+                  else if (notification.type === 'newFollower')
                     return (
                       <FollowerNotification
                         key={notification._id}
@@ -79,7 +84,14 @@ function Notifications({ notifications, errorLoading, userFollowStats }) {
                     )
                 })}
               </Feed>
-              <Button disabled={deleting} inverted size="small" compact icon="delete" color="red" content="Clear all"
+              <Button
+                disabled={deleting}
+                inverted
+                size="small"
+                compact
+                icon="delete"
+                color="red"
+                content="Clear all"
                 onClick={async () => {
                   setDeleting(true)
                   await clearNotifications()
@@ -89,26 +101,28 @@ function Notifications({ notifications, errorLoading, userFollowStats }) {
             </div>
           </Segment>
         ) : (
-          <NoNotifications />
+          <Segment basic style={{ paddingTop: '0', minHeight: '100vh' }}>
+            <NoNotifications />
+          </Segment>
         )}
         <Divider hidden />
       </Container>
     </>
-  );
+  )
 }
 
-Notifications.getInitialProps = async ctx => {
+Notifications.getInitialProps = async (ctx) => {
   try {
-    const { token } = parseCookies(ctx);
+    const { token } = parseCookies(ctx)
 
     const res = await axios.get(`${baseUrl}/api/notifications`, {
       headers: { Authorization: token }
-    });
+    })
 
-    return { notifications: res.data };
+    return { notifications: res.data }
   } catch (error) {
-    return { errorLoading: true };
+    return { errorLoading: true }
   }
-};
+}
 
-export default Notifications;
+export default Notifications

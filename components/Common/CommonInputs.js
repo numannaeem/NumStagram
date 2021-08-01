@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Button, Message, TextArea, Divider } from 'semantic-ui-react'
+import { Form, Button, Message, TextArea } from 'semantic-ui-react'
 
 function CommonInputs({
   user: { bio, facebook, instagram, youtube, twitter },
@@ -10,18 +10,17 @@ function CommonInputs({
   return (
     <>
       <Form.Field
-        required
+        label="Bio"
         control={TextArea}
         name="bio"
         value={bio}
         onChange={handleChange}
-        placeholder="bio"
       />
 
       <Button
         content="Add Social Links"
         icon={showSocialLinks ? 'caret up' : 'caret down'}
-        color="basic"
+        basic
         type="button"
         onClick={() => setShowSocialLinks(!showSocialLinks)}
       />

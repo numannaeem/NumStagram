@@ -65,7 +65,14 @@ function ChatListSearch({ user, chats, setChats }) {
           return setResults([])
         }
 
-        setResults(filteredResults)
+        setResults(
+          res.data.map((r) => ({
+            _id: r._id,
+            name: r.name,
+            profilePicUrl: r.profilePicUrl,
+            username: r.username
+          }))
+        )
       } catch (error) {
         console.log(error)
         console.log('Error Searching')

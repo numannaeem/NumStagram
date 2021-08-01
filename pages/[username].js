@@ -69,7 +69,7 @@ function ProfilePage({
   }, [showToastr])
 
   return (
-    <Segment style={{ borderTop: 'none' }}>
+    <Segment style={{ borderTop: 'none', minHeight: '100vh' }}>
       {showToastr && <PostDeleteToastr />}
 
       <Grid stackable>

@@ -105,13 +105,17 @@ function Layout({ children, user }) {
 
                   <Media between={['zero', 'mobile']}>
                     <Grid>
-                      <Grid.Column style={{ paddingLeft: '0', paddingRight: '0' }}>
+                      <Grid.Column style={{ padding: '0', paddingTop: '1rem' }}>
                         <MobileHeader user={user} />
                         {children}
+                        <Footer />
                       </Grid.Column>
                     </Grid>
                   </Media>
                 </div>
+                <Media greaterThan={'mobile'}>
+                  <Footer />
+                </Media>
               </MediaContextProvider>
             </>
           ) : (
@@ -130,7 +134,6 @@ function Layout({ children, user }) {
           </Container>
         </>
       )}
-      <Footer />
     </>
   )
 }

@@ -71,18 +71,6 @@ function CardPost({ post, user, setPosts, setShowToastr }) {
 
       <>
         <Card color="teal" fluid>
-          {post.picUrl && (
-            <Image
-              src={post.picUrl}
-              style={{ cursor: 'pointer', maxHeight: '70vh', overflow: 'hidden' }}
-              floated="left"
-              wrapped
-              ui={false}
-              alt="PostImage"
-              onClick={() => setShowImageModal(true)}
-            />
-          )}
-
           <Card.Content>
             <Image floated="left" src={post.user.profilePicUrl} avatar circular />
 
@@ -132,11 +120,23 @@ function CardPost({ post, user, setPosts, setShowToastr }) {
               {post.text}
             </Card.Description>
           </Card.Content>
+          {post.picUrl && (
+            <Image
+              src={post.picUrl}
+              style={{ cursor: 'pointer', maxHeight: '70vh', overflow: 'hidden' }}
+              floated="left"
+              wrapped
+              ui={false}
+              alt="PostImage"
+              onClick={() => setShowImageModal(true)}
+            />
+          )}
 
           <Card.Content extra>
             <Icon
               name={isLiked ? 'heart' : 'heart outline'}
               color="red"
+              size="large"
               style={{ cursor: 'pointer' }}
               onClick={() =>
                 likePost(post._id, user._id, setLikes, isLiked ? false : true)
@@ -154,7 +154,7 @@ function CardPost({ post, user, setPosts, setShowToastr }) {
               }
             />
 
-            <Icon name="comment outline" style={{ marginLeft: '7px' }} color="blue" />
+            {likes.length === 0 && <span>No likes</span>}
 
             {comments.length > 0 &&
               comments.map(

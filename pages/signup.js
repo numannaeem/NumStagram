@@ -52,11 +52,13 @@ function Signup() {
   const inputRef = useRef()
 
   useEffect(() => {
-    const isUser = Object.values({ name, email, password, bio }).every((item) =>
-      Boolean(item)
-    )
+    const isUser = Object.values({ name, email, password }).every((item) => Boolean(item))
     isUser ? setSubmitDisabled(false) : setSubmitDisabled(true)
   }, [user])
+
+  useEffect(() => {
+    errorMsg && window.scroll(0, 0)
+  }, [errorMsg])
 
   useEffect(() => {
     if (username === '') {

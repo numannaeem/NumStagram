@@ -6,6 +6,7 @@ import { submitNewPost } from '../../utils/postActions'
 function CreatePost({ user, setPosts }) {
   const [newPost, setNewPost] = useState({ text: '', location: '' })
   const [loading, setLoading] = useState(false)
+  const [touched, setTouched] = useState(false)
   let inputRef = useRef()
 
   const [error, setError] = useState(null)
@@ -30,7 +31,8 @@ function CreatePost({ user, setPosts }) {
     minHeight: '150px',
     width: '100%',
     maxWidth: '300px',
-    border: !media && '1px darkgray solid',
+    border: !media && '1px rgb(34,36,38,.15) solid',
+    color: 'rgb(34,36,38,.75)',
     borderRadius: '5px',
     paddingTop: !media && '60px',
     cursor: 'pointer',
@@ -77,94 +79,97 @@ function CreatePost({ user, setPosts }) {
             name="text"
             required
             value={newPost.text}
-            onChange={handleChange}
+            onChange={(e) => {
+              !touched && setTouched(true)
+              handleChange(e)
+            }}
             rows={4}
-            width={14}
+            width={16}
           />
         </Form.Group>
 
-        <Form.Group grouped>
-          <Form.Input
-            style={{ maxWidth: '300px' }}
-            value={newPost.location}
-            name="location"
-            onChange={handleChange}
-            label="Add Location"
-            icon="map marker alternate"
-            placeholder="Want to add a location?"
-          />
+        {touched && (
+          <>
+            <Form.Group grouped>
+              <Form.Input
+                style={{ maxWidth: '300px' }}
+                value={newPost.location}
+                name="location"
+                onChange={handleChange}
+                label="Add Location"
+                icon="map marker alternate"
+                placeholder="Location"
+              />
+              <Form.Field>
+                <label>Upload an image</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  name="media"
+                  ref={inputRef}
+                  style={{ display: 'none' }}
+                  onChange={handleChange}
+                />
+              </Form.Field>
 
-          {/* <Form.Input
-            label="Upload an image"
-            ref={inputRef}
-            onChange={handleChange}
-            name="media"
-            style={{ display: 'none' }}
-            type="file"
-            accept="image/*"
-          /> */}
-          <Form.Field>
-            <label>Upload an image</label>
-            <input
-              type="file"
-              accept="image/*"
-              name="media"
-              ref={inputRef}
-              style={{ display: 'none' }}
-              onChange={handleChange}
+              <div
+                onClick={() => {
+                  console.log(inputRef)
+                  inputRef.current.click()
+                }}
+                style={addStyles()}
+                onDragOver={(e) => {
+                  e.preventDefault()
+                  setHighlighted(true)
+                }}
+                onDragLeave={(e) => {
+                  e.preventDefault()
+                  setHighlighted(false)
+                }}
+                onDrop={(e) => {
+                  e.preventDefault()
+                  setHighlighted(false)
+
+                  const droppedFile = Array.from(e.dataTransfer.files)
+
+                  if (droppedFile[0]) {
+                    setMedia(droppedFile[0])
+                    setMediaPreview(URL.createObjectURL(droppedFile[0]))
+                  }
+                }}
+              >
+                {media === null ? (
+                  <>
+                    <Icon name="plus" size="small" />
+                    <span>Add image</span>
+                  </>
+                ) : (
+                  <>
+                    <Image src={mediaPreview} alt="PostImage" centered />
+                  </>
+                )}
+              </div>
+            </Form.Group>
+
+            <Divider hidden />
+            <Button
+              circular
+              disabled={!newPost.text.trim().length || loading}
+              content={<strong>Post</strong>}
+              style={{ backgroundColor: '#1DA1F2', color: 'white' }}
+              icon="send"
+              loading={loading}
             />
-          </Form.Field>
-
-          <div
-            onClick={() => {
-              console.log(inputRef)
-              inputRef.current.click()
-            }}
-            style={addStyles()}
-            onDragOver={(e) => {
-              e.preventDefault()
-              setHighlighted(true)
-            }}
-            onDragLeave={(e) => {
-              e.preventDefault()
-              setHighlighted(false)
-            }}
-            onDrop={(e) => {
-              e.preventDefault()
-              setHighlighted(false)
-
-              const droppedFile = Array.from(e.dataTransfer.files)
-
-              if (droppedFile[0]) {
-                setMedia(droppedFile[0])
-                setMediaPreview(URL.createObjectURL(droppedFile[0]))
-              }
-            }}
-          >
-            {media === null ? (
-              <>
-                <Icon name="plus" size="small" />
-                <span>Add image</span>
-              </>
-            ) : (
-              <>
-                <Image src={mediaPreview} alt="PostImage" centered />
-              </>
-            )}
-          </div>
-        </Form.Group>
-
-        <Divider hidden />
-        <Button
-          circular
-          disabled={!newPost.text.trim().length || loading}
-          content={<strong>Post</strong>}
-          style={{ backgroundColor: '#1DA1F2', color: 'white' }}
-          icon="send"
-          loading={loading}
-        />
+          </>
+        )}
       </Form>
-      <Divider />
+      <Icon
+        size="large"
+        color="grey"
+        style={{ width: '100%', cursor: 'pointer' }}
+        name={`angle ${touched ? 'up' : 'down'}`}
+        onClick={() => setTouched((prev) => !prev)}
+      ></Icon>
     </>
   )
 }

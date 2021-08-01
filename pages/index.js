@@ -115,7 +115,7 @@ function Index({ user, postsData, errorLoading }) {
 
       <Segment style={{ borderTop: 'none' }}>
         <CreatePost user={user} setPosts={setPosts} />
-
+        <h2 style={{ color: 'teal', marginBottom: '0.2rem' }}>Your feed</h2>
         <InfiniteScroll
           hasMore={hasMore}
           next={fetchDataOnScroll}
