@@ -44,8 +44,6 @@ body {
 
 .ui.icon.input {
   width: inherit; /*for search*/
-  /* border: 2px solid teal;
-  border-radius: 20px; */
 }
 
 .ui.page.modals.dimmer.transition.visible.active {
@@ -77,6 +75,25 @@ body {
   color: white;
   width: 100%;
   height: 100%;
+}
+
+footer {
+  display: flex !important;
+  min-height: 150px;
+  width: 100%;
+  background-image: linear-gradient(white, hsl(202, 84%, 81%));
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+
+footer a {
+  color: brown;
+  transition: color 100ms;
+}
+
+footer a:hover {
+  color: rgb(92, 22, 22);
 }
 
 @media only screen and (max-width: 767px) {

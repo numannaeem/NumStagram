@@ -7,6 +7,7 @@ import Router, { useRouter } from 'next/router'
 import SideMenu from './SideMenu'
 import Search from './Search'
 import MobileHeader from './MobileHeader'
+import Footer from './Footer'
 import { createMedia } from '@artsy/fresnel'
 
 const appMedia = createMedia({
@@ -44,11 +45,7 @@ function Layout({ children, user }) {
                   <Media greaterThanOrEqual="computer">
                     <Ref innerRef={contextRef}>
                       <Grid style={{ minHeight: '105vh' }} stretched>
-                        <Grid.Column
-                          style={{ paddingRight: '0' }}
-                          floated="left"
-                          width={2}
-                        >
+                        <Grid.Column style={{ paddingRight: '0' }} width={2}>
                           <Sticky context={contextRef}>
                             <SideMenu user={user} pc />
                           </Sticky>
@@ -61,13 +58,10 @@ function Layout({ children, user }) {
                         </Grid.Column>
                         <Grid.Column
                           style={{
-                            backgroundColor: '#d6fff0',
-                            paddingLeft: '0',
-                            borderLeft: '2px solid teal'
+                            backgroundImage: 'linear-gradient(#d6fff0, white)',
+                            paddingLeft: '0'
                           }}
-                          floated="left"
                           width={4}
-                          stretched
                         >
                           <Sticky context={contextRef}>
                             <Segment basic>
@@ -136,6 +130,7 @@ function Layout({ children, user }) {
           </Container>
         </>
       )}
+      <Footer />
     </>
   )
 }

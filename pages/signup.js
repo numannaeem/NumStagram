@@ -19,7 +19,8 @@ function Signup() {
     facebook: '',
     youtube: '',
     twitter: '',
-    instagram: ''
+    instagram: '',
+    username: ''
   })
 
   const { name, email, password, bio } = user
@@ -43,7 +44,7 @@ function Signup() {
 
   const [username, setUsername] = useState('')
   const [usernameLoading, setUsernameLoading] = useState(false)
-  const [usernameAvailable, setUsernameAvailable] = useState(false)
+  const [usernameState, setUsernameState] = useState({ valid: true, error: null })
 
   const [media, setMedia] = useState(null)
   const [mediaPreview, setMediaPreview] = useState(null)
@@ -57,34 +58,43 @@ function Signup() {
     isUser ? setSubmitDisabled(false) : setSubmitDisabled(true)
   }, [user])
 
-  const checkUsername = async () => {
-    setUsernameLoading(true)
-    try {
-      cancel && cancel()
-
-      const CancelToken = axios.CancelToken
-
-      const res = await axios.get(`${baseUrl}/api/signup/${username}`, {
-        cancelToken: new CancelToken((canceler) => {
-          cancel = canceler
-        })
-      })
-
-      if (errorMsg !== null) setErrorMsg(null)
-
-      if (res.data === 'Available') {
-        setUsernameAvailable(true)
-        setUser((prev) => ({ ...prev, username }))
-      }
-    } catch (error) {
-      setErrorMsg('Username Not Available')
-      setUsernameAvailable(false)
-    }
-    setUsernameLoading(false)
-  }
-
   useEffect(() => {
-    username === '' ? setUsernameAvailable(false) : checkUsername()
+    if (username === '') {
+      setUsernameState({ valid: false, error: 'Username cannot be empty' })
+    } else {
+      setUsernameState({ valid: true, error: null })
+      if (regexUserName.test(username)) {
+        setUsernameLoading(true)
+
+        cancel && cancel()
+
+        const CancelToken = axios.CancelToken
+
+        axios
+          .get(`${baseUrl}/api/signup/${username}`, {
+            cancelToken: new CancelToken((canceler) => {
+              cancel = canceler
+            })
+          })
+          .then((res) => {
+            if (res.data === 'Available') {
+              setUsernameState({ valid: true, error: null })
+              setUser((prev) => ({ ...prev, username }))
+            }
+          })
+          .catch((err) => {
+            setUsernameState({ valid: false, error: 'Username already taken' })
+          })
+          .finally(() => {
+            setUsernameLoading(false)
+          })
+      } else {
+        setUsernameState({
+          valid: false,
+          error: 'Special characters not allowed'
+        })
+      }
+    }
   }, [username])
 
   const handleSubmit = async (e) => {
@@ -171,21 +181,16 @@ function Signup() {
 
           <Form.Input
             loading={usernameLoading}
-            error={!usernameAvailable}
+            error={usernameState.error}
             required
             label="Username"
             placeholder="Username"
             value={username}
             onChange={(e) => {
               setUsername(e.target.value)
-              if (regexUserName.test(e.target.value)) {
-                setUsernameAvailable(true)
-              } else {
-                setUsernameAvailable(false)
-              }
             }}
             fluid
-            icon={usernameAvailable ? 'check' : 'close'}
+            icon={usernameState.valid ? 'check' : 'close'}
             iconPosition="left"
           />
 
@@ -202,7 +207,7 @@ function Signup() {
             content="Signup"
             type="submit"
             color="orange"
-            disabled={submitDisabled || !usernameAvailable}
+            disabled={submitDisabled || username === '' || !usernameState.valid}
           />
         </Segment>
       </Form>

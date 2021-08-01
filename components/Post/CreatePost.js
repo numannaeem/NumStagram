@@ -1,12 +1,12 @@
 import React, { useState, useRef } from 'react'
-import { Form, Button, Image, Divider, Message, Icon } from 'semantic-ui-react'
+import { Form, Button, Image, Divider, Message, Icon, Input } from 'semantic-ui-react'
 import uploadPic from '../../utils/uploadPicToCloudinary'
 import { submitNewPost } from '../../utils/postActions'
 
 function CreatePost({ user, setPosts }) {
   const [newPost, setNewPost] = useState({ text: '', location: '' })
   const [loading, setLoading] = useState(false)
-  const inputRef = useRef()
+  let inputRef = useRef()
 
   const [error, setError] = useState(null)
   const [highlighted, setHighlighted] = useState(false)
@@ -94,7 +94,7 @@ function CreatePost({ user, setPosts }) {
             placeholder="Want to add a location?"
           />
 
-          <Form.Input
+          {/* <Form.Input
             label="Upload an image"
             ref={inputRef}
             onChange={handleChange}
@@ -102,10 +102,24 @@ function CreatePost({ user, setPosts }) {
             style={{ display: 'none' }}
             type="file"
             accept="image/*"
-          />
+          /> */}
+          <Form.Field>
+            <label>Upload an image</label>
+            <input
+              type="file"
+              accept="image/*"
+              name="media"
+              ref={inputRef}
+              style={{ display: 'none' }}
+              onChange={handleChange}
+            />
+          </Form.Field>
 
           <div
-            onClick={() => inputRef.current.click()}
+            onClick={() => {
+              console.log(inputRef)
+              inputRef.current.click()
+            }}
             style={addStyles()}
             onDragOver={(e) => {
               e.preventDefault()
@@ -121,8 +135,10 @@ function CreatePost({ user, setPosts }) {
 
               const droppedFile = Array.from(e.dataTransfer.files)
 
-              setMedia(droppedFile[0])
-              setMediaPreview(URL.createObjectURL(droppedFile[0]))
+              if (droppedFile[0]) {
+                setMedia(droppedFile[0])
+                setMediaPreview(URL.createObjectURL(droppedFile[0]))
+              }
             }}
           >
             {media === null ? (

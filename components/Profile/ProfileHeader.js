@@ -18,7 +18,7 @@ function ProfileHeader({
 
   return (
     <>
-      <Segment style={{ backgroundColor: '#fbffdb' }}>
+      <Segment raised color="teal" style={{ backgroundColor: '#ffffef' }}>
         <Grid stackable>
           <Grid.Column width={11}>
             <Grid.Row>
