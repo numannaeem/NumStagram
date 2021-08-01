@@ -30,7 +30,6 @@ function Signup() {
     if (name === 'media') {
       setMedia(files[0] || null)
       setMediaPreview(files[0] ? URL.createObjectURL(files[0]) : null)
-      setShowCropperModal(true)
     }
 
     setUser((prev) => ({ ...prev, [name]: value }))
@@ -49,7 +48,6 @@ function Signup() {
   const [media, setMedia] = useState(null)
   const [mediaPreview, setMediaPreview] = useState(null)
   const [highlighted, setHighlighted] = useState(false)
-  const [showCropperModal, setShowCropperModal] = useState(false)
   const inputRef = useRef()
 
   useEffect(() => {
@@ -109,14 +107,6 @@ function Signup() {
 
   return (
     <>
-      {/* {showCropperModal && (
-        <CropImageModal
-          mediaPreview={mediaPreview}
-          setMedia={setMedia}
-          showModal={showCropperModal}
-          setShowModal={setShowCropperModal}
-        />
-      )} */}
       <HeaderMessage />
       <Form loading={formLoading} error={errorMsg !== null} onSubmit={handleSubmit}>
         <Message

@@ -7,7 +7,7 @@ import CardPost from '../components/Post/CardPost'
 import { Grid, Segment } from 'semantic-ui-react'
 import { parseCookies } from 'nookies'
 import { NoPosts } from '../components/Layout/NoData'
-import { PostDeleteToastr } from '../components/Layout/Toastr'
+import { ErrorToastr, PostDeleteToastr } from '../components/Layout/Toastr'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { PlaceHolderPosts, EndMessage } from '../components/Layout/PlaceHolderGroup'
 import cookie from 'js-cookie'
@@ -17,6 +17,7 @@ import newMsgSound from '../utils/newMsgSound'
 
 function Index({ user, postsData, errorLoading }) {
   const [posts, setPosts] = useState(postsData || [])
+  const [error, setError] = useState(null)
   const [showToastr, setShowToastr] = useState(false)
   const [hasMore, setHasMore] = useState(true)
 
@@ -76,7 +77,7 @@ function Index({ user, postsData, errorLoading }) {
       setPosts((prev) => [...prev, ...res.data])
       setPageNumber((prev) => prev + 1)
     } catch (error) {
-      alert('Error fetching Posts')
+      setError('Error fetching posts')
     }
   }
 
@@ -99,6 +100,7 @@ function Index({ user, postsData, errorLoading }) {
 
   return (
     <>
+      {error && <ErrorToastr error={error} />}
       {showToastr && <PostDeleteToastr />}
 
       {newMessageModal && newMessageReceived !== null && (

@@ -123,6 +123,7 @@ function CardPost({ post, user, setPosts, setShowToastr }) {
 
             <Card.Description
               style={{
+                whiteSpace: 'pre-wrap',
                 fontSize: '17px',
                 letterSpacing: '0.1px',
                 wordSpacing: '0.35px'

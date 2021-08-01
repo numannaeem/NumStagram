@@ -230,12 +230,21 @@ function Messages({ chatsData, user }) {
           <>
             <Grid stackable columns={2}>
               <Grid.Column stretched width={5}>
-                <Segment style={{ backgroundColor: '#39a09c73' }}>
+                <Segment
+                  style={{ backgroundColor: '#39a09c73', border: '2px solid teal' }}
+                >
                   <div style={{ marginBottom: '10px' }}>
                     <ChatListSearch user={user} chats={chats} setChats={setChats} />
                   </div>
                   <Comment.Group size="big">
-                    <Segment raised style={{ overflow: 'auto', maxHeight: '32rem' }}>
+                    <Segment
+                      raised
+                      style={{
+                        overflow: 'auto',
+                        maxHeight: '32rem',
+                        border: '2px solid teal'
+                      }}
+                    >
                       <List divided selection>
                         {chats.map((chat, i) => (
                           <Chat

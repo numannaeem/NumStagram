@@ -7,14 +7,22 @@
   color: #fff;
 }
 .inlineContainer {
+  align-items: center;
   display: inline-flex;
 }
 .inlineContainer.own {
   flex-direction: row-reverse;
 }
 .inlineIcon {
-  width: 20px;
+  border: 2px solid #54788e;
+  margin-bottom: 6px;
+  align-self: flex-end;
+  border-radius: 50%;
+  width: 30px;
   object-fit: contain;
+}
+.inlineIcon.self {
+  border: 2px solid #443f56;
 }
 .ownBubble {
   min-width: 60px;

@@ -43,7 +43,7 @@ function Layout({ children, user }) {
                 <div style={{ marginLeft: '1rem' }}>
                   <Media greaterThanOrEqual="computer">
                     <Ref innerRef={contextRef}>
-                      <Grid>
+                      <Grid style={{ minHeight: '105vh' }} stretched>
                         <Grid.Column
                           style={{ paddingRight: '0' }}
                           floated="left"
@@ -53,10 +53,22 @@ function Layout({ children, user }) {
                             <SideMenu user={user} pc />
                           </Sticky>
                         </Grid.Column>
-                        <Grid.Column style={{ zIndex: '999' }} width={10}>
+                        <Grid.Column
+                          style={{ zIndex: '999', paddingRight: '0' }}
+                          width={10}
+                        >
                           <Visibility context={contextRef}>{children}</Visibility>
                         </Grid.Column>
-                        <Grid.Column floated="left" width={4}>
+                        <Grid.Column
+                          style={{
+                            backgroundColor: '#d6fff0',
+                            paddingLeft: '0',
+                            borderLeft: '2px solid teal'
+                          }}
+                          floated="left"
+                          width={4}
+                          stretched
+                        >
                           <Sticky context={contextRef}>
                             <Segment basic>
                               <Search />

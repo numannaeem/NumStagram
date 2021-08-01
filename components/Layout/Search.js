@@ -55,7 +55,13 @@ function SearchComponent(props) {
 
   return (
     <Search
-      style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
+      style={{
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        border: '2px solid teal',
+        borderRadius: '22px'
+      }}
       onBlur={() => {
         results.length > 0 && setResults([])
         loading && setLoading(false)
@@ -63,6 +69,7 @@ function SearchComponent(props) {
       }}
       size={props.size || 'large'}
       fluid
+      placeholder="Search away!"
       loading={loading}
       value={text}
       resultRenderer={ResultRenderer}

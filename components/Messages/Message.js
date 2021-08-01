@@ -1,24 +1,24 @@
-import React, { useState } from "react";
-import { Icon, Popup } from "semantic-ui-react";
-import calculateTime from "../../utils/calculateTime";
+import React, { useState } from 'react'
+import { Icon, Popup } from 'semantic-ui-react'
+import calculateTime from '../../utils/calculateTime'
 
 function Message({ message, user, deleteMsg, bannerProfilePic, divRef }) {
-  const [deleteIcon, showDeleteIcon] = useState(false);
+  const [deleteIcon, showDeleteIcon] = useState(false)
 
-  const ifYouSender = message.sender === user._id;
+  const ifYouSender = message.sender === user._id
 
   return (
     <div className="bubbleWrapper" ref={divRef}>
       <div
-        className={ifYouSender ? "inlineContainer own" : "inlineContainer"}
+        className={ifYouSender ? 'inlineContainer own' : 'inlineContainer'}
         onClick={() => ifYouSender && showDeleteIcon(!deleteIcon)}
       >
         <img
-          className="inlineIcon"
+          className={ifYouSender ? 'inlineIcon self' : 'inlineIcon'}
           src={ifYouSender ? user.profilePicUrl : bannerProfilePic}
         />
 
-        <div className={ifYouSender ? "ownBubble own" : "otherBubble other"}>
+        <div className={ifYouSender ? 'ownBubble own' : 'otherBubble other'}>
           {message.msg}
         </div>
 
@@ -28,8 +28,11 @@ function Message({ message, user, deleteMsg, bannerProfilePic, divRef }) {
               <Icon
                 name="trash"
                 color="red"
-                style={{ cursor: "pointer" }}
-                onClick={() => { console.log(message); deleteMsg(message._id) }}
+                style={{ cursor: 'pointer' }}
+                onClick={() => {
+                  console.log(message)
+                  deleteMsg(message._id)
+                }}
               />
             }
             content="This will only delete the message from your inbox!"
@@ -38,9 +41,9 @@ function Message({ message, user, deleteMsg, bannerProfilePic, divRef }) {
         )}
       </div>
 
-      <span className={ifYouSender ? "own" : "other"}>{calculateTime(message.date)}</span>
+      <span className={ifYouSender ? 'own' : 'other'}>{calculateTime(message.date)}</span>
     </div>
-  );
+  )
 }
 
-export default Message;
+export default Message

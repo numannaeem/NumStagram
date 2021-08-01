@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react'
-import { Form, Button, Message, Divider } from 'semantic-ui-react'
+import { Form, Button, Message, Image } from 'semantic-ui-react'
 import CommonInputs from '../Common/CommonInputs'
 import SignupImage from '../Common/SignupImage'
 import uploadPic from '../../utils/uploadPicToCloudinary'
@@ -21,6 +21,7 @@ function UpdateProfile({ Profile }) {
   const [errorMsg, setErrorMsg] = useState(null)
 
   const [loading, setLoading] = useState(false)
+  const [editDP, setEditDP] = useState(false)
   const [showSocialLinks, setShowSocialLinks] = useState(false)
 
   const [highlighted, setHighlighted] = useState(false)
@@ -34,6 +35,7 @@ function UpdateProfile({ Profile }) {
     const { name, value, files } = e.target
 
     if (name === 'media') {
+      setEditDP(true)
       setMedia(files[0] || null)
       setMediaPreview(files[0] ? URL.createObjectURL(files[0]) : null)
     }
@@ -50,13 +52,14 @@ function UpdateProfile({ Profile }) {
           setLoading(true)
 
           let profilePicUrl = null
-          if (mediaPreview === profile.profilePicUrl) {
+          if (!editDP) {
             profilePicUrl = profile.profilePicUrl
-          } else if (mediaPreview !== null) {
+          }
+          if (media) {
             profilePicUrl = await uploadPic(media)
           }
 
-          if (mediaPreview !== null && !profilePicUrl) {
+          if (media && !profilePicUrl) {
             setLoading(false)
             return setErrorMsg('Error Uploading Image')
           }
@@ -71,16 +74,23 @@ function UpdateProfile({ Profile }) {
           attached
           header="Oops!"
         />
+        {!editDP && (
+          <div className="updateProfilePic" onClick={() => setEditDP(true)}>
+            <Image src={mediaPreview} circular size="small" centered />
+          </div>
+        )}
 
-        <SignupImage
-          inputRef={inputRef}
-          mediaPreview={mediaPreview}
-          setMediaPreview={setMediaPreview}
-          setMedia={setMedia}
-          highlighted={highlighted}
-          setHighlighted={setHighlighted}
-          handleChange={handleChange}
-        />
+        {(editDP || !mediaPreview) && (
+          <SignupImage
+            inputRef={inputRef}
+            mediaPreview={mediaPreview}
+            setMediaPreview={setMediaPreview}
+            setMedia={setMedia}
+            highlighted={highlighted}
+            setHighlighted={setHighlighted}
+            handleChange={handleChange}
+          />
+        )}
 
         <CommonInputs
           user={profile}

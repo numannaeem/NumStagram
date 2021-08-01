@@ -59,11 +59,13 @@ function SignupImage({
                   style={{ cursor: 'pointer' }}
                   placeholder
                   basic
-                  onClick={() => inputRef.current.click()}
+                  onClick={() => inputRef.current?.click()}
                 >
                   <Header icon>
                     <Icon name="file image outline" />
-                    Drag and drop or Click to upload image
+                    Click to upload
+                    <br />
+                    <small>or drop an image</small>
                   </Header>
                 </Segment>
               </>
@@ -128,10 +130,21 @@ function SignupImage({
                     type="button"
                   />
                   <Button
-                    content="Clear image"
+                    inverted
+                    content="New image"
+                    color="orange"
+                    icon="image"
+                    type="button"
+                    onClick={() => {
+                      inputRef.current?.click()
+                    }}
+                  />
+                  <Button
+                    style={{ marginTop: '5px', marginBottom: '5px' }}
+                    inverted
+                    content="Remove image"
                     color="red"
                     icon="delete"
-                    basic
                     type="button"
                     onClick={() => {
                       setMedia(null)

@@ -18,7 +18,7 @@ function ProfileHeader({
 
   return (
     <>
-      <Segment style={{ backgroundColor: 'beige' }}>
+      <Segment style={{ backgroundColor: '#fbffdb' }}>
         <Grid stackable>
           <Grid.Column width={11}>
             <Grid.Row>
@@ -29,7 +29,7 @@ function ProfileHeader({
               />
             </Grid.Row>
 
-            <Grid.Row stretched>
+            <Grid.Row style={{ whiteSpace: 'pre-wrap' }} stretched>
               {profile.bio}
               <Divider hidden />
             </Grid.Row>
