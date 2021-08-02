@@ -8,7 +8,7 @@ import {
   Transition,
   Grid,
   Container,
-  Segment
+  Divider
 } from 'semantic-ui-react'
 import uploadPic from '../../utils/uploadPicToCloudinary'
 import { submitNewPost } from '../../utils/postActions'
@@ -43,6 +43,7 @@ function CreatePost({ user, setPosts }) {
     const { name, value, files } = e.target
 
     if (name === 'media') {
+      console.log(files[0])
       setMedia(files[0] || null)
       setMediaPreview(files[0] ? URL.createObjectURL(files[0]) : null)
     }
@@ -151,7 +152,6 @@ function CreatePost({ user, setPosts }) {
 
                     <div
                       onClick={() => {
-                        console.log(inputRef)
                         inputRef.current.click()
                       }}
                       style={addStyles()}
@@ -194,7 +194,6 @@ function CreatePost({ user, setPosts }) {
         </Transition.Group>
         <div
           style={{
-            marginBottom: '10px',
             marginLeft: 'auto',
             display: 'block',
             width: 'fit-content'
@@ -214,16 +213,16 @@ function CreatePost({ user, setPosts }) {
           )}
           <Button.Group style={{ marginRight: '5px' }}>
             <Button
-              disabled={!newPost.text.trim().length || loading}
+              content="Cancel"
+              disabled={(!media && !newPost.text.trim().length) || loading}
               onClick={() => {
                 setMedia(null)
                 setMediaPreview(null)
                 setNewPost({ text: '', location: '' })
                 setTouched(false)
               }}
-            >
-              Cancel
-            </Button>
+            />
+
             <Button.Or />
 
             <Button
@@ -235,6 +234,7 @@ function CreatePost({ user, setPosts }) {
             />
           </Button.Group>
         </div>
+        <br />
         <Icon
           size="large"
           color="grey"

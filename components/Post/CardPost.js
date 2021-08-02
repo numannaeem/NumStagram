@@ -5,11 +5,12 @@ import {
   Icon,
   Image,
   Divider,
-  Segment,
+  Transition,
   Button,
   Popup,
   Header,
-  Modal
+  Modal,
+  Container
 } from 'semantic-ui-react'
 import PostComments from './PostComments'
 import CommentInputField from './CommentInputField'
@@ -25,6 +26,7 @@ function CardPost({ post, user, setPosts, setShowToastr }) {
   const [likes, setLikes] = useState(post.likes)
   const [liking, setLiking] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const [showHeart, setShowHeart] = useState(false)
 
   const isLiked =
     likes.length > 0 && likes.filter((like) => like.user === user._id).length > 0
@@ -34,6 +36,9 @@ function CardPost({ post, user, setPosts, setShowToastr }) {
   const [showModal, setShowModal] = useState(false)
   const [showImageModal, setShowImageModal] = useState(false)
 
+  let timer = 0
+  let prevent = false
+  let delay = 250
   const addPropsToModal = () => ({
     post,
     user,
@@ -131,15 +136,58 @@ function CardPost({ post, user, setPosts, setShowToastr }) {
             </Card.Description>
           </Card.Content>
           {post.picUrl && (
-            <Image
-              src={post.picUrl}
-              style={{ cursor: 'pointer', maxHeight: '70vh', overflow: 'hidden' }}
-              floated="left"
-              wrapped
-              ui={false}
-              alt="PostImage"
-              onClick={() => setShowImageModal(true)}
-            />
+            <div style={{ position: 'relative' }}>
+              <Image
+                onDoubleClick={async () => {
+                  if (!liking) {
+                    clearTimeout(timer)
+                    prevent = true
+                    if (!isLiked) {
+                      setShowHeart(true)
+                      setTimeout(() => setShowHeart(false), 400)
+                    }
+                    setLiking(true)
+                    await likePost(post._id, user._id, setLikes, isLiked ? false : true)
+                    setLiking(false)
+                  }
+                }}
+                src={post.picUrl}
+                style={{
+                  cursor: 'pointer',
+                  maxHeight: '70vh',
+                  overflow: 'hidden'
+                }}
+                wrapped
+                alt="PostImage"
+                onClick={() => {
+                  timer = setTimeout(() => {
+                    !prevent && setShowImageModal(true)
+                    prevent = false
+                  }, delay)
+                }}
+              />
+              <Transition.Group animation="fade" duration={300}>
+                {showHeart && (
+                  <Icon.Group
+                    size="huge"
+                    style={{
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                      transform: 'translateX(-50%) translateY(-50%)'
+                    }}
+                  >
+                    <Icon
+                      color="teal"
+                      name="heart"
+                      style={{
+                        filter: 'drop-shadow(0 0 20px #6ed4db)'
+                      }}
+                    />
+                  </Icon.Group>
+                )}
+              </Transition.Group>
+            </div>
           )}
 
           <Card.Content extra>
