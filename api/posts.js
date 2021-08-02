@@ -9,8 +9,30 @@ const {
   newLikeNotification,
   removeLikeNotification,
   newCommentNotification,
-  removeCommentNotification
+  removeCommentNotification,
+  newReplyNotification,
+  removeReplyNotification
 } = require('../utilsServer/notificationActions')
+
+//TEST ROUTE
+
+// router.post('/test', async (req, res) => {
+//   try {
+//     PostModel.updateMany(
+//       { 'comments.$[].replies': { $exists: false } },
+//       {
+//         $set: {
+//           'comments.$[].replies': []
+//         }
+//       },
+//       { upsert: true }
+//     )
+//     return res.status(200).send('Success')
+//   } catch (error) {
+//     console.error(error)
+//     return res.status(500).send('Server Error')
+//   }
+// })
 
 // CREATE A POST
 
@@ -56,6 +78,7 @@ router.get('/', authMiddleware, async (req, res) => {
         .sort({ createdAt: -1 })
         .populate('user')
         .populate('comments.user')
+        .populate('comments.replies.user')
       return res.json(posts)
     }
 
@@ -70,6 +93,7 @@ router.get('/', authMiddleware, async (req, res) => {
         .sort({ createdAt: -1 })
         .populate('user')
         .populate('comments.user')
+        .populate('comments.replies.user')
     } else {
       posts = await PostModel.find({ user: userId })
         .skip(skips)
@@ -77,6 +101,7 @@ router.get('/', authMiddleware, async (req, res) => {
         .sort({ createdAt: -1 })
         .populate('user')
         .populate('comments.user')
+        .populate('comments.replies.user')
     }
 
     return res.json(posts)
@@ -242,7 +267,8 @@ router.post('/comment/:postId', authMiddleware, async (req, res) => {
       _id: uuid(),
       text,
       user: req.userId,
-      date: Date.now()
+      date: Date.now(),
+      replies: []
     }
 
     await post.comments.unshift(newComment)
@@ -258,6 +284,53 @@ router.post('/comment/:postId', authMiddleware, async (req, res) => {
     }
 
     return res.status(200).json(newComment._id)
+  } catch (error) {
+    console.error(error)
+    return res.status(500).send(`Server error`)
+  }
+})
+
+//REPLY TO A COMMENT
+router.post('/reply/:postId/:commentId', authMiddleware, async (req, res) => {
+  try {
+    const { postId, commentId } = req.params
+    const { userId } = req
+    const { text } = req.body
+
+    if (text.length < 1) return res.status(401).send('Reply cannot be empty')
+
+    const post = await PostModel.findById(postId)
+
+    if (!post) return res.status(404).send('Post not found')
+
+    const comment = post.comments.find((comment) => comment._id === commentId)
+    if (!comment) {
+      return res.status(404).send('No comment found')
+    }
+
+    const newReply = {
+      _id: uuid(),
+      text,
+      user: req.userId,
+      date: Date.now()
+    }
+    if (!comment.replies) {
+      comment.replies = []
+    }
+    await comment.replies.push(newReply)
+
+    await post.save()
+    if (comment.user.toString() !== userId) {
+      await newReplyNotification(
+        postId,
+        userId,
+        newReply._id,
+        comment.user.toString(),
+        text
+      )
+    }
+
+    return res.status(200).json(newReply._id)
   } catch (error) {
     console.error(error)
     return res.status(500).send(`Server error`)
@@ -292,6 +365,47 @@ router.delete('/:postId/:commentId', authMiddleware, async (req, res) => {
 
     if (post.user.toString() !== userId) {
       await removeCommentNotification(postId, userId, commentId, post.user.toString())
+    }
+
+    return res.status(200).send('Deleted Successfully')
+  } catch (error) {
+    console.error(error)
+    return res.status(500).send(`Server error`)
+  }
+})
+
+//DELETE A REPLY
+
+router.delete('/:postId/:commentId/:replyId', authMiddleware, async (req, res) => {
+  try {
+    const { postId, commentId, replyId } = req.params
+    const { userId } = req
+
+    const post = await PostModel.findById(postId)
+    if (!post) return res.status(404).send('Post not found')
+
+    const comment = post.comments.find((comment) => comment._id === commentId)
+    if (!comment) {
+      return res.status(404).send('No Comment found')
+    }
+    const reply = comment.replies.find((reply) => reply._id === replyId)
+    if (!reply) {
+      return res.status(404).send('No reply found')
+    }
+
+    const user = await UserModel.findById(userId)
+    if (reply.user.toString() !== userId && user.role !== 'root') {
+      return res.status(401).send('Unauthorized')
+    }
+
+    const indexOf = comment.replies.indexOf(reply)
+
+    await comment.replies.splice(indexOf, 1)
+
+    await post.save()
+
+    if (comment.user.toString() !== userId) {
+      await removeReplyNotification(postId, userId, replyId, comment.user.toString())
     }
 
     return res.status(200).send('Deleted Successfully')

@@ -123,6 +123,13 @@ io.on('connection', (socket) => {
 })
 
 nextApp.prepare().then(() => {
+  if (process.env.NODE_ENV === 'production') {
+    app.use((req, res, next) => {
+      if (req.header('x-forwarded-proto') !== 'https')
+        res.redirect(`https://${req.header('host')}${req.url}`)
+      else next()
+    })
+  }
   app.use('/api/signup', require('./api/signup'))
   app.use('/api/auth', require('./api/auth'))
   app.use('/api/search', require('./api/search'))

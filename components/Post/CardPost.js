@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import {
+  Comment,
   Card,
   Icon,
   Image,
@@ -60,6 +61,7 @@ function CardPost({ post, user, setPosts, setShowToastr }) {
       </Modal>
 
       <Modal
+        size="small"
         basic
         open={showImageModal}
         onClose={() => setShowImageModal(false)}
@@ -156,19 +158,22 @@ function CardPost({ post, user, setPosts, setShowToastr }) {
 
             {likes.length === 0 && <span>No likes</span>}
 
-            {comments.length > 0 &&
-              comments.map(
-                (comment, i) =>
-                  i < 3 && (
-                    <PostComments
-                      key={comment._id}
-                      comment={comment}
-                      postId={post._id}
-                      user={user}
-                      setComments={setComments}
-                    />
-                  )
-              )}
+            {comments.length > 0 && (
+              <Comment.Group>
+                {comments.map(
+                  (comment, i) =>
+                    i < 3 && (
+                      <PostComments
+                        key={comment._id}
+                        comment={comment}
+                        postId={post._id}
+                        user={user}
+                        setComments={setComments}
+                      />
+                    )
+                )}
+              </Comment.Group>
+            )}
 
             {comments.length > 3 && (
               <Button

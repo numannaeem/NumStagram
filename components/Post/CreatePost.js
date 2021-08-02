@@ -1,5 +1,13 @@
-import React, { useState, useRef } from 'react'
-import { Form, Button, Image, Divider, Message, Icon, Input } from 'semantic-ui-react'
+import React, { useState, useRef, useEffect } from 'react'
+import {
+  Form,
+  Button,
+  Image,
+  Message,
+  Icon,
+  Transition,
+  Container
+} from 'semantic-ui-react'
 import uploadPic from '../../utils/uploadPicToCloudinary'
 import { submitNewPost } from '../../utils/postActions'
 
@@ -14,6 +22,20 @@ function CreatePost({ user, setPosts }) {
 
   const [media, setMedia] = useState(null)
   const [mediaPreview, setMediaPreview] = useState(null)
+
+  useEffect(() => {
+    if (!touched) {
+      return
+    }
+    function handleEscPress(e) {
+      if (e.key === 'Escape') {
+        setTouched(false)
+      }
+    }
+    window.addEventListener('keydown', handleEscPress)
+
+    return () => window.removeEventListener('keydown', handleEscPress)
+  }, [touched])
 
   const handleChange = (e) => {
     const { name, value, files } = e.target
@@ -88,88 +110,89 @@ function CreatePost({ user, setPosts }) {
           />
         </Form.Group>
 
-        {touched && (
-          <>
-            <Form.Group grouped>
-              <Form.Input
-                style={{ maxWidth: '300px' }}
-                value={newPost.location}
-                name="location"
-                onChange={handleChange}
-                label="Add Location"
-                icon="map marker alternate"
-                placeholder="Location"
-              />
-              <Form.Field>
-                <label>Upload an image</label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  name="media"
-                  ref={inputRef}
-                  style={{ display: 'none' }}
+        <Transition.Group animation="fade down" duration={{ hide: 300, show: 600 }}>
+          {touched && (
+            <Container>
+              <Form.Group grouped>
+                <Form.Input
+                  style={{ maxWidth: '300px' }}
+                  value={newPost.location}
+                  name="location"
                   onChange={handleChange}
+                  label="Add Location"
+                  icon="map marker alternate"
+                  placeholder="Location"
                 />
-              </Form.Field>
+                <Form.Field>
+                  <label>Upload an image</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    name="media"
+                    ref={inputRef}
+                    style={{ display: 'none' }}
+                    onChange={handleChange}
+                  />
+                </Form.Field>
 
-              <div
-                onClick={() => {
-                  console.log(inputRef)
-                  inputRef.current.click()
-                }}
-                style={addStyles()}
-                onDragOver={(e) => {
-                  e.preventDefault()
-                  setHighlighted(true)
-                }}
-                onDragLeave={(e) => {
-                  e.preventDefault()
-                  setHighlighted(false)
-                }}
-                onDrop={(e) => {
-                  e.preventDefault()
-                  setHighlighted(false)
+                <div
+                  onClick={() => {
+                    console.log(inputRef)
+                    inputRef.current.click()
+                  }}
+                  style={addStyles()}
+                  onDragOver={(e) => {
+                    e.preventDefault()
+                    setHighlighted(true)
+                  }}
+                  onDragLeave={(e) => {
+                    e.preventDefault()
+                    setHighlighted(false)
+                  }}
+                  onDrop={(e) => {
+                    e.preventDefault()
+                    setHighlighted(false)
 
-                  const droppedFile = Array.from(e.dataTransfer.files)
+                    const droppedFile = Array.from(e.dataTransfer.files)
 
-                  if (droppedFile[0]) {
-                    setMedia(droppedFile[0])
-                    setMediaPreview(URL.createObjectURL(droppedFile[0]))
-                  }
-                }}
-              >
-                {media === null ? (
-                  <>
-                    <Icon name="plus" size="small" />
-                    <span>Add image</span>
-                  </>
-                ) : (
-                  <>
-                    <Image src={mediaPreview} alt="PostImage" centered />
-                  </>
-                )}
-              </div>
-            </Form.Group>
+                    if (droppedFile[0]) {
+                      setMedia(droppedFile[0])
+                      setMediaPreview(URL.createObjectURL(droppedFile[0]))
+                    }
+                  }}
+                >
+                  {media === null ? (
+                    <>
+                      <Icon name="plus" size="small" />
+                      <span>Add image</span>
+                    </>
+                  ) : (
+                    <div>
+                      <Image src={mediaPreview} alt="PostImage" centered />
+                    </div>
+                  )}
+                </div>
+              </Form.Group>
 
-            <Divider hidden />
-            <Button
-              circular
-              disabled={!newPost.text.trim().length || loading}
-              content={<strong>Post</strong>}
-              style={{ backgroundColor: '#1DA1F2', color: 'white' }}
-              icon="send"
-              loading={loading}
-            />
-          </>
-        )}
+              <Button
+                circular
+                disabled={!newPost.text.trim().length || loading}
+                content={<strong>Post</strong>}
+                style={{ backgroundColor: '#1DA1F2', color: 'white' }}
+                icon="send"
+                loading={loading}
+              />
+            </Container>
+          )}
+          <Icon
+            size="large"
+            color="grey"
+            style={{ width: '100%', cursor: 'pointer' }}
+            name={`angle ${touched ? 'up' : 'down'}`}
+            onClick={() => setTouched((prev) => !prev)}
+          />
+        </Transition.Group>
       </Form>
-      <Icon
-        size="large"
-        color="grey"
-        style={{ width: '100%', cursor: 'pointer' }}
-        name={`angle ${touched ? 'up' : 'down'}`}
-        onClick={() => setTouched((prev) => !prev)}
-      ></Icon>
     </>
   )
 }

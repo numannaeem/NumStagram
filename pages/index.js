@@ -83,7 +83,7 @@ function Index({ user, postsData, errorLoading }) {
 
   if (posts.length === 0 || errorLoading)
     return (
-      <Segment>
+      <Segment style={{ minHeight: '100vh' }}>
         {newMessageModal && newMessageReceived !== null && (
           <MessageNotificationModal
             socket={socket}

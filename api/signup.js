@@ -33,17 +33,10 @@ router.get('/:username', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
-  const {
-    name,
-    email,
-    username,
-    password,
-    bio,
-    facebook,
-    youtube,
-    twitter,
-    instagram
-  } = req.body.user
+  const { name, email, username, password, facebook, youtube, twitter, instagram } =
+    req.body.user
+
+  const bio = req.body.user.bio || ''
 
   if (!isEmail(email)) return res.status(401).send('Invalid Email')
 
@@ -90,15 +83,10 @@ router.post('/', async (req, res) => {
     await new ChatModel({ user: user._id, chats: [] }).save()
 
     const payload = { userId: user._id }
-    jwt.sign(
-      payload,
-      process.env.JWT_SECRET,
-      { expiresIn: '2d' },
-      (err, token) => {
-        if (err) throw err
-        res.status(200).json(token)
-      }
-    )
+    jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '2d' }, (err, token) => {
+      if (err) throw err
+      res.status(200).json(token)
+    })
   } catch (error) {
     console.error(error)
     return res.status(500).send(`Server error`)

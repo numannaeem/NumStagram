@@ -48,6 +48,7 @@ router.get('/posts/:username', authMiddleware, async (req, res) => {
       .sort({ createdAt: -1 })
       .populate('user')
       .populate('comments.user')
+      .populate('comments.replies.user')
     return res.json(posts)
   } catch (error) {
     console.error(error)

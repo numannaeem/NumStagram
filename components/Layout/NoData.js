@@ -32,8 +32,8 @@ export const NoPosts = () => (
   <Message
     info
     icon="meh"
-    header="Hey!"
-    content="No Posts. Make sure you have followed someone."
+    header="It's lonely in here..."
+    content="Follow someone to see what they're up to!"
   />
 )
 

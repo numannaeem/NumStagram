@@ -15,11 +15,17 @@ function SignupImage({
   const [cropper, setCropper] = useState(null)
 
   useEffect(() => {
-    window.addEventListener('keydown', ({ key }) => {
-      if (key === 'r') {
+    if (!cropper) {
+      return
+    }
+    function handleRPress(e) {
+      if (e.key === 'r') {
         cropper?.reset()
       }
-    })
+    }
+    window.addEventListener('keydown', handleRPress)
+
+    return () => window.removeEventListener('keydown', handleRPress)
   }, [cropper])
   return (
     <>

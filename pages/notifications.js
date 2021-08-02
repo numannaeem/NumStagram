@@ -8,6 +8,7 @@ import { NoNotifications } from '../components/Layout/NoData'
 import LikeNotification from '../components/Notifications/LikeNotification'
 import CommentNotification from '../components/Notifications/CommentNotification'
 import FollowerNotification from '../components/Notifications/FollowerNotification'
+import ReplyNotification from '../components/Notifications/ReplyNotification'
 
 function Notifications({ notifications, userFollowStats }) {
   const [notifs, setNotifs] = useState(notifications)
@@ -76,6 +77,15 @@ function Notifications({ notifications, userFollowStats }) {
                   else if (notification.type === 'newFollower')
                     return (
                       <FollowerNotification
+                        key={notification._id}
+                        notification={notification}
+                        loggedUserFollowStats={loggedUserFollowStats}
+                        setUserFollowStats={setUserFollowStats}
+                      />
+                    )
+                  else if (notification.type === 'newReply')
+                    return (
+                      <ReplyNotification
                         key={notification._id}
                         notification={notification}
                         loggedUserFollowStats={loggedUserFollowStats}
