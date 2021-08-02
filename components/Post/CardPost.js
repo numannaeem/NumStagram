@@ -23,6 +23,8 @@ import ImageOnlyModal from './ImageOnlyModal'
 
 function CardPost({ post, user, setPosts, setShowToastr }) {
   const [likes, setLikes] = useState(post.likes)
+  const [liking, setLiking] = useState(false)
+  const [deleting, setDeleting] = useState(false)
 
   const isLiked =
     likes.length > 0 && likes.filter((like) => like.user === user._id).length > 0
@@ -94,10 +96,16 @@ function CardPost({ post, user, setPosts, setShowToastr }) {
                   <p>This action is irreversible!</p>
 
                   <Button
+                    loading={deleting}
+                    disabled={deleting}
                     color="red"
                     icon="trash"
                     content="Delete"
-                    onClick={() => deletePost(post._id, setPosts, setShowToastr)}
+                    onClick={async () => {
+                      setDeleting(true)
+                      await deletePost(post._id, setPosts, setShowToastr)
+                      setDeleting(false)
+                    }}
                   />
                 </Popup>
               </>
@@ -136,13 +144,17 @@ function CardPost({ post, user, setPosts, setShowToastr }) {
 
           <Card.Content extra>
             <Icon
-              name={isLiked ? 'heart' : 'heart outline'}
+              loading={liking}
+              disabled={liking}
+              name={liking ? 'circle notched' : isLiked ? 'heart' : 'heart outline'}
               color="red"
               size="large"
               style={{ cursor: 'pointer' }}
-              onClick={() =>
-                likePost(post._id, user._id, setLikes, isLiked ? false : true)
-              }
+              onClick={async () => {
+                setLiking(true)
+                await likePost(post._id, user._id, setLikes, isLiked ? false : true)
+                setLiking(false)
+              }}
             />
 
             <LikesList
@@ -180,6 +192,7 @@ function CardPost({ post, user, setPosts, setShowToastr }) {
                 content="View More"
                 color="teal"
                 basic
+                compact
                 circular
                 onClick={() => setShowModal(true)}
               />

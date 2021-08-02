@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Form, Header, Grid, Segment, Icon, Button, ButtonGroup } from 'semantic-ui-react'
+import { Form, Header, Grid, Segment, Icon, Button } from 'semantic-ui-react'
 import Cropper from 'react-cropper'
 
 function SignupImage({

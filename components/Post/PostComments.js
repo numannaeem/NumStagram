@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { Comment, Icon, Form } from 'semantic-ui-react'
 import calculateTime from '../../utils/calculateTime'
 import { deleteComment, deleteReply } from '../../utils/postActions'
@@ -12,7 +12,7 @@ function PostComments({ comment, user, setComments, postId }) {
   const [loading, setLoading] = useState(false)
   const [replies, setReplies] = useState(comment.replies)
   const [showReplies, setShowReplies] = useState(false)
-
+  const replyRef = useRef()
   return (
     <Comment>
       <Comment.Avatar
@@ -48,7 +48,10 @@ function PostComments({ comment, user, setComments, postId }) {
         <Comment.Actions>
           <Comment.Action
             active={showReply}
-            onClick={() => setShowReply((prev) => !prev)}
+            onClick={() => {
+              replyRef.current?.focus()
+              setShowReply((prev) => !prev)
+            }}
           >
             Reply
           </Comment.Action>
@@ -72,6 +75,8 @@ function PostComments({ comment, user, setComments, postId }) {
             }}
           >
             <Form.Input
+              autoFocus
+              onBlur={() => setShowReply(false)}
               action={{
                 color: 'teal',
                 compact: true,

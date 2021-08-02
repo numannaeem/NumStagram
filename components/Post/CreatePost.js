@@ -6,7 +6,9 @@ import {
   Message,
   Icon,
   Transition,
-  Container
+  Grid,
+  Container,
+  Segment
 } from 'semantic-ui-react'
 import uploadPic from '../../utils/uploadPicToCloudinary'
 import { submitNewPost } from '../../utils/postActions'
@@ -52,11 +54,14 @@ function CreatePost({ user, setPosts }) {
     textAlign: 'center',
     minHeight: '150px',
     width: '100%',
-    maxWidth: '300px',
+    maxWidth: '400px',
     border: !media && '1px rgb(34,36,38,.15) solid',
     color: 'rgb(34,36,38,.75)',
     borderRadius: '5px',
-    paddingTop: !media && '60px',
+    display: 'flex',
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
     cursor: 'pointer',
     backgroundColor: !media && highlighted ? 'lightgray' : 'white'
   })
@@ -112,86 +117,131 @@ function CreatePost({ user, setPosts }) {
 
         <Transition.Group animation="fade down" duration={{ hide: 300, show: 600 }}>
           {touched && (
-            <Container>
-              <Form.Group grouped>
-                <Form.Input
-                  style={{ maxWidth: '300px' }}
-                  value={newPost.location}
-                  name="location"
-                  onChange={handleChange}
-                  label="Add Location"
-                  icon="map marker alternate"
-                  placeholder="Location"
-                />
-                <Form.Field>
-                  <label>Upload an image</label>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    name="media"
-                    ref={inputRef}
-                    style={{ display: 'none' }}
+            <Container fluid>
+              <Grid
+                style={{ marginBottom: '0.3rem' }}
+                columns={2}
+                stackable
+                padded={false}
+              >
+                <Grid.Column>
+                  <Form.Input
+                    fluid
+                    value={newPost.location}
+                    name="location"
                     onChange={handleChange}
+                    label="Add Location"
+                    icon="map marker alternate"
+                    placeholder="Location"
                   />
-                </Form.Field>
+                </Grid.Column>
+                <Grid.Column>
+                  <div>
+                    <Form.Field style={{ marginBottom: '0' }}>
+                      <label>Upload an image</label>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        name="media"
+                        ref={inputRef}
+                        style={{ display: 'none' }}
+                        onChange={handleChange}
+                      />
+                    </Form.Field>
 
-                <div
-                  onClick={() => {
-                    console.log(inputRef)
-                    inputRef.current.click()
-                  }}
-                  style={addStyles()}
-                  onDragOver={(e) => {
-                    e.preventDefault()
-                    setHighlighted(true)
-                  }}
-                  onDragLeave={(e) => {
-                    e.preventDefault()
-                    setHighlighted(false)
-                  }}
-                  onDrop={(e) => {
-                    e.preventDefault()
-                    setHighlighted(false)
+                    <div
+                      onClick={() => {
+                        console.log(inputRef)
+                        inputRef.current.click()
+                      }}
+                      style={addStyles()}
+                      onDragOver={(e) => {
+                        e.preventDefault()
+                        setHighlighted(true)
+                      }}
+                      onDragLeave={(e) => {
+                        e.preventDefault()
+                        setHighlighted(false)
+                      }}
+                      onDrop={(e) => {
+                        e.preventDefault()
+                        setHighlighted(false)
 
-                    const droppedFile = Array.from(e.dataTransfer.files)
+                        const droppedFile = Array.from(e.dataTransfer.files)
 
-                    if (droppedFile[0]) {
-                      setMedia(droppedFile[0])
-                      setMediaPreview(URL.createObjectURL(droppedFile[0]))
-                    }
-                  }}
-                >
-                  {media === null ? (
-                    <>
-                      <Icon name="plus" size="small" />
-                      <span>Add image</span>
-                    </>
-                  ) : (
-                    <div>
-                      <Image src={mediaPreview} alt="PostImage" centered />
+                        if (droppedFile[0]) {
+                          setMedia(droppedFile[0])
+                          setMediaPreview(URL.createObjectURL(droppedFile[0]))
+                        }
+                      }}
+                    >
+                      {media === null ? (
+                        <>
+                          <Icon name="plus" size="small" />
+                          <span>Add image</span>
+                        </>
+                      ) : (
+                        <div>
+                          <Image src={mediaPreview} alt="PostImage" centered />
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-              </Form.Group>
-
-              <Button
-                circular
-                disabled={!newPost.text.trim().length || loading}
-                content={<strong>Post</strong>}
-                style={{ backgroundColor: '#1DA1F2', color: 'white' }}
-                icon="send"
-                loading={loading}
-              />
+                  </div>
+                </Grid.Column>
+              </Grid>
             </Container>
           )}
-          <Icon
-            size="large"
-            color="grey"
-            style={{ width: '100%', cursor: 'pointer' }}
-            name={`angle ${touched ? 'up' : 'down'}`}
-            onClick={() => setTouched((prev) => !prev)}
-          />
         </Transition.Group>
+        <div
+          style={{
+            marginBottom: '10px',
+            marginLeft: 'auto',
+            display: 'block',
+            width: 'fit-content'
+          }}
+        >
+          {media && (
+            <Button
+              content="Remove image"
+              color="red"
+              icon="delete"
+              type="button"
+              onClick={() => {
+                setMedia(null)
+                setMediaPreview(null)
+              }}
+            />
+          )}
+          <Button.Group style={{ marginRight: '5px' }}>
+            <Button
+              disabled={!newPost.text.trim().length || loading}
+              onClick={() => {
+                setMedia(null)
+                setMediaPreview(null)
+                setNewPost({ text: '', location: '' })
+                setTouched(false)
+              }}
+            >
+              Cancel
+            </Button>
+            <Button.Or />
+
+            <Button
+              disabled={!newPost.text.trim().length || loading}
+              content={<strong>Post</strong>}
+              color="teal"
+              icon="send"
+              loading={loading}
+            />
+          </Button.Group>
+        </div>
+        <Icon
+          size="large"
+          color="grey"
+          style={{ width: '100%', cursor: 'pointer' }}
+          name={`angle ${touched ? 'up' : 'down'}`}
+          onClick={() => setTouched((prev) => !prev)}
+        />
       </Form>
     </>
   )

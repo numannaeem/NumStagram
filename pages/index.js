@@ -83,7 +83,7 @@ function Index({ user, postsData, errorLoading }) {
 
   if (posts.length === 0 || errorLoading)
     return (
-      <Segment style={{ minHeight: '100vh' }}>
+      <Segment style={{ minHeight: '100vh', borderTop: 'none', borderBottom: '0px' }}>
         {newMessageModal && newMessageReceived !== null && (
           <MessageNotificationModal
             socket={socket}
@@ -113,7 +113,7 @@ function Index({ user, postsData, errorLoading }) {
         />
       )}
 
-      <Segment style={{ borderTop: 'none' }}>
+      <Segment style={{ borderTop: 'none', borderBottom: '0px' }}>
         <CreatePost user={user} setPosts={setPosts} />
         <h2 style={{ color: 'teal', marginBottom: '0.2rem' }}>Your feed</h2>
         <InfiniteScroll

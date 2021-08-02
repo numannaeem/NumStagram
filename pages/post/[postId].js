@@ -1,40 +1,42 @@
-import React, { useState } from "react";
-import axios from "axios";
-import { parseCookies } from "nookies";
-import { Card, Icon, Image, Divider, Segment, Container } from "semantic-ui-react";
-import PostComments from "../../components/Post/PostComments";
-import CommentInputField from "../../components/Post/CommentInputField";
-import LikesList from "../../components/Post/LikesList";
-import Link from "next/link";
-import { likePost } from "../../utils/postActions";
-import calculateTime from "../../utils/calculateTime";
-import baseUrl from "../../utils/baseUrl";
-import { NoPostFound } from "../../components/Layout/NoData";
+import React, { useState } from 'react'
+import axios from 'axios'
+import { parseCookies } from 'nookies'
+import {
+  Card,
+  Icon,
+  Image,
+  Divider,
+  Segment,
+  Container,
+  CommentGroup
+} from 'semantic-ui-react'
+import PostComments from '../../components/Post/PostComments'
+import CommentInputField from '../../components/Post/CommentInputField'
+import LikesList from '../../components/Post/LikesList'
+import Link from 'next/link'
+import { likePost } from '../../utils/postActions'
+import calculateTime from '../../utils/calculateTime'
+import baseUrl from '../../utils/baseUrl'
+import { NoPostFound } from '../../components/Layout/NoData'
 
 function PostPage({ post, errorLoading, user }) {
   if (errorLoading) {
-    return <NoPostFound />;
+    return <NoPostFound />
   }
 
-  const [likes, setLikes] = useState(post.likes);
+  const [likes, setLikes] = useState(post.likes)
 
   const isLiked =
-    likes.length > 0 && likes.filter(like => like.user === user._id).length > 0;
+    likes.length > 0 && likes.filter((like) => like.user === user._id).length > 0
 
-  const [comments, setComments] = useState(post.comments);
+  const [comments, setComments] = useState(post.comments)
 
   return (
     <Container text>
       <Segment basic>
         <Card color="teal" fluid>
           {post.picUrl && (
-            <Image
-              src={post.picUrl}
-              floated="left"
-              wrapped
-              ui={false}
-              alt="PostImage"
-            />
+            <Image src={post.picUrl} floated="left" wrapped ui={false} alt="PostImage" />
           )}
 
           <Card.Content>
@@ -51,9 +53,9 @@ function PostPage({ post, errorLoading, user }) {
 
             <Card.Description
               style={{
-                fontSize: "17px",
-                letterSpacing: "0.1px",
-                wordSpacing: "0.35px"
+                fontSize: '17px',
+                letterSpacing: '0.1px',
+                wordSpacing: '0.35px'
               }}
             >
               {post.text}
@@ -62,9 +64,9 @@ function PostPage({ post, errorLoading, user }) {
 
           <Card.Content extra>
             <Icon
-              name={isLiked ? "heart" : "heart outline"}
+              name={isLiked ? 'heart' : 'heart outline'}
               color="red"
-              style={{ cursor: "pointer" }}
+              style={{ cursor: 'pointer' }}
               onClick={() =>
                 likePost(post._id, user._id, setLikes, isLiked ? false : true)
               }
@@ -75,25 +77,25 @@ function PostPage({ post, errorLoading, user }) {
               trigger={
                 likes.length > 0 && (
                   <span className="spanLikesList">
-                    {`${likes.length} ${likes.length === 1 ? "like" : "likes"}`}
+                    {`${likes.length} ${likes.length === 1 ? 'like' : 'likes'}`}
                   </span>
                 )
               }
             />
 
-            <Icon name="comment outline" style={{ marginLeft: "7px" }} color="blue" />
-
-            {comments.length > 0 &&
-              comments.map(comment => (
-                <PostComments
-                  key={comment._id}
-                  comment={comment}
-                  postId={post._id}
-                  user={user}
-                  setComments={setComments}
-                />
-              ))}
-
+            <Icon name="comment outline" style={{ marginLeft: '7px' }} color="blue" />
+            <CommentGroup>
+              {comments.length > 0 &&
+                comments.map((comment) => (
+                  <PostComments
+                    key={comment._id}
+                    comment={comment}
+                    postId={post._id}
+                    user={user}
+                    setComments={setComments}
+                  />
+                ))}
+            </CommentGroup>
             <Divider hidden />
 
             <CommentInputField user={user} postId={post._id} setComments={setComments} />
@@ -102,22 +104,22 @@ function PostPage({ post, errorLoading, user }) {
       </Segment>
       <Divider hidden />
     </Container>
-  );
+  )
 }
 
-PostPage.getInitialProps = async ctx => {
+PostPage.getInitialProps = async (ctx) => {
   try {
-    const { postId } = ctx.query;
-    const { token } = parseCookies(ctx);
+    const { postId } = ctx.query
+    const { token } = parseCookies(ctx)
 
     const res = await axios.get(`${baseUrl}/api/posts/${postId}`, {
       headers: { Authorization: token }
-    });
+    })
 
-    return { post: res.data };
+    return { post: res.data }
   } catch (error) {
-    return { errorLoading: true };
+    return { errorLoading: true }
   }
-};
+}
 
-export default PostPage;
+export default PostPage

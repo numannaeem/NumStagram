@@ -1,12 +1,14 @@
-import React from "react";
-import { Comment, Icon, List } from "semantic-ui-react";
-import { useRouter } from "next/router";
-import calculateTime from "../../utils/calculateTime";
+import React from 'react'
+import { Comment, Icon, List } from 'semantic-ui-react'
+import { useRouter } from 'next/router'
+import calculateTime from '../../utils/calculateTime'
 
 function Chat({ chat, connectedUsers, deleteChat }) {
-  const router = useRouter();
+  const router = useRouter()
 
-  const isOnline = Boolean(connectedUsers?.filter(user => user.userId === chat.messagesWith).length);
+  const isOnline = Boolean(
+    connectedUsers?.filter((user) => user.userId === chat.messagesWith).length
+  )
 
   return (
     <List.Item
@@ -21,13 +23,19 @@ function Chat({ chat, connectedUsers, deleteChat }) {
         <Comment.Avatar src={chat.profilePicUrl} />
         <Comment.Content>
           <Comment.Author>
-            {chat.name}{" "}
-            {isOnline && <Icon name="circle" size="small" color="green" />}
+            {chat.name} {isOnline && <Icon name="circle" size="small" color="green" />}
           </Comment.Author>
 
           <Comment.Metadata>
             <div>{chat.date && calculateTime(chat.date)}</div>
-            <div style={{ position: "absolute", right: "10px", bottom: '2px', cursor: "pointer" }}>
+            <div
+              style={{
+                position: 'absolute',
+                right: '10px',
+                bottom: '2px',
+                cursor: 'pointer'
+              }}
+            >
               <Icon
                 name="trash alternate"
                 color="red"
@@ -38,14 +46,13 @@ function Chat({ chat, connectedUsers, deleteChat }) {
 
           <Comment.Text>
             {chat.lastMessage.length > 20
-              ? `${chat.lastMessage.substring(0, 20)} ...`
+              ? `${chat.lastMessage.substring(0, 20)}...`
               : chat.lastMessage}
           </Comment.Text>
         </Comment.Content>
       </Comment>
     </List.Item>
-
-  );
+  )
 }
 
-export default Chat;
+export default Chat

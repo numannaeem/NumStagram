@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { List, Image, Search } from 'semantic-ui-react'
+import { List, Image, Search, Segment, Divider } from 'semantic-ui-react'
 import axios from 'axios'
 import cookie from 'js-cookie'
 import Router from 'next/router'
@@ -54,30 +54,37 @@ function SearchComponent(props) {
   }
 
   return (
-    <Search
-      style={{
-        width: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-        border: '2px solid teal',
-        borderRadius: '22px'
-      }}
-      onBlur={() => {
-        results.length > 0 && setResults([])
-        loading && setLoading(false)
-        setText('')
-      }}
-      size={props.size || 'large'}
-      fluid
-      placeholder="Search away!"
-      loading={loading}
-      value={text}
-      resultRenderer={ResultRenderer}
-      results={results}
-      onSearchChange={handleChange}
-      minCharacters={2}
-      onResultSelect={(e, data) => Router.push(`/${data.result.username}`)}
-    />
+    <>
+      <Search
+        style={{
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          border: '2px solid teal',
+          borderRadius: '22px'
+        }}
+        onBlur={() => {
+          results.length > 0 && setResults([])
+          loading && setLoading(false)
+          setText('')
+        }}
+        size={props.size || 'large'}
+        fluid
+        placeholder="Search away!"
+        loading={loading}
+        value={text}
+        resultRenderer={ResultRenderer}
+        results={results}
+        onSearchChange={handleChange}
+        minCharacters={2}
+        onResultSelect={(e, data) => Router.push(`/${data.result.username}`)}
+      />
+      {/* <Divider />
+      <Segment basic raised>
+        <h4>New to NumStagram</h4>
+
+      </Segment> */}
+    </>
   )
 }
 
