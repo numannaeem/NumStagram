@@ -1,12 +1,16 @@
 import React, { useState } from 'react'
 import { Segment, Image, Grid, Divider, Header, Button, List } from 'semantic-ui-react'
-import { followUser, unfollowUser } from '../../utils/profileActions'
+import { followUser, unfollowUser, sendRequest } from '../../utils/profileActions'
 
 function ProfileHeader({
   profile,
   ownAccount,
   loggedUserFollowStats,
-  setUserFollowStats
+  setUserFollowStats,
+  setPrivateAcc,
+  privateAcc,
+  followRequestSent,
+  setFollowRequestSent
 }) {
   const [loading, setLoading] = useState(false)
 
@@ -113,14 +117,31 @@ function ProfileHeader({
               <Button
                 compact
                 loading={loading}
-                disabled={loading}
-                content={isFollowing ? 'Following' : 'Follow'}
-                icon={isFollowing ? 'check circle' : 'add user'}
+                disabled={loading || followRequestSent}
+                content={
+                  isFollowing
+                    ? 'Following'
+                    : followRequestSent
+                    ? 'Follow request sent'
+                    : privateAcc
+                    ? 'Send follow request'
+                    : 'Follow'
+                }
+                icon={
+                  isFollowing
+                    ? 'check circle'
+                    : followRequestSent
+                    ? 'clock outline'
+                    : 'add user'
+                }
                 color={isFollowing ? 'instagram' : 'twitter'}
                 onClick={async () => {
                   setLoading(true)
+                  isFollowing && profile.user.private && setPrivateAcc(true)
                   isFollowing
                     ? await unfollowUser(profile.user._id, setUserFollowStats)
+                    : privateAcc
+                    ? await sendRequest(profile.user._id, setFollowRequestSent)
                     : await followUser(profile.user._id, setUserFollowStats)
                   setLoading(false)
                 }}

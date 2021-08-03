@@ -30,7 +30,6 @@ function Message({ message, user, deleteMsg, bannerProfilePic, divRef }) {
                 color="red"
                 style={{ cursor: 'pointer' }}
                 onClick={() => {
-                  console.log(message)
                   deleteMsg(message._id)
                 }}
               />

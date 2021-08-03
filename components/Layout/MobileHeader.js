@@ -30,7 +30,7 @@ function MobileHeader({ user: { unreadNotification, email, unreadMessage, userna
           <Link href="/messages">
             <Menu.Item header active={isActive('/messages')}>
               <Icon
-                name="mail outline"
+                name="comments outline"
                 size="large"
                 {...(unreadMessage && { color: 'orange' })}
               />

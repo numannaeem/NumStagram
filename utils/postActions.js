@@ -82,7 +82,6 @@ export const postReply = async (postId, commentId, user, text, setReplies) => {
       text,
       date: Date.now()
     }
-    console.log(res.data)
     setReplies((prev) => [...prev, newReply])
   } catch (error) {
     alert(catchErrors(error))

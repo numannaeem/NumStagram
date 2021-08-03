@@ -9,6 +9,35 @@ const Axios = axios.create({
   headers: { Authorization: Cookies.get('token') }
 })
 
+export const acceptRequest = async (userToFollowId, setUserFollowStats) => {
+  try {
+    await Axios.post(`/acceptRequest/${userToFollowId}`)
+    setUserFollowStats((prev) => ({
+      ...prev,
+      followers: [...prev.followers, { user: userToFollowId }]
+    }))
+  } catch (error) {
+    alert(catchErrors(error))
+  }
+}
+
+export const rejectRequest = async (userSentReqId) => {
+  try {
+    await Axios.delete(`/rejectRequest/${userSentReqId}`)
+  } catch (error) {
+    alert(catchErrors(error))
+  }
+}
+
+export const sendRequest = async (userToSendReqId, setFollowRequestSent) => {
+  try {
+    await Axios.post(`/sendRequest/${userToSendReqId}`)
+    setFollowRequestSent(true)
+  } catch (error) {
+    alert(catchErrors(error))
+  }
+}
+
 export const followUser = async (userToFollowId, setUserFollowStats) => {
   try {
     await Axios.post(`/follow/${userToFollowId}`)

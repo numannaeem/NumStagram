@@ -7,6 +7,18 @@ export const NoProfilePosts = () => (
   </>
 )
 
+export const PrivateBanner = () => (
+  <>
+    <Message
+      warning
+      icon="spy"
+      header="Private Account"
+      content="Follow them to view their posts"
+    />
+    <Button icon="long arrow alternate left" content="Go Back" as="a" href="/" />
+  </>
+)
+
 export const NoFollowData = ({ followersComponent, followingComponent }) => (
   <>
     {followersComponent && (

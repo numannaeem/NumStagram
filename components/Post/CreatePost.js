@@ -44,7 +44,6 @@ function CreatePost({ user, setPosts }) {
     const { name, value, files } = e.target
 
     if (name === 'media') {
-      console.log(files[0])
       setMedia(files[0] || null)
       setMediaPreview(files[0] ? URL.createObjectURL(files[0]) : null)
     }
@@ -100,23 +99,24 @@ function CreatePost({ user, setPosts }) {
     <>
       <div
         style={{
-          marginBottom: '1rem',
+          marginBottom: '1.2rem',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'center'
+          justifyContent: 'center',
+          cursor: 'pointer'
         }}
+        onClick={() => setTouched((prev) => !prev)}
       >
-        <Image src={user.profilePicUrl} circular avatar />
+        <Image
+          style={{ marginRight: '0.4rem' }}
+          src={user.profilePicUrl}
+          circular
+          avatar
+        />
         <big>
           Hi, {user.username} | <Moment interval={1000} format="hh:mm A" />
         </big>
-        <Icon
-          size="large"
-          color="grey"
-          style={{ cursor: 'pointer' }}
-          name={`angle ${touched ? 'up' : 'down'}`}
-          onClick={() => setTouched((prev) => !prev)}
-        />
+        <Icon size="large" color="grey" name={`angle ${touched ? 'up' : 'down'}`} />
       </div>
       <Form error={error !== null} onSubmit={handleSubmit}>
         <Message error onDismiss={() => setError(null)} content={error} header="Oops!" />

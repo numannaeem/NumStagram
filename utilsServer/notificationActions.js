@@ -195,6 +195,26 @@ const removeFollowerNotification = async (userId, userToNotifyId) => {
   }
 }
 
+const newFollowRequestNotification = async (userId, userToNotifyId) => {
+  try {
+    const userToNotify = await NotificationModel.findOne({ user: userToNotifyId })
+    const newNotif = {
+      type: 'newFollowRequest',
+      user: userId,
+      date: Date.now()
+    }
+
+    await userToNotify.notifications.unshift(newNotif)
+    await userToNotify.save()
+
+    await setNotificationToUnread(userToNotifyId)
+    return
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+
 module.exports = {
   newLikeNotification,
   removeLikeNotification,
@@ -203,5 +223,6 @@ module.exports = {
   newFollowerNotification,
   removeFollowerNotification,
   newReplyNotification,
-  removeReplyNotification
+  removeReplyNotification,
+  newFollowRequestNotification
 }

@@ -5,7 +5,10 @@ const NotificationSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: 'User' },
   notifications: [
     {
-      type: { type: String, enum: ['newLike', 'newComment', 'newFollower', 'newReply'] },
+      type: {
+        type: String,
+        enum: ['newLike', 'newComment', 'newFollower', 'newReply', 'newFollowRequest']
+      },
       user: { type: Schema.Types.ObjectId, ref: 'User' },
       post: { type: Schema.Types.ObjectId, ref: 'Post' },
       commentId: { type: String },

@@ -4,7 +4,7 @@ import axios from 'axios'
 import baseUrl from '../utils/baseUrl'
 import { parseCookies } from 'nookies'
 import { Divider, Grid, Segment } from 'semantic-ui-react'
-import { NoProfilePosts, NoProfile } from '../components/Layout/NoData'
+import { NoProfilePosts, NoProfile, PrivateBanner } from '../components/Layout/NoData'
 import CardPost from '../components/Post/CardPost'
 import cookie from 'js-cookie'
 import { PlaceHolderPosts } from '../components/Layout/PlaceHolderGroup'
@@ -34,8 +34,12 @@ function ProfilePage({
   const router = useRouter()
 
   const [posts, setPosts] = useState([])
+  const [privateAcc, setPrivateAcc] = useState(true)
   const [loading, setLoading] = useState(false)
   const [showToastr, setShowToastr] = useState(false)
+  const [followRequestSent, setFollowRequestSent] = useState(
+    Boolean(user.followRequestsSent?.filter((r) => r === profile.user._id).length)
+  )
 
   const [activeItem, setActiveItem] = useState('profile')
   const handleItemClick = (clickedTab) => setActiveItem(clickedTab)
@@ -53,10 +57,12 @@ function ProfilePage({
         const res = await axios.get(`${baseUrl}/api/profile/posts/${username}`, {
           headers: { Authorization: cookie.get('token') }
         })
-
-        setPosts(res.data)
+        if (res.data !== 'Private account') {
+          setPrivateAcc(false)
+          setPosts(res.data)
+        }
       } catch (error) {
-        alert('Error Loading Posts')
+        alert('Error loading posts')
       }
 
       setLoading(false)
@@ -89,6 +95,10 @@ function ProfilePage({
             {activeItem === 'profile' && (
               <>
                 <ProfileHeader
+                  followRequestSent={followRequestSent}
+                  setFollowRequestSent={setFollowRequestSent}
+                  privateAcc={privateAcc}
+                  setPrivateAcc={setPrivateAcc}
                   profile={profile}
                   ownAccount={ownAccount}
                   loggedUserFollowStats={loggedUserFollowStats}
@@ -97,6 +107,8 @@ function ProfilePage({
                 <Divider hidden />
                 {loading ? (
                   <PlaceHolderPosts />
+                ) : privateAcc && !ownAccount ? (
+                  <PrivateBanner />
                 ) : posts.length > 0 ? (
                   posts.map((post) => (
                     <CardPost

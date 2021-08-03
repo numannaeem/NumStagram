@@ -61,12 +61,12 @@ function PostComments({ comment, user, setComments, postId }) {
             </Comment.Action>
           )}
         </Comment.Actions>
-        {showReply && !loading && (
+        {(showReply || loading) && (
           <Form
             reply
             onSubmit={async (e) => {
-              e.preventDefault()
               setLoading(true)
+              e.preventDefault()
               setShowReplies(true)
               await postReply(postId, comment._id, user, commentReply.trim(), setReplies)
               setCommentReply('')
@@ -76,11 +76,6 @@ function PostComments({ comment, user, setComments, postId }) {
           >
             <Form.Input
               autoFocus
-              onBlur={() => {
-                setTimeout(() => {
-                  if (!loading) setShowReply(false)
-                }, 50)
-              }}
               action={{
                 color: 'teal',
                 compact: true,

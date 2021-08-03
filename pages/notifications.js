@@ -9,6 +9,7 @@ import LikeNotification from '../components/Notifications/LikeNotification'
 import CommentNotification from '../components/Notifications/CommentNotification'
 import FollowerNotification from '../components/Notifications/FollowerNotification'
 import ReplyNotification from '../components/Notifications/ReplyNotification'
+import FollowRequestNotification from '../components/Notifications/FollowRequestNotification'
 
 function Notifications({ notifications, userFollowStats }) {
   const [notifs, setNotifs] = useState(notifications)
@@ -24,7 +25,7 @@ function Notifications({ notifications, userFollowStats }) {
           { headers: { Authorization: cookie.get('token') } }
         )
       } catch (error) {
-        window.alert(error)
+        alert(error)
       }
     }
 
@@ -36,9 +37,9 @@ function Notifications({ notifications, userFollowStats }) {
       await axios.delete(`${baseUrl}/api/notifications`, {
         headers: { Authorization: cookie.get('token') }
       })
-      setNotifs([])
+      setNotifs((prev) => prev.filter((n) => n.type === 'newFollowRequest'))
     } catch (error) {
-      window.alert(error)
+      alert(error)
     }
   }
 
@@ -92,22 +93,34 @@ function Notifications({ notifications, userFollowStats }) {
                         setUserFollowStats={setUserFollowStats}
                       />
                     )
+                  else if (notification.type === 'newFollowRequest')
+                    return (
+                      <FollowRequestNotification
+                        key={notification._id}
+                        notification={notification}
+                        loggedUserFollowStats={loggedUserFollowStats}
+                        setUserFollowStats={setUserFollowStats}
+                        setNotifs={setNotifs}
+                      />
+                    )
                 })}
               </Feed>
-              <Button
-                disabled={deleting}
-                inverted
-                size="small"
-                compact
-                icon="delete"
-                color="red"
-                content="Clear all"
-                onClick={async () => {
-                  setDeleting(true)
-                  await clearNotifications()
-                  setDeleting(false)
-                }}
-              />
+              {notifs.filter((n) => n.type !== 'newFollowRequest').length > 0 && (
+                <Button
+                  disabled={deleting}
+                  inverted
+                  size="small"
+                  compact
+                  icon="delete"
+                  color="red"
+                  content="Clear all"
+                  onClick={async () => {
+                    setDeleting(true)
+                    await clearNotifications()
+                    setDeleting(false)
+                  }}
+                />
+              )}
             </div>
           </Segment>
         ) : (

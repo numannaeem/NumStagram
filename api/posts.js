@@ -16,23 +16,18 @@ const {
 
 //TEST ROUTE
 
-// router.post('/test', async (req, res) => {
-//   try {
-//     PostModel.updateMany(
-//       { 'comments.$[].replies': { $exists: false } },
-//       {
-//         $set: {
-//           'comments.$[].replies': []
-//         }
-//       },
-//       { upsert: true }
-//     )
-//     return res.status(200).send('Success')
-//   } catch (error) {
-//     console.error(error)
-//     return res.status(500).send('Server Error')
-//   }
-// })
+router.put('/test', async (req, res) => {
+  try {
+    UserModel.updateMany({ private: { $exists: false } }, { private: true })
+    const doc = await UserModel.findOne({ name: 'admin' })
+    doc.private = false
+    await doc.save()
+    return res.status(200).send(doc)
+  } catch (error) {
+    console.error(error)
+    return res.status(500).send('Server Error')
+  }
+})
 
 // CREATE A POST
 
