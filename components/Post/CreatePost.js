@@ -12,6 +12,7 @@ import {
 } from 'semantic-ui-react'
 import uploadPic from '../../utils/uploadPicToCloudinary'
 import { submitNewPost } from '../../utils/postActions'
+import Moment from 'react-moment'
 
 function CreatePost({ user, setPosts }) {
   const [newPost, setNewPost] = useState({ text: '', location: '' })
@@ -97,11 +98,30 @@ function CreatePost({ user, setPosts }) {
 
   return (
     <>
+      <div
+        style={{
+          marginBottom: '1rem',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        <Image src={user.profilePicUrl} circular avatar />
+        <big>
+          Hi, {user.username} | <Moment interval={1000} format="hh:mm A" />
+        </big>
+        <Icon
+          size="large"
+          color="grey"
+          style={{ cursor: 'pointer' }}
+          name={`angle ${touched ? 'up' : 'down'}`}
+          onClick={() => setTouched((prev) => !prev)}
+        />
+      </div>
       <Form error={error !== null} onSubmit={handleSubmit}>
         <Message error onDismiss={() => setError(null)} content={error} header="Oops!" />
 
         <Form.Group>
-          <Image src={user.profilePicUrl} circular avatar inline />
           <Form.TextArea
             placeholder="What's happening?"
             name="text"
@@ -235,13 +255,6 @@ function CreatePost({ user, setPosts }) {
           </Button.Group>
         </div>
         <br />
-        <Icon
-          size="large"
-          color="grey"
-          style={{ width: '100%', cursor: 'pointer' }}
-          name={`angle ${touched ? 'up' : 'down'}`}
-          onClick={() => setTouched((prev) => !prev)}
-        />
       </Form>
     </>
   )

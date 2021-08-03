@@ -13,11 +13,12 @@ function Chat({ chat, connectedUsers, deleteChat }) {
   return (
     <List.Item
       active={router.query.message === chat.messagesWith}
-      onClick={() =>
+      onClick={(e) => {
+        e.stopPropagation()
         router.push(`/messages?message=${chat.messagesWith}`, undefined, {
           shallow: true
         })
-      }
+      }}
     >
       <Comment>
         <Comment.Avatar src={chat.profilePicUrl} />
@@ -26,26 +27,28 @@ function Chat({ chat, connectedUsers, deleteChat }) {
             {chat.name} {isOnline && <Icon name="circle" size="small" color="green" />}
           </Comment.Author>
 
-          <Comment.Metadata>
+          <Comment.Metadata
+            style={{
+              marginLeft: '0',
+              display: 'flex',
+              justifyContent: 'space-between',
+              paddingRight: '5px'
+            }}
+          >
             <div>{chat.date && calculateTime(chat.date)}</div>
+
             <div
-              style={{
-                position: 'absolute',
-                right: '10px',
-                bottom: '2px',
-                cursor: 'pointer'
+              onClick={(e) => {
+                e.stopPropagation()
+                deleteChat(chat.messagesWith)
               }}
             >
-              <Icon
-                name="trash alternate"
-                color="red"
-                onClick={() => deleteChat(chat.messagesWith)}
-              />
+              <Icon name="trash alternate" color="red" />
             </div>
           </Comment.Metadata>
 
           <Comment.Text>
-            {chat.lastMessage.length > 20
+            {chat.lastMessage && chat.lastMessage?.length > 20
               ? `${chat.lastMessage.substring(0, 20)}...`
               : chat.lastMessage}
           </Comment.Text>

@@ -168,23 +168,18 @@ function CardPost({ post, user, setPosts, setShowToastr }) {
               />
               <Transition.Group animation="fade" duration={300}>
                 {showHeart && (
-                  <Icon.Group
+                  <Icon
                     size="huge"
                     style={{
                       position: 'absolute',
                       top: '50%',
                       left: '50%',
-                      transform: 'translateX(-50%) translateY(-50%)'
+                      transform: 'translateX(-50%) translateY(-50%)',
+                      filter: 'drop-shadow(0 0 20px black)'
                     }}
-                  >
-                    <Icon
-                      color="teal"
-                      name="heart"
-                      style={{
-                        filter: 'drop-shadow(0 0 20px #6ed4db)'
-                      }}
-                    />
-                  </Icon.Group>
+                    color="teal"
+                    name="heart"
+                  />
                 )}
               </Transition.Group>
             </div>

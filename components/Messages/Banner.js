@@ -2,14 +2,18 @@ import React from 'react'
 import { Segment, Grid, Image, Icon } from 'semantic-ui-react'
 import Link from 'next/link'
 
-function Banner({ bannerData }) {
+function Banner({ bannerData, isMobile }) {
   const { username, name, profilePicUrl, online } = bannerData
-
   return (
     <Segment color="teal" attached="top">
       <Grid>
-        <Grid.Column floated="left" width={14}>
-          <Image avatar src={profilePicUrl} />
+        <Grid.Column>
+          {isMobile && (
+            <Link shallow={true} href="/messages" style={{ color: 'black' }}>
+              <Icon size="large" name="angle left" />
+            </Link>
+          )}
+          <Image href={`/${username}`} avatar src={profilePicUrl} />
           <Link href={`/${username}`}>
             <b style={{ cursor: 'pointer' }}>{name}</b>
           </Link>{' '}

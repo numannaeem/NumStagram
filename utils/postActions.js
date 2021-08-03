@@ -61,7 +61,8 @@ export const postComment = async (postId, user, text, setComments, setText) => {
       _id: res.data,
       user,
       text,
-      date: Date.now()
+      date: Date.now(),
+      replies: []
     }
 
     setComments((prev) => [newComment, ...prev])

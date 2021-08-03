@@ -18,7 +18,7 @@ import cookie from 'js-cookie'
 const scrollDivToBottom = (divRef) =>
   divRef.current?.scrollIntoView({ behaviour: 'smooth' })
 
-function Messages({ chatsData, user }) {
+function Messages({ chatsData, user, isMobile }) {
   const [chats, setChats] = useState(chatsData)
   const router = useRouter()
 
@@ -67,7 +67,7 @@ function Messages({ chatsData, user }) {
             )
             previousChat.lastMessage = newMsg.msg
             previousChat.date = newMsg.date
-
+            prev.sort((a, b) => new Date(b.date) - new Date(a.date))
             return [...prev]
           })
         }
@@ -137,7 +137,7 @@ function Messages({ chatsData, user }) {
         }))
       })
 
-      if (chats.length > 0 && !router.query.message) {
+      if (!isMobile && chats.length > 0 && !router.query.message) {
         router.push(`/messages?message=${chats[0].messagesWith}`, undefined, {
           shallow: true
         })
@@ -218,7 +218,7 @@ function Messages({ chatsData, user }) {
     if (socket.current && router.query.message) loadMessages()
   }, [router.query.message])
 
-  return (
+  return !isMobile ? (
     <>
       <Segment padded basic size="large" style={{ marginTop: '5px' }}>
         <a href="/">
@@ -229,7 +229,7 @@ function Messages({ chatsData, user }) {
         {chats?.length ? (
           <>
             <Grid stackable columns={2}>
-              <Grid.Column stretched width={5}>
+              <Grid.Column stretched width={6}>
                 <Segment
                   style={{ backgroundColor: '#39a09c73', border: '2px solid teal' }}
                 >
@@ -260,9 +260,12 @@ function Messages({ chatsData, user }) {
                 </Segment>
               </Grid.Column>
 
-              <Grid.Column width={11}>
+              <Grid.Column width={10}>
                 {router.query.message && (
                   <>
+                    <div>
+                      <Banner bannerData={bannerData} />
+                    </div>
                     <div
                       style={{
                         padding: '0 2px',
@@ -274,10 +277,6 @@ function Messages({ chatsData, user }) {
                         backgroundColor: 'whitesmoke'
                       }}
                     >
-                      <div style={{ position: 'sticky', top: '0' }}>
-                        <Banner bannerData={bannerData} />
-                      </div>
-
                       {messages.length > 0 &&
                         messages.map((message, i) => (
                           <Message
@@ -307,6 +306,103 @@ function Messages({ chatsData, user }) {
         )}
       </Segment>
     </>
+  ) : (
+    <>
+      {!router.query.message ? (
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            margin: '0',
+            width: '100vw',
+            height: '100vh',
+            backgroundColor: '#39a09c73',
+            border: '2px solid teal',
+            padding: '1rem',
+            overflow: 'hidden'
+          }}
+        >
+          <div style={{ marginBottom: '1rem' }}>
+            <Header
+              size="medium"
+              name="angle left"
+              content="Go Home"
+              icon="angle left"
+              as="a"
+              href="/"
+            />
+          </div>
+          {chats?.length ? (
+            <>
+              <ChatListSearch user={user} chats={chats} setChats={setChats} />
+              <div
+                style={{
+                  flexGrow: '1',
+                  border: '2px solid teal',
+                  marginTop: '1rem',
+                  backgroundColor: 'white',
+                  overflow: 'auto'
+                }}
+              >
+                <Comment.Group>
+                  <Segment basic>
+                    <List divided selection>
+                      {chats.map((chat, i) => (
+                        <Chat
+                          key={i}
+                          chat={chat}
+                          connectedUsers={connectedUsers}
+                          deleteChat={deleteChat}
+                        />
+                      ))}
+                    </List>
+                  </Segment>
+                </Comment.Group>
+              </div>
+            </>
+          ) : (
+            <>
+              <NoMessages />
+              <div style={{ marginBottom: '10px', maxWidth: '500px' }}>
+                <ChatListSearch user={user} chats={chats} setChats={setChats} />
+              </div>
+            </>
+          )}
+        </div>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+          <div style={{ position: 'sticky', top: '0' }}>
+            <Banner isMobile bannerData={bannerData} />
+          </div>
+          <div
+            style={{
+              flexGrow: '2',
+              padding: '0 2px',
+              width: '100%',
+              overflow: 'auto',
+              overflowX: 'hidden',
+              backgroundColor: 'whitesmoke'
+            }}
+          >
+            {messages.length > 0 &&
+              messages.map((message, i) => (
+                <Message
+                  divRef={divRef}
+                  key={i}
+                  bannerProfilePic={bannerData.profilePicUrl}
+                  message={message}
+                  user={user}
+                  deleteMsg={deleteMsg}
+                />
+              ))}
+          </div>
+
+          <div style={{ position: 'sticky', bottom: '0' }}>
+            <MessageInputField sendMsg={sendMsg} />
+          </div>
+        </div>
+      )}
+    </>
   )
 }
 
@@ -317,6 +413,8 @@ Messages.getInitialProps = async (ctx) => {
     const res = await axios.get(`${baseUrl}/api/chats`, {
       headers: { Authorization: token }
     })
+    const chats = res.data
+    chats.sort((a, b) => new Date(b.date) - new Date(a.date))
 
     return { chatsData: res.data }
   } catch (error) {
