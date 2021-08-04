@@ -14,6 +14,7 @@ const UserSchema = new Schema(
     profilePicUrl: { type: String },
 
     newMessagePopup: { type: Boolean, default: true },
+    newMessageSound: { type: Boolean, default: true },
 
     unreadMessage: { type: Boolean, default: false },
 

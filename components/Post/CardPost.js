@@ -144,7 +144,7 @@ function CardPost({ post, user, setPosts, setShowToastr }) {
                     prevent = true
                     if (!isLiked) {
                       setShowHeart(true)
-                      setTimeout(() => setShowHeart(false), 400)
+                      setTimeout(() => setShowHeart(false), 500)
                     }
                     setLiking(true)
                     await likePost(post._id, user._id, setLikes, isLiked ? false : true)
@@ -166,7 +166,7 @@ function CardPost({ post, user, setPosts, setShowToastr }) {
                   }, delay)
                 }}
               />
-              <Transition.Group animation="fade" duration={300}>
+              <Transition.Group animation="fade" duration={500}>
                 {showHeart && (
                   <Icon
                     size="huge"

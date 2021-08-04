@@ -1,60 +1,32 @@
-import React from 'react'
-import { Segment, Header, Icon, List, Image, Divider, Button } from 'semantic-ui-react'
-import { calculateDays } from '../../utils/calculateTime'
-import { useRouter } from 'next/router'
+import React, { useState } from 'react'
+import { Segment, Header, Icon, List, Divider } from 'semantic-ui-react'
+import NewUser from './NewUser'
 
-function NewUsers({ newUsers }) {
-  const router = useRouter()
+function NewUsers({ newUsers, user, userFollowStats }) {
+  const [loggedUserFollowStats, setUserFollowStats] = useState(userFollowStats)
+
   return (
     <Segment raised style={{ height: '80vh', overflow: 'auto' }}>
-      <Header icon textAlign="center" style={{ color: 'teal' }}>
+      <Header style={{ color: 'teal' }}>
         <Icon name="users" />
         <Header.Content>
           New to NumStagram
-          <Header.Subheader as="h6">
-            Users who have joined within the last week
-          </Header.Subheader>
+          <Header.Subheader>Say hello!</Header.Subheader>
         </Header.Content>
       </Header>
-      <Divider />
+      <Divider style={{ marginBottom: '0' }} />
       {newUsers?.length ? (
         <List size="large" selection verticalAlign="middle">
-          {newUsers.map((u) => (
-            <>
-              <List.Item
-                key={u._id}
-                title="View Profile"
-                style={{ cursor: 'pointer' }}
-                onClick={() => {
-                  router.push(`/${u.username}`, undefined, { shallow: true })
-                }}
-              >
-                <Image src={u.profilePicUrl} avatar />
-                <List.Content>
-                  <List.Header as="a" content={u.name} />
-                  <List.Description>Joined {calculateDays(u.createdAt)}</List.Description>
-                </List.Content>
-                {/* <List.Content style={{ marginTop: '0.5rem' }}>
-                  <Button
-                    icon="add user"
-                    color="blue"
-                    compact
-                    size="small"
-                    content="Follow"
-                    onClick={(e) => e.stopPropagation()}
-                  />
-                  <Button
-                    onClick={(e) => e.stopPropagation()}
-                    icon="comment outline"
-                    color="teal"
-                    compact
-                    size="small"
-                    content="Message"
-                  />
-                </List.Content> */}
-              </List.Item>
-            </>
-          ))}
+          {newUsers
+            .filter((u) => u._id !== user?._id)
+            .map((u) => (
+              <NewUser
+                user={u}
+                loggedUser={user}
+                setUserFollowStats={setUserFollowStats}
+                loggedUserFollowStats={loggedUserFollowStats}
+              />
+            ))}
         </List>
       ) : (
         <p style={{ textAlign: 'center', color: 'gray' }}>

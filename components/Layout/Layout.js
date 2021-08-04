@@ -22,7 +22,7 @@ const appMedia = createMedia({
 const mediaStyles = appMedia.createMediaStyle()
 const { Media, MediaContextProvider } = appMedia
 
-function Layout({ children, user, newUsers }) {
+function Layout({ children, user, newUsers, userFollowStats }) {
   const contextRef = createRef()
   const router = useRouter()
 
@@ -49,7 +49,7 @@ function Layout({ children, user, newUsers }) {
                           <SideMenu user={user} pc />
                         </Sticky>
                       </Grid.Column>
-                      <Grid.Column style={{ zIndex: '999', paddingRight: '0' }} width={9}>
+                      <Grid.Column style={{ zIndex: '999', paddingRight: '0' }} width={8}>
                         <Visibility context={contextRef}>{children}</Visibility>
                       </Grid.Column>
                       <Grid.Column
@@ -57,11 +57,15 @@ function Layout({ children, user, newUsers }) {
                           backgroundImage: 'linear-gradient(#d6fff0, white)',
                           paddingLeft: '0'
                         }}
-                        width={4}
+                        width={5}
                       >
                         <Sticky context={contextRef}>
                           <Segment basic>
-                            <Search newUsers={newUsers} />
+                            <Search
+                              user={user}
+                              newUsers={newUsers}
+                              userFollowStats={userFollowStats}
+                            />
                           </Segment>
                         </Sticky>
                       </Grid.Column>

@@ -73,29 +73,39 @@ export const profileUpdate = async (profile, setLoading, setError, profilePicUrl
       youtube,
       profilePicUrl
     })
-    setLoading(false)
     Router.reload()
+    setLoading(false)
   } catch (error) {
     setError(catchErrors(error))
     setLoading(false)
   }
 }
 
-export const passwordUpdate = async (setSuccess, userPasswords) => {
+export const passwordUpdate = async (toast, userPasswords) => {
   try {
     const { currentPassword, newPassword } = userPasswords
     await Axios.post('/settings/password', { currentPassword, newPassword })
-    setSuccess(true)
+    toast.success('Password updated!')
   } catch (error) {
     throw error
   }
 }
 
-export const toggleMessagePopup = async (popupSetting, setPopupSetting, setSuccess) => {
+export const toggleMessagePopup = async (popupSetting, setPopupSetting, toast) => {
   try {
     await Axios.post(`/settings/messagePopup`)
     setPopupSetting(!popupSetting)
-    setSuccess(true)
+    toast.success('Successfully updated!')
+  } catch (error) {
+    throw error
+  }
+}
+
+export const toggleMessageSound = async (setSoundSetting, toast) => {
+  try {
+    await Axios.post(`/settings/messageSound`)
+    setSoundSetting((prev) => !prev)
+    toast.success('Successfully updated!')
   } catch (error) {
     throw error
   }

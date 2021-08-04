@@ -93,6 +93,7 @@ function UpdateProfile({ Profile }) {
         )}
 
         <CommonInputs
+          update
           user={profile}
           handleChange={handleChange}
           showSocialLinks={showSocialLinks}

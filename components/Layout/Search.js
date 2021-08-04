@@ -7,7 +7,7 @@ import baseUrl from '../../utils/baseUrl'
 import NewUsers from '../Common/NewUsers'
 let cancel
 
-function SearchComponent({ autofocus, size, newUsers }) {
+function SearchComponent({ user, autofocus, size, newUsers, userFollowStats }) {
   const [text, setText] = useState('')
   const [loading, setLoading] = useState(false)
   const [results, setResults] = useState([])
@@ -86,8 +86,8 @@ function SearchComponent({ autofocus, size, newUsers }) {
         minCharacters={2}
         onResultSelect={(e, data) => Router.push(`/${data.result.username}`)}
       />
-      <Divider />
-      <NewUsers newUsers={newUsers} />
+      <Divider hidden />
+      <NewUsers user={user} newUsers={newUsers} userFollowStats={userFollowStats} />
     </>
   )
 }

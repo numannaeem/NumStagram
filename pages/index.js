@@ -47,7 +47,7 @@ function Index({ user, postsData, errorLoading }) {
           })
           showNewMessageModal(true)
         }
-        newMsgSound(name)
+        newMsgSound(name, user.newMessageSound)
       })
     }
 

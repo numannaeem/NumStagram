@@ -21,7 +21,9 @@ const calculateTime = (createdAt) => {
 }
 
 export const calculateDays = (date) => {
-  let days = (Date.now() - new Date(date)) / (1000 * 60 * 60 * 24)
+  let days =
+    (new Date(new Date().toDateString()) - new Date(new Date(date).toDateString())) /
+    (1000 * 60 * 60 * 24)
   days = Math.round(days)
   if (days === 0) {
     return 'today'

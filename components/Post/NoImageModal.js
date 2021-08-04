@@ -57,7 +57,7 @@ function NoImageModal({ post, user, setLikes, likes, isLiked, comments, setComme
         <div
           style={{
             overflow: 'auto',
-            height: '200px',
+            height: '250px',
             marginBottom: '8px'
           }}
         >

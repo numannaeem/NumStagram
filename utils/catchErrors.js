@@ -1,27 +1,27 @@
-const catchErrors = error => {
-  let errorMsg = null;
+const catchErrors = (error) => {
+  let errorMsg = null
 
   if (error.response) {
     // If the request was made and the server not responded with a status code in the range of 2xx
 
-    errorMsg = error.response.data;
+    errorMsg = error.response.data
 
-    console.error(errorMsg);
+    console.error(errorMsg)
   } else if (error.request) {
     // if the request was made and no response was recevied from server
-    errorMsg = error.request;
+    errorMsg = error.request
 
-    console.error(errorMsg);
+    console.error(errorMsg)
   } else {
     // if something else happened while making the request
-    errorMsg = error.message;
+    errorMsg = error.message
 
-    console.error(errorMsg);
+    console.error(errorMsg)
   }
   if (!errorMsg) {
-    errorMsg = "Something went wrong"
+    errorMsg = 'Something went wrong'
   }
-  return errorMsg;
-};
+  return errorMsg
+}
 
-export default catchErrors;
+export default catchErrors

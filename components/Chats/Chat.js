@@ -43,7 +43,7 @@ function Chat({ chat, connectedUsers, deleteChat }) {
                 deleteChat(chat.messagesWith)
               }}
             >
-              <Icon name="trash alternate" color="red" />
+              <Icon name="trash alternate" color="red" size="large" />
             </div>
           </Comment.Metadata>
 

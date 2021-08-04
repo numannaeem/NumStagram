@@ -48,6 +48,11 @@ function ProfilePage({
 
   const ownAccount = profile.user._id === user._id
   useEffect(() => {
+    setPrivateAcc(true)
+    setPosts([])
+    setFollowRequestSent(
+      Boolean(user.followRequestsSent?.filter((r) => r === profile.user._id).length)
+    )
     setActiveItem('profile')
     const getPosts = async () => {
       setLoading(true)
@@ -146,7 +151,10 @@ function ProfilePage({
             {activeItem === 'updateProfile' && <UpdateProfile Profile={profile} />}
 
             {activeItem === 'settings' && (
-              <Settings newMessagePopup={user.newMessagePopup} />
+              <Settings
+                newMessageSound={user.newMessageSound}
+                newMessagePopup={user.newMessagePopup}
+              />
             )}
           </Grid.Column>
         </Grid.Row>

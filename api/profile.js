@@ -339,6 +339,19 @@ router.post('/settings/messagePopup', authMiddleware, async (req, res) => {
   }
 })
 
+//Update message sound settings
+router.post('/settings/messageSound', authMiddleware, async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.userId)
+    user.newMessageSound = user.newMessageSound ? false : true
+    await user.save()
+    res.status(200).send('Success')
+  } catch (error) {
+    console.error(error)
+    return res.status(500).send('Server error')
+  }
+})
+
 //DELETE the user
 router.post('/delete', authMiddleware, async (req, res) => {
   try {

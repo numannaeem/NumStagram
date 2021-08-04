@@ -107,12 +107,7 @@ function CreatePost({ user, setPosts }) {
         }}
         onClick={() => setTouched((prev) => !prev)}
       >
-        <Image
-          style={{ marginRight: '0.4rem' }}
-          src={user.profilePicUrl}
-          circular
-          avatar
-        />
+        <Image style={{ marginRight: '0.4rem' }} src={user.profilePicUrl} avatar />
         <big>
           Hi, {user.username} | <Moment interval={1000} format="hh:mm A" />
         </big>

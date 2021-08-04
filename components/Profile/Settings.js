@@ -1,47 +1,74 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import { List, Divider, Message, Checkbox, Form, Button } from 'semantic-ui-react'
 import catchErrors from '../../utils/catchErrors'
 import {
   deleteAccount,
   passwordUpdate,
-  toggleMessagePopup
+  toggleMessagePopup,
+  toggleMessageSound
 } from '../../utils/profileActions'
+import { ToastContainer, toast } from 'react-toastify'
 
-function Settings({ newMessagePopup }) {
+function Settings({ newMessagePopup, newMessageSound }) {
   const [passwordFields, showPasswordFields] = useState(false)
   const [showDeleteButton, setShowDeleteButton] = useState(false)
 
   const [popupSetting, setPopupSetting] = useState(newMessagePopup)
-
-  const [success, setSuccess] = useState(false)
-  const [popupError, setPopupError] = useState(null)
-
-  useEffect(() => {
-    success && setTimeout(() => setSuccess(false), 3000)
-  }, [success])
-
-  useEffect(() => {
-    popupError && setTimeout(() => setPopupError(null), 3000)
-  }, [popupError])
+  const [soundSetting, setSoundSetting] = useState(newMessageSound)
 
   return (
     <>
-      {success && (
-        <>
-          <Message success icon="check circle" header="Updated Successfully" />
-          <Divider hidden />
-        </>
-      )}
-      {popupError && (
-        <>
-          <Message icon="meh" error header="Oops!" content={popupError} />
-          <Divider hidden />
-        </>
-      )}
-
-      <List size="huge">
+      <List size="big">
         <List.Item>
-          <List.Icon name="user secret" size="large" verticalAlign="middle" />
+          <List.Content>
+            <List.Header style={{ color: 'black' }} content="Show 'New Message' pop-up" />
+          </List.Content>
+
+          <div style={{ marginTop: '10px', color: 'gray', fontSize: '80%' }}>
+            Control whether a pop-up should appear when you recieve a new message.
+            <br />
+            <br />
+            <Checkbox
+              checked={popupSetting}
+              slider
+              onChange={() => {
+                try {
+                  toggleMessagePopup(popupSetting, setPopupSetting, toast)
+                } catch (error) {
+                  toast.error(catchErrors(error))
+                }
+              }}
+            />
+          </div>
+        </List.Item>
+        <Divider />
+
+        <List.Item>
+          <List.Content>
+            <List.Header style={{ color: 'black' }} content="Play a bell sound" />
+          </List.Content>
+
+          <div style={{ marginTop: '10px', color: 'gray', fontSize: '80%' }}>
+            Control whether a bell sound should be played when you recieve a new message.
+            <br />
+            <br />
+            <Checkbox
+              checked={soundSetting}
+              slider
+              onChange={() => {
+                try {
+                  toggleMessageSound(setSoundSetting, toast)
+                } catch (error) {
+                  toast.error(catchErrors(error))
+                }
+              }}
+            />
+          </div>
+        </List.Item>
+
+        <Divider />
+        <List.Item>
+          <List.Icon name="unlock alternate" size="large" verticalAlign="middle" />
           <List.Content>
             <List.Header
               onClick={() => {
@@ -54,39 +81,9 @@ function Settings({ newMessagePopup }) {
           </List.Content>
 
           {passwordFields && (
-            <UpdatePassword
-              setSuccess={setSuccess}
-              showPasswordFields={showPasswordFields}
-            />
+            <UpdatePassword setSuccess={toast} showPasswordFields={showPasswordFields} />
           )}
         </List.Item>
-        <Divider />
-
-        <List.Item>
-          <List.Icon name="paper plane outline" size="large" verticalAlign="middle" />
-
-          <List.Content>
-            <List.Header style={{ color: '#4183c4' }} content="Show New Message Popup?" />
-          </List.Content>
-
-          <div style={{ marginTop: '10px' }}>
-            Control whether a pop-up should appear when you recieve a new message.
-            <br />
-            <br />
-            <Checkbox
-              checked={popupSetting}
-              toggle
-              onChange={() => {
-                try {
-                  toggleMessagePopup(popupSetting, setPopupSetting, setSuccess)
-                } catch (error) {
-                  setPopupError(catchErrors(error))
-                }
-              }}
-            />
-          </div>
-        </List.Item>
-
         <Divider />
         <List.Item>
           <List.Icon color="red" name="trash" size="large" verticalAlign="middle" />
@@ -106,6 +103,17 @@ function Settings({ newMessagePopup }) {
           )}
         </List.Item>
       </List>
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover={false}
+      />
     </>
   )
 }
@@ -177,7 +185,7 @@ const DeleteAccount = ({ setShowDeleteButton }) => {
   )
 }
 
-const UpdatePassword = ({ setSuccess, showPasswordFields }) => {
+const UpdatePassword = ({ toast, showPasswordFields }) => {
   const [loading, setLoading] = useState(false)
   const [errorMsg, setError] = useState(null)
 
@@ -212,7 +220,7 @@ const UpdatePassword = ({ setSuccess, showPasswordFields }) => {
           e.preventDefault()
           setLoading(true)
           try {
-            await passwordUpdate(setSuccess, userPasswords)
+            await passwordUpdate(toast, userPasswords)
             showPasswordFields(false)
           } catch (error) {
             setError(catchErrors(error))

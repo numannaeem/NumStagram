@@ -71,11 +71,18 @@ function Messages({ chatsData, user, isMobile }) {
       socket.current.on('msgSent', ({ newMsg }) => {
         if (newMsg.receiver === openChatId.current) {
           setMessages((prev) => [...prev, newMsg])
-
           setChats((prev) => {
-            const previousChat = prev.find(
-              (chat) => chat.messagesWith === newMsg.receiver
-            )
+            let previousChat = prev.find((chat) => chat.messagesWith === newMsg.receiver)
+            if (!previousChat) {
+              previousChat = {
+                messagesWith: newMsg.reciever,
+                name: bannerData.name,
+                profilePicUrl: bannerData.profilePicUrl,
+                lastMessage: newMsg.msg,
+                date: newMsg.date
+              }
+              return [previousChat, ...prev]
+            }
             previousChat.lastMessage = newMsg.msg
             previousChat.date = newMsg.date
             prev.sort((a, b) => new Date(b.date) - new Date(a.date))
@@ -132,7 +139,7 @@ function Messages({ chatsData, user, isMobile }) {
           }
         }
 
-        newMsgSound(senderName)
+        newMsgSound(senderName, user.newMessageSound)
       })
     }
   }, [])
@@ -200,6 +207,8 @@ function Messages({ chatsData, user, isMobile }) {
   // LOAD MESSAGES useEffect
   useEffect(() => {
     const loadMessages = () => {
+      setMessages([])
+      setBannerData({})
       socket.current.emit('loadMessages', {
         userId: user._id,
         messagesWith: router.query.message
@@ -215,6 +224,18 @@ function Messages({ chatsData, user, isMobile }) {
             connectedUsers?.filter((u) => u.userId === chat.messagesWith._id).length
           )
         })
+        if (
+          !Boolean(chats.filter((c) => c.messagesWith === chat.messagesWith._id).length)
+        ) {
+          const newChat = {
+            messagesWith: chat.messagesWith._id,
+            name: chat.messagesWith.name,
+            profilePicUrl: chat.messagesWith.profilePicUrl,
+            lastMessage: '',
+            date: Date.now()
+          }
+          setChats((prev) => [newChat, ...prev])
+        }
 
         openChatId.current = chat.messagesWith._id
         divRef.current && scrollDivToBottom(divRef)
@@ -222,7 +243,7 @@ function Messages({ chatsData, user, isMobile }) {
       })
 
       socket.current.on('noChatFound', () => {
-        window.alert('No such user found!')
+        alert('No such user found!')
       })
     }
 
@@ -231,7 +252,7 @@ function Messages({ chatsData, user, isMobile }) {
 
   return !isMobile ? (
     <>
-      <Segment padded basic size="large">
+      <Segment style={{ paddingBottom: '0' }} padded basic size="large">
         <Link shallow={true} href="/">
           <div
             style={{
@@ -330,7 +351,7 @@ function Messages({ chatsData, user, isMobile }) {
     </>
   ) : (
     <>
-      {!router.query.message && (
+      {(!router.query.message || !messages.length) && (
         <div
           style={{
             display: 'flex',
@@ -399,7 +420,7 @@ function Messages({ chatsData, user, isMobile }) {
         </div>
       )}
       <Transition.Group animation="fade right" duration={400}>
-        {Boolean(router.query.message) && (
+        {Boolean(router.query.message && messages.length) && (
           <Container id="chat-container">
             <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
               <div style={{ position: 'sticky', top: '0' }}>

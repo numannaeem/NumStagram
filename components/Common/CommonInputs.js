@@ -2,6 +2,7 @@ import React from 'react'
 import { Form, Button, Message, TextArea } from 'semantic-ui-react'
 
 function CommonInputs({
+  update,
   user: { bio, facebook, instagram, youtube, twitter },
   handleChange,
   showSocialLinks,
@@ -18,7 +19,7 @@ function CommonInputs({
       />
 
       <Button
-        content="Add Social Links"
+        content={`${update ? 'Update' : 'Add'} Social Links`}
         icon={showSocialLinks ? 'caret up' : 'caret down'}
         basic
         type="button"

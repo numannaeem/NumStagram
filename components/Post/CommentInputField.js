@@ -20,7 +20,7 @@ function CommentInputField({ postId, user, setComments }) {
     >
       <Form.Input
         value={text}
-        onChange={(e) => setText(e.target.value)}
+        onChange={(e) => setText(e.target.value.trimStart())}
         placeholder="Add Comment"
         action={{
           color: 'blue',

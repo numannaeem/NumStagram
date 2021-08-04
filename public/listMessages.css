@@ -65,4 +65,8 @@ span.other {
   .otherBubble {
     margin: 2px 6px;
   }
+  span.own,
+  span.other {
+    margin: 6px 0;
+  }
 }

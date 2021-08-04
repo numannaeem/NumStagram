@@ -15,7 +15,9 @@ router.get('/', authMiddleware, async (req, res) => {
     const userFollowStats = await FollowerModel.findOne({ user: userId })
     const newUsers = await UserModel.find({
       createdAt: { $gte: Date.now() - 7 * 60 * 60 * 24 * 1000 }
-    }).sort({ createdAt: -1 })
+    })
+      .limit(10)
+      .sort({ createdAt: -1 })
 
     return res.status(200).json({ user, userFollowStats, newUsers })
   } catch (error) {

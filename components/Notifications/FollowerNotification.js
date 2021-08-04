@@ -52,7 +52,7 @@ function FollowerNotification({
               isFollowing
                 ? 'Following'
                 : followRequestSent
-                ? 'Follow request sent'
+                ? 'Requested'
                 : privateAcc
                 ? 'Send follow request'
                 : 'Follow'
