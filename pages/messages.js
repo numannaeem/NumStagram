@@ -4,7 +4,7 @@ import axios from 'axios'
 import baseUrl from '../utils/baseUrl'
 import { parseCookies } from 'nookies'
 import { useRouter } from 'next/router'
-import { Segment, Header, Divider, Comment, Grid, List } from 'semantic-ui-react'
+import { Segment, Header, Divider, Comment, Grid, List, Icon } from 'semantic-ui-react'
 import Chat from '../components/Chats/Chat'
 import ChatListSearch from '../components/Chats/ChatListSearch'
 import { NoMessages } from '../components/Layout/NoData'
@@ -14,6 +14,7 @@ import Message from '../components/Messages/Message'
 import getUserInfo from '../utils/getUserInfo'
 import newMsgSound from '../utils/newMsgSound'
 import cookie from 'js-cookie'
+import Link from 'next/link'
 
 const scrollDivToBottom = (divRef) =>
   divRef.current?.scrollIntoView({ behaviour: 'smooth' })
@@ -220,10 +221,21 @@ function Messages({ chatsData, user, isMobile }) {
 
   return !isMobile ? (
     <>
-      <Segment padded basic size="large" style={{ marginTop: '5px' }}>
-        <a href="/">
-          <Header icon="angle left" content="Go Back" style={{ cursor: 'pointer' }} />
-        </a>
+      <Segment padded basic size="large">
+        <Link shallow={true} href="/">
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              cursor: 'pointer'
+            }}
+          >
+            <Icon size="large" name="angle left" />
+            <big>
+              <b> Go home</b>
+            </big>
+          </div>
+        </Link>
         <Divider hidden />
 
         {chats?.length ? (
@@ -322,21 +334,27 @@ function Messages({ chatsData, user, isMobile }) {
             overflow: 'hidden'
           }}
         >
-          <div style={{ marginBottom: '1rem' }}>
-            <Header
-              size="medium"
-              name="angle left"
-              content="Go Home"
-              icon="angle left"
-              as="a"
-              href="/"
-            />
-          </div>
+          <Link shallow={true} href="/">
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                margin: '0.5rem 0 1rem',
+                cursor: 'pointer'
+              }}
+            >
+              <Icon size="large" name="angle left" />
+              <big>
+                <b> Go home</b>
+              </big>
+            </div>
+          </Link>
           {chats?.length ? (
             <>
               <ChatListSearch user={user} chats={chats} setChats={setChats} />
               <div
                 style={{
+                  borderRadius: '1rem',
                   flexGrow: '1',
                   border: '2px solid teal',
                   marginTop: '1rem',

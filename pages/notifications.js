@@ -11,7 +11,7 @@ import FollowerNotification from '../components/Notifications/FollowerNotificati
 import ReplyNotification from '../components/Notifications/ReplyNotification'
 import FollowRequestNotification from '../components/Notifications/FollowRequestNotification'
 
-function Notifications({ notifications, userFollowStats }) {
+function Notifications({ user, notifications, userFollowStats }) {
   const [notifs, setNotifs] = useState(notifications)
   const [loggedUserFollowStats, setUserFollowStats] = useState(userFollowStats)
   const [deleting, setDeleting] = useState(false)
@@ -78,6 +78,7 @@ function Notifications({ notifications, userFollowStats }) {
                   else if (notification.type === 'newFollower')
                     return (
                       <FollowerNotification
+                        user={user}
                         key={notification._id}
                         notification={notification}
                         loggedUserFollowStats={loggedUserFollowStats}

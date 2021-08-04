@@ -35,7 +35,8 @@ function FollowRequestNotification({
           <Button
             size="small"
             compact
-            negative
+            color="red"
+            inverted
             content={'Decline'}
             disabled={disabled}
             onClick={async () => {
@@ -46,9 +47,12 @@ function FollowRequestNotification({
             }}
           />
           <Button
+            className="mobileFollowReqBtn"
             size="small"
             compact
-            color={'twitter'}
+            color="green"
+            inverted
+            // color={'twitter'}
             content={'Accept'}
             disabled={disabled}
             onClick={async () => {

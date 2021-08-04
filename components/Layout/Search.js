@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { List, Image, Search, Segment, Divider } from 'semantic-ui-react'
 import axios from 'axios'
 import cookie from 'js-cookie'
@@ -6,10 +6,11 @@ import Router from 'next/router'
 import baseUrl from '../../utils/baseUrl'
 let cancel
 
-function SearchComponent(props) {
+function SearchComponent({ autofocus, size }) {
   const [text, setText] = useState('')
   const [loading, setLoading] = useState(false)
   const [results, setResults] = useState([])
+  let searchRef = useRef()
 
   const handleChange = async (e) => {
     const { value } = e.target
@@ -53,9 +54,14 @@ function SearchComponent(props) {
     }
   }
 
+  useEffect(() => {
+    autofocus && searchRef.current?.focus()
+  }, [])
+
   return (
     <>
       <Search
+        input={{ ref: searchRef }}
         style={{
           width: '100%',
           display: 'flex',
@@ -68,7 +74,7 @@ function SearchComponent(props) {
           loading && setLoading(false)
           setText('')
         }}
-        size={props.size || 'large'}
+        size={size || 'large'}
         fluid
         placeholder="Search away!"
         loading={loading}

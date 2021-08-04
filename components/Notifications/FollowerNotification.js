@@ -1,14 +1,20 @@
 import React, { useState } from 'react'
 import { Feed, Button, Divider } from 'semantic-ui-react'
 import calculateTime from '../../utils/calculateTime'
-import { followUser, unfollowUser } from '../../utils/profileActions'
+import { followUser, unfollowUser, sendRequest } from '../../utils/profileActions'
 
 function FollowerNotification({
+  user,
   notification,
   loggedUserFollowStats,
   setUserFollowStats
 }) {
-  const [disabled, setDisabled] = useState(false)
+  const [followLoading, setFollowLoading] = useState(false)
+
+  const [followRequestSent, setFollowRequestSent] = useState(
+    user.followRequestsSent?.filter((r) => r === notification.user._id).length > 0
+  )
+  const privateAcc = notification.user.private
 
   const isFollowing =
     loggedUserFollowStats.following.length > 0 &&
@@ -34,19 +40,34 @@ function FollowerNotification({
         <div style={{ alignSelf: 'flex-end', marginRight: '10px' }}>
           <Button
             size="small"
-            compact
-            icon={isFollowing ? 'check circle' : 'add user'}
             color={isFollowing ? 'instagram' : 'twitter'}
-            content={isFollowing ? 'Following' : 'Follow back?'}
-            disabled={disabled}
-            onClick={async () => {
-              setDisabled(true)
+            icon={
+              isFollowing
+                ? 'check circle'
+                : followRequestSent
+                ? 'clock outline'
+                : 'add user'
+            }
+            content={
+              isFollowing
+                ? 'Following'
+                : followRequestSent
+                ? 'Follow request sent'
+                : privateAcc
+                ? 'Send follow request'
+                : 'Follow'
+            }
+            disabled={followRequestSent || followLoading}
+            onClick={() => {
+              setFollowLoading(true)
 
               isFollowing
-                ? await unfollowUser(notification.user._id, setUserFollowStats)
-                : await followUser(notification.user._id, setUserFollowStats)
+                ? unfollowUser(notification.user._id, setUserFollowStats)
+                : privateAcc
+                ? sendRequest(notification.user._id, setFollowRequestSent)
+                : followUser(notification.user._id, setUserFollowStats)
 
-              setDisabled(false)
+              setFollowLoading(false)
             }}
           />
         </div>

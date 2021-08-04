@@ -51,6 +51,7 @@ router.get('/posts/:username', authMiddleware, async (req, res) => {
     }
     if (
       user.private &&
+      user._id.toString() !== userId &&
       !loggedUser.following.filter((f) => f.user.username === username).length
     ) {
       return res.status(200).send('Private account')
@@ -102,29 +103,45 @@ router.post('/follow/:userToFollowId', authMiddleware, async (req, res) => {
   const { userId } = req
   const { userToFollowId } = req.params
   try {
-    const user = await FollowerModel.findOne({ user: userId })
-    const userToFollow = await FollowerModel.findOne({ user: userToFollowId })
-    if (!user || !userToFollow) {
-      return res.status(404).send('User not found')
+    const userToFollowModel = await UserModel.findById(userToFollowId)
+    if (userToFollowModel.private) {
+      await newFollowRequestNotification(userId, userToFollowId)
+      const user = await UserModel.findById(userId)
+      if (!user.followRequestsSent) {
+        user.followRequestsSent = []
+      }
+      if (user.followRequestsSent.filter((r) => r.toString() === userToFollowId).length) {
+        return res.status(401).send('Request already sent')
+      }
+
+      await user.followRequestsSent.unshift(userToFollowId)
+      await user.save()
+      return res.status(200).send('Success')
+    } else {
+      const user = await FollowerModel.findOne({ user: userId })
+      const userToFollow = await FollowerModel.findOne({ user: userToFollowId })
+      if (!user || !userToFollow) {
+        return res.status(404).send('User not found')
+      }
+      const isFollowing =
+        user.following.length > 0 &&
+        user.following.filter((following) => following.user.toString() === userToFollowId)
+          .length > 0
+
+      if (isFollowing) {
+        return res.status(401).send('User already followed')
+      }
+
+      await user.following.unshift({ user: userToFollowId })
+      await user.save()
+
+      await userToFollow.followers.unshift({ user: userId })
+      await userToFollow.save()
+
+      await newFollowerNotification(userId, userToFollowId)
+
+      return res.status(200).send('Success')
     }
-    const isFollowing =
-      user.following.length > 0 &&
-      user.following.filter((following) => following.user.toString() === userToFollowId)
-        .length > 0
-
-    if (isFollowing) {
-      return res.status(401).send('User already followed')
-    }
-
-    await user.following.unshift({ user: userToFollowId })
-    await user.save()
-
-    await userToFollow.followers.unshift({ user: userId })
-    await userToFollow.save()
-
-    await newFollowerNotification(userId, userToFollowId)
-
-    return res.status(200).send('Success')
   } catch (error) {
     console.error(error)
     return res.status(500).send('Server Error')
@@ -173,44 +190,28 @@ router.put('/unfollow/:userToUnfollowId', authMiddleware, async (req, res) => {
   }
 })
 
-//Send Request
+// //Send Request
 
-router.post('/sendRequest/:userToSendReqId', authMiddleware, async (req, res) => {
-  const { userToSendReqId } = req.params
-  const { userId } = req
-  try {
-    await newFollowRequestNotification(userId, userToSendReqId)
-    const user = await UserModel.findById(userId)
-    if (!user.followRequestsSent) {
-      user.followRequestsSent = []
-    }
-
-    await user.followRequestsSent.unshift(userToSendReqId)
-    await user.save()
-    return res.status(200).send('Success')
-  } catch (error) {
-    return res.status(500).send('Server Error')
-  }
-})
+// router.post('/sendRequest/:userToSendReqId', authMiddleware, async (req, res) => {
+//   const { userToSendReqId } = req.params
+//   const { userId } = req
+//   try {
+//   } catch (error) {
+//     return res.status(500).send('Server Error')
+//   }
+// })
 
 router.delete('/rejectRequest/:userSentReqId', authMiddleware, async (req, res) => {
   const { userSentReqId } = req.params
   const { userId } = req
   try {
     const userSentReq = await UserModel.findById(userSentReqId)
-
-    console.log('here')
-
-    const userGotNotif = await NotificationModel.findOne({ user: userId })
-    console.log('here')
-
-    let arr = userGotNotif.notifications.filter(
+    userGotNotif.notifications = userGotNotif.notifications.filter(
       (n) => n.user.toString() !== userSentReqId && n.type === 'newFollowRequest'
     )
-    userGotNotif.notifications = arr
     await userGotNotif.save()
-    console.log('here')
 
+    const userGotNotif = await NotificationModel.findOne({ user: userId })
     const index = userSentReq.followRequestsSent.map((r) => r.toString()).indexOf(userId)
     await userSentReq.followRequestsSent.splice(index, 1)
     await userSentReq.save()
@@ -226,6 +227,16 @@ router.post('/acceptRequest/:userSentReqId', authMiddleware, async (req, res) =>
   const { userId } = req
   const { userSentReqId } = req.params
   try {
+    const userModel = await UserModel.findById(userSentReqId)
+    userModel.followRequestsSent = userModel.followRequestsSent.filter(
+      (r) => r.toString() !== userId
+    )
+    await userModel.save()
+    const userGotNotif = await NotificationModel.findOne({ user: userId })
+    userGotNotif.notifications = userGotNotif.notifications.filter(
+      (n) => n.user.toString() !== userSentReqId && n.type === 'newFollowRequest'
+    )
+    await userGotNotif.save()
     const user = await FollowerModel.findOne({ user: userId })
     const userSentReq = await FollowerModel.findOne({ user: userSentReqId })
     if (!user || !userSentReq) {
@@ -236,28 +247,14 @@ router.post('/acceptRequest/:userSentReqId', authMiddleware, async (req, res) =>
       userSentReq.following.filter((f) => f.user.toString() === userId).length > 0
 
     if (isFollowing) {
-      return res.status(401).send('Request already accepted')
+      return res.status(401).send('User already following')
     }
-    const userModel = await UserModel.findById(userSentReqId)
-    userModel.followRequestsSent = userModel.followRequestsSent.filter(
-      (r) => r.toString() !== userId
-    )
-    await userModel.save()
 
     await user.followers.unshift({ user: userSentReqId })
     await user.save()
 
     await userSentReq.following.unshift({ user: userId })
     await userSentReq.save()
-
-    const userGotNotif = await NotificationModel.findOne({ user: userId })
-    const arr = userGotNotif.notifications.filter(
-      (n) => n.user.toString() !== userSentReqId && n.type === 'newFollowRequest'
-    )
-    userGotNotif.notifications = arr
-    await userGotNotif.save()
-
-    // await newFollowerNotification(userId, userSentReqId)
 
     return res.status(200).send('Success')
   } catch (error) {

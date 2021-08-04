@@ -31,7 +31,7 @@ export const rejectRequest = async (userSentReqId) => {
 
 export const sendRequest = async (userToSendReqId, setFollowRequestSent) => {
   try {
-    await Axios.post(`/sendRequest/${userToSendReqId}`)
+    await Axios.post(`/follow/${userToSendReqId}`)
     setFollowRequestSent(true)
   } catch (error) {
     alert(catchErrors(error))

@@ -12,6 +12,7 @@ function MobileHeader({ user: { unreadNotification, email, unreadMessage, userna
     <>
       <Menu
         style={{
+          display: 'flex',
           position: 'sticky',
           top: '0',
           zIndex: '1030',
@@ -20,7 +21,7 @@ function MobileHeader({ user: { unreadNotification, email, unreadMessage, userna
         fluid
         borderless
       >
-        <Container text>
+        <Container text style={{ justifyContent: 'space-around' }}>
           <Link href="/">
             <Menu.Item header active={isActive('/')}>
               <Icon name="rss" size="large" />
@@ -47,19 +48,18 @@ function MobileHeader({ user: { unreadNotification, email, unreadMessage, userna
             </Menu.Item>
           </Link>
 
+          <Link shallow={true} href="/search">
+            <Menu.Item header active={isActive('/search')}>
+              <Icon name="search" size="large" />
+            </Menu.Item>
+          </Link>
+
           <Dropdown item icon="bars" direction="left">
             <Dropdown.Menu>
               <Link href={`/${username}`}>
                 <Dropdown.Item active={isActive(`/${username}`)}>
                   <Icon name="user" size="large" />
                   Account
-                </Dropdown.Item>
-              </Link>
-
-              <Link href="/search">
-                <Dropdown.Item active={isActive('/search')}>
-                  <Icon name="search" size="large" />
-                  Search
                 </Dropdown.Item>
               </Link>
 
