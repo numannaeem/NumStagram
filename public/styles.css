@@ -110,6 +110,14 @@ footer a:hover {
 }
 
 @media only screen and (max-width: 767px) {
+  #chat-container {
+    margin: 0 !important;
+  }
+
+  #chatsListMobile {
+    margin: 0 !important;
+  }
+
   .ui.modal .content > .image {
     margin-right: 1em !important;
     margin-bottom: 1em !important;

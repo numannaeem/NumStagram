@@ -4,7 +4,17 @@ import axios from 'axios'
 import baseUrl from '../utils/baseUrl'
 import { parseCookies } from 'nookies'
 import { useRouter } from 'next/router'
-import { Segment, Header, Divider, Comment, Grid, List, Icon } from 'semantic-ui-react'
+import {
+  Segment,
+  Header,
+  Divider,
+  Comment,
+  Grid,
+  List,
+  Icon,
+  Transition,
+  Container
+} from 'semantic-ui-react'
 import Chat from '../components/Chats/Chat'
 import ChatListSearch from '../components/Chats/ChatListSearch'
 import { NoMessages } from '../components/Layout/NoData'
@@ -284,8 +294,8 @@ function Messages({ chatsData, user, isMobile }) {
                         width: '100%',
                         overflow: 'auto',
                         overflowX: 'hidden',
-                        maxHeight: '35rem',
-                        height: '35rem',
+                        maxHeight: '32rem',
+                        height: '32rem',
                         backgroundColor: 'whitesmoke'
                       }}
                     >
@@ -320,7 +330,7 @@ function Messages({ chatsData, user, isMobile }) {
     </>
   ) : (
     <>
-      {!router.query.message ? (
+      {!router.query.message && (
         <div
           style={{
             display: 'flex',
@@ -387,39 +397,44 @@ function Messages({ chatsData, user, isMobile }) {
             </>
           )}
         </div>
-      ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-          <div style={{ position: 'sticky', top: '0' }}>
-            <Banner isMobile bannerData={bannerData} />
-          </div>
-          <div
-            style={{
-              flexGrow: '2',
-              padding: '0 2px',
-              width: '100%',
-              overflow: 'auto',
-              overflowX: 'hidden',
-              backgroundColor: 'whitesmoke'
-            }}
-          >
-            {messages.length > 0 &&
-              messages.map((message, i) => (
-                <Message
-                  divRef={divRef}
-                  key={i}
-                  bannerProfilePic={bannerData.profilePicUrl}
-                  message={message}
-                  user={user}
-                  deleteMsg={deleteMsg}
-                />
-              ))}
-          </div>
-
-          <div style={{ position: 'sticky', bottom: '0' }}>
-            <MessageInputField sendMsg={sendMsg} />
-          </div>
-        </div>
       )}
+      <Transition.Group animation="fade right" duration={400}>
+        {Boolean(router.query.message) && (
+          <Container id="chat-container">
+            <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+              <div style={{ position: 'sticky', top: '0' }}>
+                <Banner isMobile bannerData={bannerData} />
+              </div>
+              <div
+                style={{
+                  flexGrow: '2',
+                  padding: '0 2px',
+                  width: '100%',
+                  overflow: 'auto',
+                  overflowX: 'hidden',
+                  backgroundColor: 'whitesmoke'
+                }}
+              >
+                {messages.length > 0 &&
+                  messages.map((message, i) => (
+                    <Message
+                      divRef={divRef}
+                      key={i}
+                      bannerProfilePic={bannerData.profilePicUrl}
+                      message={message}
+                      user={user}
+                      deleteMsg={deleteMsg}
+                    />
+                  ))}
+              </div>
+
+              <div style={{ position: 'sticky', bottom: '0' }}>
+                <MessageInputField sendMsg={sendMsg} />
+              </div>
+            </div>
+          </Container>
+        )}
+      </Transition.Group>
     </>
   )
 }

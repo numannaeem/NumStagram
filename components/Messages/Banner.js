@@ -10,7 +10,7 @@ function Banner({ bannerData, isMobile }) {
         <Grid.Column>
           {isMobile && (
             <Link shallow={true} href="/messages" style={{ color: 'black' }}>
-              <Icon size="large" name="angle left" />
+              <Icon size="big" name="angle left" />
             </Link>
           )}
           <Image href={`/${username}`} avatar src={profilePicUrl} />

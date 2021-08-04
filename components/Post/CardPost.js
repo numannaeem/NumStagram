@@ -175,7 +175,7 @@ function CardPost({ post, user, setPosts, setShowToastr }) {
                       top: '50%',
                       left: '50%',
                       transform: 'translateX(-50%) translateY(-50%)',
-                      filter: 'drop-shadow(0 0 20px black)'
+                      filter: 'drop-shadow(0 0 20px gray)'
                     }}
                     color="teal"
                     name="heart"
