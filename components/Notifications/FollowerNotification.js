@@ -37,7 +37,7 @@ function FollowerNotification({
             </>
           </Feed.Summary>
         </Feed.Content>
-        <div style={{ alignSelf: 'flex-end', marginRight: '10px' }}>
+        <div style={{ alignSelf: 'flex-end', marginLeft: '5px' }}>
           <Button
             size="small"
             color={isFollowing ? 'instagram' : 'twitter'}

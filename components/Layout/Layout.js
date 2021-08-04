@@ -22,7 +22,7 @@ const appMedia = createMedia({
 const mediaStyles = appMedia.createMediaStyle()
 const { Media, MediaContextProvider } = appMedia
 
-function Layout({ children, user }) {
+function Layout({ children, user, newUsers }) {
   const contextRef = createRef()
   const router = useRouter()
 
@@ -61,7 +61,7 @@ function Layout({ children, user }) {
                       >
                         <Sticky context={contextRef}>
                           <Segment basic>
-                            <Search />
+                            <Search newUsers={newUsers} />
                           </Segment>
                         </Sticky>
                       </Grid.Column>
@@ -100,7 +100,7 @@ function Layout({ children, user }) {
                 </Media>
 
                 <Media between={['zero', 'mobile']}>
-                  <Grid>
+                  <Grid style={{ minHeight: '100vh' }}>
                     <Grid.Column style={{ padding: '0', paddingTop: '1rem' }}>
                       <MobileHeader user={user} />
                       {children}

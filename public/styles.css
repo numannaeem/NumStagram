@@ -137,6 +137,6 @@ footer a:hover {
     flex-direction: column-reverse;
   }
   .mobileFollowReqBtn {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.3rem !important;
   }
 }

@@ -20,4 +20,14 @@ const calculateTime = (createdAt) => {
   }
 }
 
+export const calculateDays = (date) => {
+  let days = (Date.now() - new Date(date)) / (1000 * 60 * 60 * 24)
+  days = Math.round(days)
+  if (days === 0) {
+    return 'today'
+  } else if (days === 1) {
+    return 'yesterday'
+  } else return `${days} days ago`
+}
+
 export default calculateTime

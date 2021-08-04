@@ -99,7 +99,7 @@ function CreatePost({ user, setPosts }) {
     <>
       <div
         style={{
-          marginBottom: '1.2rem',
+          margin: '0.3rem 0 1.2rem',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',

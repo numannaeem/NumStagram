@@ -1,12 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { List, Image, Search, Segment, Divider } from 'semantic-ui-react'
+import { List, Image, Search, Divider } from 'semantic-ui-react'
 import axios from 'axios'
 import cookie from 'js-cookie'
 import Router from 'next/router'
 import baseUrl from '../../utils/baseUrl'
+import NewUsers from '../Common/NewUsers'
 let cancel
 
-function SearchComponent({ autofocus, size }) {
+function SearchComponent({ autofocus, size, newUsers }) {
   const [text, setText] = useState('')
   const [loading, setLoading] = useState(false)
   const [results, setResults] = useState([])
@@ -85,11 +86,8 @@ function SearchComponent({ autofocus, size }) {
         minCharacters={2}
         onResultSelect={(e, data) => Router.push(`/${data.result.username}`)}
       />
-      {/* <Divider />
-      <Segment basic raised>
-        <h4>New to NumStagram</h4>
-
-      </Segment> */}
+      <Divider />
+      <NewUsers newUsers={newUsers} />
     </>
   )
 }

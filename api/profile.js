@@ -205,18 +205,21 @@ router.delete('/rejectRequest/:userSentReqId', authMiddleware, async (req, res) 
   const { userSentReqId } = req.params
   const { userId } = req
   try {
+    console.log('here')
     const userSentReq = await UserModel.findById(userSentReqId)
+    const userGotNotif = await NotificationModel.findOne({ user: userId })
     userGotNotif.notifications = userGotNotif.notifications.filter(
       (n) => n.user.toString() !== userSentReqId && n.type === 'newFollowRequest'
     )
     await userGotNotif.save()
+    console.log('here')
 
-    const userGotNotif = await NotificationModel.findOne({ user: userId })
     const index = userSentReq.followRequestsSent.map((r) => r.toString()).indexOf(userId)
     await userSentReq.followRequestsSent.splice(index, 1)
     await userSentReq.save()
     return res.status(200).send('Success')
   } catch (error) {
+    console.error(error)
     return res.status(500).send('Server Error')
   }
 })

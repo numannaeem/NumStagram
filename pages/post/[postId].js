@@ -32,7 +32,7 @@ function PostPage({ post, errorLoading, user }) {
   const [comments, setComments] = useState(post.comments)
 
   return (
-    <div style={{ minHeight: '100vh' }}>
+    <div style={{ minHeight: '105vh' }}>
       <Container text>
         <Segment basic>
           <Card color="teal" fluid>

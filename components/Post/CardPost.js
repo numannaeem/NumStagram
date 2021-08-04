@@ -235,13 +235,12 @@ function CardPost({ post, user, setPosts, setShowToastr }) {
                 content="View More"
                 color="teal"
                 basic
+                size="small"
                 compact
                 circular
                 onClick={() => setShowModal(true)}
               />
             )}
-
-            <Divider hidden />
 
             <CommentInputField user={user} postId={post._id} setComments={setComments} />
           </Card.Content>
