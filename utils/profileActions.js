@@ -111,6 +111,16 @@ export const toggleMessageSound = async (setSoundSetting, toast) => {
   }
 }
 
+export const toggleVisibility = async (setVisbilitySetting, toast) => {
+  try {
+    await Axios.post(`/settings/visibility`)
+    setVisbilitySetting((prev) => !prev)
+    toast.success('Successfully updated!')
+  } catch (error) {
+    throw error
+  }
+}
+
 export const deleteAccount = async (password) => {
   try {
     await Axios.post('/delete', { password })

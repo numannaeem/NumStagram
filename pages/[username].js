@@ -152,6 +152,7 @@ function ProfilePage({
 
             {activeItem === 'settings' && (
               <Settings
+                visibility={user.private}
                 newMessageSound={user.newMessageSound}
                 newMessagePopup={user.newMessagePopup}
               />

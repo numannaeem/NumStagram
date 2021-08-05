@@ -4,13 +4,11 @@ import {
   Card,
   Icon,
   Image,
-  Divider,
   Transition,
   Button,
   Popup,
   Header,
-  Modal,
-  Container
+  Modal
 } from 'semantic-ui-react'
 import PostComments from './PostComments'
 import CommentInputField from './CommentInputField'
@@ -90,9 +88,10 @@ function CardPost({ post, user, setPosts, setShowToastr }) {
                   position="top right"
                   trigger={
                     <Image
+                      avatar
                       src="/deleteIcon.svg"
                       style={{ cursor: 'pointer' }}
-                      size="mini"
+                      size="tiny"
                       floated="right"
                     />
                   }

@@ -1,19 +1,30 @@
 import React, { useState, useEffect } from 'react'
-import { List, Divider, Message, Checkbox, Form, Button } from 'semantic-ui-react'
+import {
+  List,
+  Divider,
+  Message,
+  Checkbox,
+  Form,
+  Button,
+  Transition,
+  Container
+} from 'semantic-ui-react'
 import catchErrors from '../../utils/catchErrors'
 import {
   deleteAccount,
   passwordUpdate,
   toggleMessagePopup,
-  toggleMessageSound
+  toggleMessageSound,
+  toggleVisibility
 } from '../../utils/profileActions'
 import { ToastContainer, toast } from 'react-toastify'
 
-function Settings({ newMessagePopup, newMessageSound }) {
+function Settings({ visibility, newMessagePopup, newMessageSound }) {
   const [passwordFields, showPasswordFields] = useState(false)
   const [showDeleteButton, setShowDeleteButton] = useState(false)
 
   const [popupSetting, setPopupSetting] = useState(newMessagePopup)
+  const [visibilitySetting, setVisibilitySetting] = useState(visibility)
   const [soundSetting, setSoundSetting] = useState(newMessageSound)
 
   return (
@@ -67,12 +78,38 @@ function Settings({ newMessagePopup, newMessageSound }) {
         </List.Item>
 
         <Divider />
+
+        <List.Item>
+          <List.Content>
+            <List.Header style={{ color: 'black' }} content="Account visibility mode" />
+          </List.Content>
+
+          <div style={{ marginTop: '10px', color: 'gray', fontSize: '80%' }}>
+            Accounts are private by default, but that can be toggled here.
+            <br />
+            <br />
+            <Checkbox
+              style={{ fontSize: '1.2rem', fontWeight: 'bold' }}
+              label={visibilitySetting ? 'Private' : 'Public'}
+              checked={visibilitySetting}
+              slider
+              onChange={() => {
+                try {
+                  toggleVisibility(setVisibilitySetting, toast)
+                } catch (error) {
+                  toast.error('Something went wrong 😵')
+                }
+              }}
+            />
+          </div>
+        </List.Item>
+
+        <Divider />
         <List.Item>
           <List.Icon name="unlock alternate" size="large" verticalAlign="middle" />
           <List.Content>
             <List.Header
               onClick={() => {
-                setShowDeleteButton(false)
                 showPasswordFields(!passwordFields)
               }}
               as="a"
@@ -80,9 +117,16 @@ function Settings({ newMessagePopup, newMessageSound }) {
             />
           </List.Content>
 
-          {passwordFields && (
-            <UpdatePassword setSuccess={toast} showPasswordFields={showPasswordFields} />
-          )}
+          <Transition.Group animation="fade down" duration={400}>
+            {passwordFields && (
+              <Container style={{ padding: '0', marginTop: '0.5rem' }} fluid>
+                <UpdatePassword
+                  setSuccess={toast}
+                  showPasswordFields={showPasswordFields}
+                />
+              </Container>
+            )}
+          </Transition.Group>
         </List.Item>
         <Divider />
         <List.Item>
@@ -91,16 +135,19 @@ function Settings({ newMessagePopup, newMessageSound }) {
             <List.Header
               style={{ color: 'red', cursor: 'pointer' }}
               onClick={() => {
-                showPasswordFields(false)
                 setShowDeleteButton((prev) => !prev)
               }}
               content="Delete Account"
             />
           </List.Content>
 
-          {showDeleteButton && (
-            <DeleteAccount setShowDeleteButton={setShowDeleteButton} />
-          )}
+          <Transition.Group animation="fade down" duration={500}>
+            {showDeleteButton && (
+              <Container fluid>
+                <DeleteAccount setShowDeleteButton={setShowDeleteButton} />
+              </Container>
+            )}
+          </Transition.Group>
         </List.Item>
       </List>
       <ToastContainer
@@ -123,65 +170,69 @@ const DeleteAccount = ({ setShowDeleteButton }) => {
   const [password, setPassword] = useState('')
   const [show, setShow] = useState(false)
   return (
-    <div style={{ marginTop: '10px' }}>
-      <p>
-        Are you sure?{' '}
-        <small style={{ color: 'red' }}>
-          <b>This action is irreversible!</b>
-        </small>
-      </p>
-      <Form
-        onSubmit={async () => {
-          try {
-            setLoading(true)
-            await deleteAccount(password)
-          } catch (error) {
-            window.alert('Something went wrong. Please try again later.')
-          }
-          setLoading(false)
-        }}
-      >
-        <Form.Input
-          icon={{
-            name: 'eye',
-            circular: true,
-            link: true,
-            onClick: () => setShow((prev) => !prev)
-          }}
-          type={show ? 'text' : 'password'}
-          iconPosition="left"
-          placeholder="Enter password to confirm"
-          name="password"
-          onChange={(e) => setPassword(e.target.value)}
-          value={password}
-        />
-        <Button
-          disabled={loading}
-          compact
-          icon="exclamation circle"
-          color="red"
-          content="Yes, I'm sure"
-          type="submit"
-        />
-
-        <Button
-          disabled={loading}
-          type="button"
-          compact
-          content="Cancel"
-          onClick={() => setShowDeleteButton(false)}
-        />
-      </Form>
-      {loading && (
-        <>
-          <p style={{ marginTop: '10px' }}>Deleting your account...</p>
-          <p style={{ color: 'gray' }}>
-            We're sad to see you go 🙁 <br />
-            <b>Come back soon!</b>
+    <List.List>
+      <List.Item>
+        <div style={{ marginTop: '10px' }}>
+          <p style={{ marginBottom: '0.3rem' }}>
+            Are you sure?&nbsp;&nbsp;
+            <small style={{ color: 'red' }}>
+              <b>This action is irreversible!</b>
+            </small>
           </p>
-        </>
-      )}
-    </div>
+          <Form
+            onSubmit={async () => {
+              try {
+                setLoading(true)
+                await deleteAccount(password)
+              } catch (error) {
+                window.alert('Something went wrong. Please try again later.')
+              }
+              setLoading(false)
+            }}
+          >
+            <Form.Input
+              icon={{
+                name: 'eye',
+                circular: true,
+                link: true,
+                onClick: () => setShow((prev) => !prev)
+              }}
+              type={show ? 'text' : 'password'}
+              iconPosition="left"
+              placeholder="Enter password to confirm"
+              name="password"
+              onChange={(e) => setPassword(e.target.value)}
+              value={password}
+            />
+            <Button
+              disabled={loading}
+              compact
+              icon="exclamation circle"
+              color="red"
+              content="Yes, I'm sure"
+              type="submit"
+            />
+
+            <Button
+              disabled={loading}
+              type="button"
+              compact
+              content="Cancel"
+              onClick={() => setShowDeleteButton(false)}
+            />
+          </Form>
+          {loading && (
+            <>
+              <p style={{ marginTop: '10px' }}>Deleting your account...</p>
+              <p style={{ color: 'gray' }}>
+                We're sad to see you go 🙁 <br />
+                <b>Come back soon!</b>
+              </p>
+            </>
+          )}
+        </div>
+      </List.Item>
+    </List.List>
   )
 }
 
@@ -287,7 +338,6 @@ const UpdatePassword = ({ toast, showPasswordFields }) => {
           </List.Item>
         </List.List>
       </Form>
-      <Divider hidden />
     </>
   )
 }

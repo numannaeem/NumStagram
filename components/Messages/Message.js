@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
-import { Icon, Popup, Button } from 'semantic-ui-react'
+import { Popup, Button } from 'semantic-ui-react'
 import calculateTime from '../../utils/calculateTime'
 
 function Message({ message, user, deleteMsg, bannerProfilePic, divRef, isMobile }) {
   const [deleteIcon, showDeleteIcon] = useState(false)
   const [showTime, setShowTime] = useState(false)
+  const [deleting, setDeleting] = useState(false)
 
   const ifYouSender = message.sender === user._id
 
@@ -36,6 +37,12 @@ function Message({ message, user, deleteMsg, bannerProfilePic, divRef, isMobile 
                   basic
                   size="mini"
                   compact
+                  disabled={deleting}
+                  loading={deleting}
+                  onClick={() => {
+                    setDeleting(true)
+                    deleteMsg(message._id)
+                  }}
                   style={{ margin: '0 7px 0', padding: '5px' }}
                   content="Delete"
                   negative

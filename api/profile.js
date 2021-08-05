@@ -338,6 +338,18 @@ router.post('/settings/messagePopup', authMiddleware, async (req, res) => {
     return res.status(500).send('Server error')
   }
 })
+//Update visbility setting
+router.post('/settings/visbility', authMiddleware, async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.userId)
+    user.private = !user.private
+    await user.save()
+    res.status(200).send('Success')
+  } catch (error) {
+    console.error(error)
+    return res.status(500).send('Server error')
+  }
+})
 
 //Update message sound settings
 router.post('/settings/messageSound', authMiddleware, async (req, res) => {
