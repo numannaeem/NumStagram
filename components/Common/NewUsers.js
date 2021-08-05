@@ -21,6 +21,7 @@ function NewUsers({ newUsers, user, userFollowStats }) {
             .filter((u) => u._id !== user?._id)
             .map((u) => (
               <NewUser
+                key={u._id}
                 user={u}
                 loggedUser={user}
                 setUserFollowStats={setUserFollowStats}

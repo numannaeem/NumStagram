@@ -1,5 +1,5 @@
 .bubbleWrapper {
-  padding: 10px;
+  padding: 4px 10px 8px;
   display: flex;
   justify-content: flex-end;
   flex-direction: column;
@@ -59,7 +59,7 @@ span.other {
     display: none;
   }
   .bubbleWrapper {
-    padding: 5px;
+    padding: 0 1px 4px;
   }
   .ownBubble,
   .otherBubble {
@@ -67,6 +67,6 @@ span.other {
   }
   span.own,
   span.other {
-    margin: 6px 0;
+    margin: 0 6px;
   }
 }

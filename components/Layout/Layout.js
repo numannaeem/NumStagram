@@ -43,7 +43,7 @@ function Layout({ children, user, newUsers, userFollowStats }) {
               <div style={{ marginLeft: '1rem' }}>
                 <Media greaterThanOrEqual="computer">
                   <Ref innerRef={contextRef}>
-                    <Grid style={{ minHeight: '105vh' }} stretched>
+                    <Grid style={{ minHeight: '105vh' }}>
                       <Grid.Column style={{ paddingRight: '0' }} width={3}>
                         <Sticky context={contextRef}>
                           <SideMenu user={user} pc />

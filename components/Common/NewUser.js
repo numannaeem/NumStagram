@@ -54,7 +54,7 @@ function NewUser({ user, loggedUser, loggedUserFollowStats, setUserFollowStats }
               : followRequestSent
               ? 'Requested'
               : privateAcc
-              ? 'Send follow request'
+              ? 'Send request'
               : 'Follow'
           }
           icon={

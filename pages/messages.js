@@ -207,14 +207,12 @@ function Messages({ chatsData, user, isMobile }) {
   // LOAD MESSAGES useEffect
   useEffect(() => {
     const loadMessages = () => {
-      setMessages([])
-      setBannerData({})
       socket.current.emit('loadMessages', {
         userId: user._id,
         messagesWith: router.query.message
       })
 
-      socket.current.on('messagesLoaded', async ({ chat }) => {
+      socket.current.on('messagesLoaded', ({ chat }) => {
         setMessages(chat.messages)
         setBannerData({
           username: chat.messagesWith.username,
@@ -224,21 +222,10 @@ function Messages({ chatsData, user, isMobile }) {
             connectedUsers?.filter((u) => u.userId === chat.messagesWith._id).length
           )
         })
-        if (
-          !Boolean(chats.filter((c) => c.messagesWith === chat.messagesWith._id).length)
-        ) {
-          const newChat = {
-            messagesWith: chat.messagesWith._id,
-            name: chat.messagesWith.name,
-            profilePicUrl: chat.messagesWith.profilePicUrl,
-            lastMessage: '',
-            date: Date.now()
-          }
-          setChats((prev) => [newChat, ...prev])
-        }
 
         openChatId.current = chat.messagesWith._id
         divRef.current && scrollDivToBottom(divRef)
+
         return
       })
 
@@ -248,6 +235,22 @@ function Messages({ chatsData, user, isMobile }) {
     }
 
     if (socket.current && router.query.message) loadMessages()
+  }, [router.query.message])
+
+  useEffect(() => {
+    const createNewChat = async () => {
+      const previouslyMessaged =
+        chats.filter((c) => c.messagesWith === router.query.message).length > 0
+      if (!previouslyMessaged) {
+        const newChat = await getUserInfo(router.query.message)
+        newChat.messagesWith = router.query.message
+        newChat.lastMessage = ''
+        newChat.date = Date.now()
+
+        setChats((prev) => [newChat, ...prev])
+      }
+    }
+    if (router.query.message) createNewChat()
   }, [router.query.message])
 
   return !isMobile ? (
@@ -351,7 +354,7 @@ function Messages({ chatsData, user, isMobile }) {
     </>
   ) : (
     <>
-      {(!router.query.message || !messages.length) && (
+      {!router.query.message && (
         <div
           style={{
             display: 'flex',
@@ -420,7 +423,7 @@ function Messages({ chatsData, user, isMobile }) {
         </div>
       )}
       <Transition.Group animation="fade right" duration={400}>
-        {Boolean(router.query.message && messages.length) && (
+        {Boolean(router.query.message) && (
           <Container id="chat-container">
             <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
               <div style={{ position: 'sticky', top: '0' }}>
@@ -439,6 +442,7 @@ function Messages({ chatsData, user, isMobile }) {
                 {messages.length > 0 &&
                   messages.map((message, i) => (
                     <Message
+                      isMobile
                       divRef={divRef}
                       key={i}
                       bannerProfilePic={bannerData.profilePicUrl}

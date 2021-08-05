@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
-import { Icon, Popup } from 'semantic-ui-react'
+import { Icon, Popup, Button } from 'semantic-ui-react'
 import calculateTime from '../../utils/calculateTime'
 
-function Message({ message, user, deleteMsg, bannerProfilePic, divRef }) {
+function Message({ message, user, deleteMsg, bannerProfilePic, divRef, isMobile }) {
   const [deleteIcon, showDeleteIcon] = useState(false)
+  const [showTime, setShowTime] = useState(false)
 
   const ifYouSender = message.sender === user._id
 
@@ -11,7 +12,10 @@ function Message({ message, user, deleteMsg, bannerProfilePic, divRef }) {
     <div className="bubbleWrapper" ref={divRef}>
       <div
         className={ifYouSender ? 'inlineContainer own' : 'inlineContainer'}
-        onClick={() => ifYouSender && showDeleteIcon(!deleteIcon)}
+        onClick={() => {
+          ifYouSender && showDeleteIcon(!deleteIcon)
+          setShowTime((prev) => !prev)
+        }}
       >
         <img
           className={ifYouSender ? 'inlineIcon self' : 'inlineIcon'}
@@ -21,26 +25,29 @@ function Message({ message, user, deleteMsg, bannerProfilePic, divRef }) {
         <div className={ifYouSender ? 'ownBubble own' : 'otherBubble other'}>
           {message.msg}
         </div>
-
-        {deleteIcon && (
-          <Popup
-            trigger={
-              <Icon
-                name="trash"
-                color="red"
-                style={{ cursor: 'pointer' }}
-                onClick={() => {
-                  deleteMsg(message._id)
-                }}
-              />
-            }
-            content="This will only delete the message from your inbox!"
-            position="top right"
-          />
-        )}
       </div>
 
-      <span className={ifYouSender ? 'own' : 'other'}>{calculateTime(message.date)}</span>
+      {((isMobile && showTime) || !isMobile) && (
+        <span className={ifYouSender ? 'own' : 'other'}>
+          {deleteIcon && (
+            <Popup
+              trigger={
+                <Button
+                  basic
+                  size="mini"
+                  compact
+                  style={{ margin: '0 7px 0', padding: '5px' }}
+                  content="Delete"
+                  negative
+                />
+              }
+              content="This will only delete the message from your inbox!"
+              position="top right"
+            />
+          )}
+          {calculateTime(message.date)}
+        </span>
+      )}
     </div>
   )
 }
