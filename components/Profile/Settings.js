@@ -22,6 +22,9 @@ import { ToastContainer, toast } from 'react-toastify'
 function Settings({ visibility, newMessagePopup, newMessageSound }) {
   const [passwordFields, showPasswordFields] = useState(false)
   const [showDeleteButton, setShowDeleteButton] = useState(false)
+  const [popupLoading, setPopupLoading] = useState(false)
+  const [soundLoading, setSoundLoading] = useState(false)
+  const [visibilityLoading, setVisibilityLoading] = useState(false)
 
   const [popupSetting, setPopupSetting] = useState(newMessagePopup)
   const [visibilitySetting, setVisibilitySetting] = useState(visibility)
@@ -40,14 +43,17 @@ function Settings({ visibility, newMessagePopup, newMessageSound }) {
             <br />
             <br />
             <Checkbox
+              disabled={popupLoading}
               checked={popupSetting}
               slider
-              onChange={() => {
+              onChange={async () => {
+                setPopupLoading(true)
                 try {
-                  toggleMessagePopup(popupSetting, setPopupSetting, toast)
+                  await toggleMessagePopup(popupSetting, setPopupSetting, toast)
                 } catch (error) {
                   toast.error(catchErrors(error))
                 }
+                setPopupLoading(false)
               }}
             />
           </div>
@@ -64,14 +70,17 @@ function Settings({ visibility, newMessagePopup, newMessageSound }) {
             <br />
             <br />
             <Checkbox
+              disabled={soundLoading}
               checked={soundSetting}
               slider
-              onChange={() => {
+              onChange={async () => {
+                setSoundLoading(true)
                 try {
-                  toggleMessageSound(setSoundSetting, toast)
+                  await toggleMessageSound(setSoundSetting, toast)
                 } catch (error) {
                   toast.error(catchErrors(error))
                 }
+                setSoundLoading(false)
               }}
             />
           </div>
@@ -85,20 +94,24 @@ function Settings({ visibility, newMessagePopup, newMessageSound }) {
           </List.Content>
 
           <div style={{ marginTop: '10px', color: 'gray', fontSize: '80%' }}>
-            Accounts are private by default, but that can be toggled here.
+            Accounts are private by default. Anyone will be able to view your posts if you
+            go public.
             <br />
             <br />
             <Checkbox
+              disabled={visibilityLoading}
               style={{ fontSize: '1.2rem', fontWeight: 'bold' }}
               label={visibilitySetting ? 'Private' : 'Public'}
               checked={visibilitySetting}
               slider
-              onChange={() => {
+              onChange={async () => {
+                setVisibilityLoading(true)
                 try {
-                  toggleVisibility(setVisibilitySetting, toast)
+                  await toggleVisibility(setVisibilitySetting, toast)
                 } catch (error) {
                   toast.error('Something went wrong 😵')
                 }
+                setVisibilityLoading(false)
               }}
             />
           </div>
@@ -120,10 +133,7 @@ function Settings({ visibility, newMessagePopup, newMessageSound }) {
           <Transition.Group animation="fade down" duration={400}>
             {passwordFields && (
               <Container style={{ padding: '0', marginTop: '0.5rem' }} fluid>
-                <UpdatePassword
-                  setSuccess={toast}
-                  showPasswordFields={showPasswordFields}
-                />
+                <UpdatePassword toast={toast} showPasswordFields={showPasswordFields} />
               </Container>
             )}
           </Transition.Group>

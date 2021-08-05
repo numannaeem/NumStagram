@@ -339,10 +339,10 @@ router.post('/settings/messagePopup', authMiddleware, async (req, res) => {
   }
 })
 //Update visbility setting
-router.post('/settings/visbility', authMiddleware, async (req, res) => {
+router.post('/settings/visibility', authMiddleware, async (req, res) => {
   try {
     const user = await UserModel.findById(req.userId)
-    user.private = !user.private
+    user.private = user.private ? false : true
     await user.save()
     res.status(200).send('Success')
   } catch (error) {

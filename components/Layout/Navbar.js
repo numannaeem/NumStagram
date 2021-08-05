@@ -1,5 +1,5 @@
 import React from 'react'
-import { Menu, Container, Icon, Image } from 'semantic-ui-react'
+import { Menu, Container } from 'semantic-ui-react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 
@@ -9,11 +9,9 @@ function Navbar() {
   const isActive = (route) => router.pathname === route
 
   return (
-    <Menu fluid borderless>
+    <Menu fluid color="teal" inverted borderless>
       <Container fluid text>
-        <Menu.Item id="logo" header position="left">
-          NumStagram
-        </Menu.Item>
+        <Menu.Item id="logo" content="NumStagram" position="left" />
         <Link href="/login">
           <Menu.Item link position="right" active={isActive('/login')}>
             Login

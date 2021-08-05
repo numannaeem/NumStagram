@@ -202,13 +202,11 @@ function Signup() {
             setShowSocialLinks={setShowSocialLinks}
             handleChange={handleChange}
           />
-
-          <Divider hidden />
+          <hr style={{ opacity: '0' }} />
           <Button
-            icon="signup"
-            content="Signup"
+            content="Sign up"
             type="submit"
-            color="orange"
+            color="purple"
             disabled={submitDisabled || username === '' || !usernameState.valid}
           />
         </Segment>

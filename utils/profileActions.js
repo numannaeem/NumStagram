@@ -74,7 +74,6 @@ export const profileUpdate = async (profile, setLoading, setError, profilePicUrl
       profilePicUrl
     })
     Router.reload()
-    setLoading(false)
   } catch (error) {
     setError(catchErrors(error))
     setLoading(false)

@@ -34,48 +34,50 @@ function NewUser({ user, loggedUser, loggedUserFollowStats, setUserFollowStats }
         </List.Description>
       </List.Content>
       <List.Content style={{ marginTop: '0.5rem' }}>
-        <Button
-          title={
-            isFollowing
-              ? 'Following'
-              : followRequestSent
-              ? 'Follow request sent'
-              : privateAcc
-              ? 'Send follow request'
-              : 'Follow'
-          }
-          compact
-          size="small"
-          loading={loading}
-          disabled={loading || followRequestSent}
-          content={
-            isFollowing
-              ? 'Following'
-              : followRequestSent
-              ? 'Requested'
-              : privateAcc
-              ? 'Send request'
-              : 'Follow'
-          }
-          icon={
-            isFollowing
-              ? 'check circle'
-              : followRequestSent
-              ? 'clock outline'
-              : 'add user'
-          }
-          color={isFollowing ? 'instagram' : 'blue'}
-          onClick={async (e) => {
-            e.stopPropagation()
-            setLoading(true)
-            isFollowing
-              ? await unfollowUser(user._id, setUserFollowStats)
-              : privateAcc
-              ? await sendRequest(user._id, setFollowRequestSent)
-              : await followUser(user._id, setUserFollowStats)
-            setLoading(false)
-          }}
-        />
+        {!isFollowing && (
+          <Button
+            title={
+              isFollowing
+                ? 'Following'
+                : followRequestSent
+                ? 'Follow request sent'
+                : privateAcc
+                ? 'Send follow request'
+                : 'Follow'
+            }
+            compact
+            size="small"
+            loading={loading}
+            disabled={loading || (privateAcc && followRequestSent)}
+            content={
+              isFollowing
+                ? 'Following'
+                : !privateAcc
+                ? 'Follow'
+                : followRequestSent
+                ? 'Request sent'
+                : 'Send follow request'
+            }
+            icon={
+              isFollowing
+                ? 'check circle'
+                : privateAcc && followRequestSent
+                ? 'clock outline'
+                : 'add user'
+            }
+            color={isFollowing ? 'instagram' : 'blue'}
+            onClick={async (e) => {
+              e.stopPropagation()
+              setLoading(true)
+              isFollowing
+                ? await unfollowUser(user._id, setUserFollowStats)
+                : privateAcc
+                ? await sendRequest(user._id, setFollowRequestSent)
+                : await followUser(user._id, setUserFollowStats)
+              setLoading(false)
+            }}
+          />
+        )}
         <Button
           title="Message"
           onClick={(e) => {
@@ -84,6 +86,7 @@ function NewUser({ user, loggedUser, loggedUserFollowStats, setUserFollowStats }
           }}
           icon="comment outline"
           color="teal"
+          basic
           compact
           size="small"
           content="Message"

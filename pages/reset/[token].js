@@ -1,52 +1,52 @@
-import React, { useState, useEffect } from "react";
-import { useRouter } from "next/router";
-import { Form, Button, Message, Segment, Divider } from "semantic-ui-react";
-import baseUrl from "../../utils/baseUrl";
-import catchErrors from "../../utils/catchErrors";
-import axios from "axios";
+import React, { useState, useEffect } from 'react'
+import { useRouter } from 'next/router'
+import { Form, Button, Message, Segment } from 'semantic-ui-react'
+import baseUrl from '../../utils/baseUrl'
+import catchErrors from '../../utils/catchErrors'
+import axios from 'axios'
 
 function TokenPage() {
-  const router = useRouter();
+  const router = useRouter()
 
-  const [newPassword, setNewPassword] = useState({ field1: "", field2: "" });
+  const [newPassword, setNewPassword] = useState({ field1: '', field2: '' })
 
-  const { field1, field2 } = newPassword;
+  const { field1, field2 } = newPassword
 
-  const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState(null);
-  const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false)
+  const [errorMsg, setErrorMsg] = useState(null)
+  const [success, setSuccess] = useState(false)
 
-  const handleChange = e => {
-    const { name, value } = e.target;
+  const handleChange = (e) => {
+    const { name, value } = e.target
 
-    setNewPassword(prev => ({ ...prev, [name]: value }));
-  };
+    setNewPassword((prev) => ({ ...prev, [name]: value }))
+  }
 
   useEffect(() => {
-    errorMsg !== null && setTimeout(() => setErrorMsg(null), 5000);
-  }, [errorMsg]);
+    errorMsg !== null && setTimeout(() => setErrorMsg(null), 5000)
+  }, [errorMsg])
 
-  const resetPassword = async e => {
-    e.preventDefault();
+  const resetPassword = async (e) => {
+    e.preventDefault()
 
-    setLoading(true);
+    setLoading(true)
     try {
       if (field1 !== field2) {
-        return setErrorMsg("Passwords do not match");
+        return setErrorMsg('Passwords do not match')
       }
 
       await axios.post(`${baseUrl}/api/reset/token`, {
         password: field1,
         token: router.query.token
-      });
+      })
 
-      setSuccess(true);
+      setSuccess(true)
     } catch (error) {
-      setErrorMsg(catchErrors(error));
+      setErrorMsg(catchErrors(error))
     }
 
-    setLoading(false);
-  };
+    setLoading(false)
+  }
 
   return (
     <>
@@ -58,11 +58,18 @@ function TokenPage() {
           header="Password reset successfully"
           icon="check"
           content="Login Again"
-          style={{ cursor: "pointer" }}
-          onClick={() => router.push("/login")}
+          style={{ cursor: 'pointer' }}
+          onClick={() => router.push('/login')}
         />
       ) : (
-        <Message attached icon="settings" header="Reset Password" color="teal" />
+        <Message
+          attached
+          icon="settings"
+          header="Reset password"
+          content="(can't wait for you to forget this one too 🙄)"
+          size="small"
+          color="purple"
+        />
       )}
 
       {!success && (
@@ -75,7 +82,7 @@ function TokenPage() {
               icon="eye"
               type="password"
               iconPosition="left"
-              label="New Password"
+              label="New password"
               placeholder="Enter new Password"
               name="field1"
               onChange={handleChange}
@@ -87,7 +94,7 @@ function TokenPage() {
               icon="eye"
               type="password"
               iconPosition="left"
-              label="Confirm Password"
+              label="Confirm password"
               placeholder="Confirm new Password"
               name="field2"
               onChange={handleChange}
@@ -95,20 +102,17 @@ function TokenPage() {
               required
             />
 
-            <Divider hidden />
-
             <Button
-              disabled={field1 === "" || field2 === "" || loading}
-              icon="configure"
+              disabled={field1 === '' || field2 === '' || loading}
               type="submit"
-              color="orange"
-              content="Reset"
+              color="purple"
+              content="Reset password"
             />
           </Segment>
         </Form>
       )}
     </>
-  );
+  )
 }
 
-export default TokenPage;
+export default TokenPage

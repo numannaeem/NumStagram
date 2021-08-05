@@ -1,56 +1,56 @@
-import React, { useState, useEffect } from "react";
-import { Form, Button, Message, Segment, Divider } from "semantic-ui-react";
-import { loginUser } from "../utils/authUser";
-import { HeaderMessage, FooterMessage } from "../components/Common/WelcomeMessage";
-import cookie from "js-cookie";
+import React, { useState, useEffect } from 'react'
+import { Form, Button, Message, Segment } from 'semantic-ui-react'
+import { loginUser } from '../utils/authUser'
+import { HeaderMessage, FooterMessage } from '../components/Common/WelcomeMessage'
+import cookie from 'js-cookie'
 
 function Login() {
   const [user, setUser] = useState({
-    email: "",
-    password: ""
-  });
+    email: '',
+    password: ''
+  })
 
-  const { email, password } = user;
-  const [showPassword, setShowPassword] = useState(false);
-  const [errorMsg, setErrorMsg] = useState(null);
-  const [formLoading, setFormLoading] = useState(false);
-  const [submitDisabled, setSubmitDisabled] = useState(true);
+  const { email, password } = user
+  const [showPassword, setShowPassword] = useState(false)
+  const [errorMsg, setErrorMsg] = useState(null)
+  const [formLoading, setFormLoading] = useState(false)
+  const [submitDisabled, setSubmitDisabled] = useState(true)
 
-  const handleChange = e => {
-    const { name, value } = e.target;
+  const handleChange = (e) => {
+    const { name, value } = e.target
 
-    setUser(prev => ({ ...prev, [name]: value }));
-  };
+    setUser((prev) => ({ ...prev, [name]: value }))
+  }
 
   useEffect(() => {
-    const isUser = Object.values({ email, password }).every(item => Boolean(item));
-    isUser ? setSubmitDisabled(false) : setSubmitDisabled(true);
-  }, [user]);
+    const isUser = Object.values({ email, password }).every((item) => Boolean(item))
+    isUser ? setSubmitDisabled(false) : setSubmitDisabled(true)
+  }, [user])
 
-  const handleSubmit = async e => {
-    e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault()
     setErrorMsg(null)
-    await loginUser(user, setErrorMsg, setFormLoading);
-  };
+    await loginUser(user, setErrorMsg, setFormLoading)
+  }
 
   useEffect(() => {
-    document.title = "Welcome Back";
-    const userEmail = cookie.get("userEmail");
-    if (userEmail) setUser(prev => ({ ...prev, email: userEmail }));
-  }, []);
+    document.title = 'Welcome Back'
+    const userEmail = cookie.get('userEmail')
+    if (userEmail) setUser((prev) => ({ ...prev, email: userEmail }))
+  }, [])
 
   return (
     <>
       <HeaderMessage />
-      <Form loading={formLoading} error={errorMsg !== null} onSubmit={handleSubmit}>
-        <Message
-          error
-          header="Oops!"
-          content={errorMsg}
-          onDismiss={() => setErrorMsg(null)}
-        />
 
-        <Segment>
+      <Segment>
+        <Form loading={formLoading} error={errorMsg !== null} onSubmit={handleSubmit}>
+          <Message
+            error
+            header="Oops!"
+            content={errorMsg}
+            onDismiss={() => setErrorMsg(null)}
+          />
           <Form.Input
             required
             label="Email"
@@ -72,30 +72,32 @@ function Login() {
             onChange={handleChange}
             fluid
             icon={{
-              name: "eye",
+              name: 'eye',
               circular: true,
               link: true,
               onClick: () => setShowPassword(!showPassword)
             }}
             iconPosition="left"
-            type={showPassword ? "text" : "password"}
+            type={showPassword ? 'text' : 'password'}
             required
           />
 
-          <Divider hidden />
           <Button
-            icon="signup"
             content="Login"
             type="submit"
-            color="orange"
+            color="purple"
             disabled={submitDisabled}
           />
-        </Segment>
-      </Form>
+        </Form>
+        <hr style={{ marginBottom: '0', opacity: '0' }} />
+        <a className="gray-link" href="/reset">
+          Forgot password?
+        </a>
+      </Segment>
 
       <FooterMessage />
     </>
-  );
+  )
 }
 
-export default Login;
+export default Login

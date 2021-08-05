@@ -19,23 +19,24 @@ function Follower({ profileFollower, loggedUserFollowStats, user, setUserFollowS
           <Button
             size="small"
             color={isFollowing ? 'instagram' : 'twitter'}
-            icon={
-              isFollowing
-                ? 'check circle'
-                : followRequestSent
-                ? 'clock outline'
-                : 'add user'
-            }
+            disabled={loading || (privateAcc && followRequestSent)}
             content={
               isFollowing
                 ? 'Following'
+                : !privateAcc
+                ? 'Follow'
                 : followRequestSent
                 ? 'Follow request sent'
-                : privateAcc
-                ? 'Send follow request'
-                : 'Follow'
+                : 'Send follow request'
             }
-            disabled={followRequestSent || followLoading}
+            icon={
+              isFollowing
+                ? 'check circle'
+                : privateAcc && followRequestSent
+                ? 'clock outline'
+                : 'add user'
+            }
+            disabled={(privateAcc && followRequestSent) || followLoading}
             onClick={() => {
               setFollowLoading(true)
 

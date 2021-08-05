@@ -34,14 +34,14 @@ router.post('/', async (req, res) => {
         email: 'numan.naeem@outlook.com',
         name: 'NumStagram'
       },
-      subject: 'Password reset request',
+      subject: 'Password Reset Request',
       html: `<b>Hey ${user.name.split(' ')[0].toString()},</b>
-            <p>You requested to reset your NumStagram account password</p>
+            <p>Click the link below to reset your NumStagram account password:</p>
             <br />
-            <a href=${href}>Click here to proceed</a>
+            <a href=${href}>Reset password</a>
             <p><i>this link expires in one hour</i></p>
             <hr />
-            <p>If you did not initiate this, you may ignore this email and your password won't be changed</p>`
+            <p>If you did not initiate this, you may ignore this email and your password will not be changed.</p>`
     }
     await sgMail.send(mailOptions)
     return res.status(200).send('Email sent successfully')

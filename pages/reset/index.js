@@ -1,35 +1,35 @@
-import React, { useEffect, useState } from "react";
-import { Form, Button, Message, Segment } from "semantic-ui-react";
-import baseUrl from "../../utils/baseUrl";
-import catchErrors from "../../utils/catchErrors";
-import axios from "axios";
+import React, { useEffect, useState } from 'react'
+import { Form, Button, Message, Segment } from 'semantic-ui-react'
+import baseUrl from '../../utils/baseUrl'
+import catchErrors from '../../utils/catchErrors'
+import axios from 'axios'
 
 function ResetPage() {
-  const [email, setEmail] = useState("");
-  const [errorMsg, setErrorMsg] = useState(null);
+  const [email, setEmail] = useState('')
+  const [errorMsg, setErrorMsg] = useState(null)
 
-  const [emailEntered, setEmailEntered] = useState(false);
+  const [emailEntered, setEmailEntered] = useState(false)
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false)
 
-  const resetPassword = async e => {
-    e.preventDefault();
+  const resetPassword = async (e) => {
+    e.preventDefault()
 
-    setLoading(true);
+    setLoading(true)
 
     try {
-      await axios.post(`${baseUrl}/api/reset`, { email });
-      setEmailEntered(true);
+      await axios.post(`${baseUrl}/api/reset`, { email })
+      setEmailEntered(true)
     } catch (error) {
-      setErrorMsg(catchErrors(error));
+      setErrorMsg(catchErrors(error))
     }
 
-    setLoading(false);
-  };
+    setLoading(false)
+  }
 
   useEffect(() => {
-    errorMsg && setTimeout(() => setErrorMsg(null), 5000);
-  }, [errorMsg]);
+    errorMsg && setTimeout(() => setErrorMsg(null), 5000)
+  }, [errorMsg])
 
   return (
     <>
@@ -37,13 +37,20 @@ function ResetPage() {
         <Message
           attached
           icon="mail"
-          header="Check Your Inbox"
+          header="Check your inbox"
           content="Please check your inbox for further instructions"
           success
         />
       ) : (
         <>
-          <Message attached icon="settings" header="Reset Password" color="teal" />
+          <Message
+            attached
+            size="small"
+            icon="settings"
+            header="Reset Password"
+            color="purple"
+            content="Enter your email below and we'll send you a link to reset your password"
+          />
           <Form loading={loading} onSubmit={resetPassword} error={errorMsg !== null}>
             <Message error header="Oops!" content={errorMsg} />
 
@@ -56,26 +63,23 @@ function ResetPage() {
                 label="Email"
                 placeholder="Enter email address"
                 name="email"
-                onChange={e => setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
                 value={email}
                 required
               />
 
               <Button
                 disabled={loading || email.length === 0}
-                icon="configure"
                 type="submit"
-                color="orange"
+                color="purple"
                 content="Submit"
               />
             </Segment>
           </Form>
         </>
       )}
-
-
     </>
-  );
+  )
 }
 
-export default ResetPage;
+export default ResetPage

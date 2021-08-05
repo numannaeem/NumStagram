@@ -117,20 +117,20 @@ function ProfileHeader({
               <Button
                 compact
                 loading={loading}
-                disabled={loading || followRequestSent}
+                disabled={loading || (privateAcc && followRequestSent)}
                 content={
                   isFollowing
                     ? 'Following'
+                    : !privateAcc
+                    ? 'Follow'
                     : followRequestSent
                     ? 'Follow request sent'
-                    : privateAcc
-                    ? 'Send follow request'
-                    : 'Follow'
+                    : 'Send follow request'
                 }
                 icon={
                   isFollowing
                     ? 'check circle'
-                    : followRequestSent
+                    : privateAcc && followRequestSent
                     ? 'clock outline'
                     : 'add user'
                 }
