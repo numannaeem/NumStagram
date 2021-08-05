@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap');
+
 html {
   scroll-behavior: smooth;
 }
@@ -7,6 +9,14 @@ html {
 }
 :root {
   --progressBar: #54d1db;
+}
+
+#logo {
+  font-family: 'Josefin Sans';
+  font-size: 1.3rem;
+  padding-left: 1rem;
+  font-weight: 400;
+  color: teal;
 }
 
 body {
