@@ -65,7 +65,7 @@ function NewUser({ user, loggedUser, loggedUserFollowStats, setUserFollowStats }
                 ? 'clock outline'
                 : 'add user'
             }
-            color={isFollowing ? 'instagram' : 'blue'}
+            color={isFollowing ? 'instagram' : followRequestSent ? 'black' : 'blue'}
             onClick={async (e) => {
               e.stopPropagation()
               setLoading(true)

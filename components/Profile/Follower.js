@@ -18,15 +18,14 @@ function Follower({ profileFollower, loggedUserFollowStats, user, setUserFollowS
         {profileFollower.user._id !== user._id && (
           <Button
             size="small"
-            color={isFollowing ? 'instagram' : 'twitter'}
-            disabled={loading || (privateAcc && followRequestSent)}
+            color={isFollowing ? 'instagram' : followRequestSent ? 'black' : 'twitter'}
             content={
               isFollowing
                 ? 'Following'
                 : !privateAcc
                 ? 'Follow'
                 : followRequestSent
-                ? 'Follow request sent'
+                ? 'Request sent'
                 : 'Send follow request'
             }
             icon={
