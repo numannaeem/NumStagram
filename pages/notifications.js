@@ -10,6 +10,7 @@ import CommentNotification from '../components/Notifications/CommentNotification
 import FollowerNotification from '../components/Notifications/FollowerNotification'
 import ReplyNotification from '../components/Notifications/ReplyNotification'
 import FollowRequestNotification from '../components/Notifications/FollowRequestNotification'
+import CommentLikeNotification from '../components/Notifications/CommentLikeNotification'
 
 function Notifications({ user, notifications, userFollowStats }) {
   const [notifs, setNotifs] = useState(notifications)
@@ -90,8 +91,6 @@ function Notifications({ user, notifications, userFollowStats }) {
                       <ReplyNotification
                         key={notification._id}
                         notification={notification}
-                        loggedUserFollowStats={loggedUserFollowStats}
-                        setUserFollowStats={setUserFollowStats}
                       />
                     )
                   else if (notification.type === 'newFollowRequest')
@@ -99,9 +98,15 @@ function Notifications({ user, notifications, userFollowStats }) {
                       <FollowRequestNotification
                         key={notification._id}
                         notification={notification}
-                        loggedUserFollowStats={loggedUserFollowStats}
                         setUserFollowStats={setUserFollowStats}
                         setNotifs={setNotifs}
+                      />
+                    )
+                  else if (notification.type === 'newCommentLike')
+                    return (
+                      <CommentLikeNotification
+                        key={notification._id}
+                        notification={notification}
                       />
                     )
                 })}

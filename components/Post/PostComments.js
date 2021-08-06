@@ -1,8 +1,13 @@
 import React, { useRef, useState } from 'react'
 import { Comment, Icon, Form } from 'semantic-ui-react'
 import calculateTime from '../../utils/calculateTime'
-import { deleteComment, deleteReply } from '../../utils/postActions'
-import { postReply } from '../../utils/postActions'
+import LikesList from './LikesList'
+import {
+  deleteComment,
+  deleteReply,
+  postReply,
+  likeComment
+} from '../../utils/postActions'
 
 function PostComments({ comment, user, setComments, postId }) {
   const [disabled, setDisabled] = useState(false)
@@ -10,9 +15,16 @@ function PostComments({ comment, user, setComments, postId }) {
   const [showReply, setShowReply] = useState(false)
   const [commentReply, setCommentReply] = useState('')
   const [loading, setLoading] = useState(false)
+  const [liking, setLiking] = useState(false)
+  const [likes, setLikes] = useState(comment.likes)
   const [replies, setReplies] = useState(comment.replies)
   const [showReplies, setShowReplies] = useState(false)
+
+  const isLiked =
+    likes.length > 0 && likes.filter((like) => like.user === user._id).length > 0
+
   const replyRef = useRef()
+
   return (
     <Comment>
       <Comment.Avatar
@@ -20,14 +32,14 @@ function PostComments({ comment, user, setComments, postId }) {
         href={`/${comment.user.username}`}
         src={comment.user.profilePicUrl}
       />
-      <Comment.Content>
+      <Comment.Content style={{ position: 'relative' }}>
         <Comment.Author as="a" href={`/${comment.user.username}`}>
           {comment.user.name}
         </Comment.Author>
         <Comment.Metadata>
           {calculateTime(comment.date)}
-          {(user.role === 'root' || comment.user._id === user._id) && (
-            <Comment.Actions>
+          <Comment.Actions>
+            {(user.role === 'root' || comment.user._id === user._id) && (
               <Comment.Action>
                 <Icon
                   disabled={disabled}
@@ -40,12 +52,47 @@ function PostComments({ comment, user, setComments, postId }) {
                   }}
                 />
               </Comment.Action>
-            </Comment.Actions>
-          )}
+            )}
+            <Comment.Action style={{ position: 'absolute', right: '0' }}>
+              <Icon
+                color="black"
+                loading={liking}
+                disabled={liking}
+                name={liking ? 'circle notched' : isLiked ? 'heart' : 'heart outline'}
+                style={{ cursor: 'pointer' }}
+                onClick={async () => {
+                  setLiking(true)
+                  await likeComment(
+                    postId,
+                    comment._id,
+                    user._id,
+                    setLikes,
+                    isLiked ? false : true
+                  )
+                  setLiking(false)
+                }}
+              />
+            </Comment.Action>
+          </Comment.Actions>
         </Comment.Metadata>
 
         <Comment.Text>{comment.text}</Comment.Text>
         <Comment.Actions>
+          {likes.length > 0 && (
+            <Comment.Action>
+              <LikesList
+                commentId={comment._id}
+                postId={postId}
+                trigger={
+                  likes.length > 0 && (
+                    <span className="spanLikesList">
+                      {`${likes.length} ${likes.length === 1 ? 'like' : 'likes'}`}
+                    </span>
+                  )
+                }
+              />
+            </Comment.Action>
+          )}
           <Comment.Action
             active={showReply}
             onClick={() => {

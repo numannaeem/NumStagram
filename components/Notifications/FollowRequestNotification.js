@@ -3,18 +3,8 @@ import { Feed, Button, Divider } from 'semantic-ui-react'
 import calculateTime from '../../utils/calculateTime'
 import { acceptRequest, rejectRequest } from '../../utils/profileActions'
 
-function FollowRequestNotification({
-  notification,
-  loggedUserFollowStats,
-  setUserFollowStats,
-  setNotifs
-}) {
+function FollowRequestNotification({ notification, setUserFollowStats, setNotifs }) {
   const [disabled, setDisabled] = useState(false)
-
-  // const accepted =
-  //   loggedUserFollowStats.followers.length > 0 &&
-  //   loggedUserFollowStats.followers.filter((f) => f.user === notification.user._id)
-  //     .length > 0
 
   return (
     <>
@@ -52,7 +42,6 @@ function FollowRequestNotification({
             compact
             color="green"
             inverted
-            // color={'twitter'}
             content={'Accept'}
             disabled={disabled}
             onClick={async () => {

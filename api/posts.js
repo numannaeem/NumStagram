@@ -11,11 +11,12 @@ const {
   newCommentNotification,
   removeCommentNotification,
   newReplyNotification,
-  removeReplyNotification
+  removeReplyNotification,
+  newCommentLikeNotification,
+  removeCommentLikeNotification
 } = require('../utilsServer/notificationActions')
 
 //TEST ROUTE
-
 router.put('/test', async (req, res) => {
   try {
     UserModel.updateMany({ private: { $exists: false } }, { private: true })
@@ -30,7 +31,6 @@ router.put('/test', async (req, res) => {
 })
 
 // CREATE A POST
-
 router.post('/', authMiddleware, async (req, res) => {
   const { text, location, picUrl } = req.body
 
@@ -56,7 +56,6 @@ router.post('/', authMiddleware, async (req, res) => {
 })
 
 // GET ALL POSTS
-
 router.get('/', authMiddleware, async (req, res) => {
   try {
     const { userId } = req
@@ -107,7 +106,6 @@ router.get('/', authMiddleware, async (req, res) => {
 })
 
 // GET POST BY ID
-
 router.get('/:postId', authMiddleware, async (req, res) => {
   try {
     const post = await PostModel.findById(req.params.postId)
@@ -127,7 +125,6 @@ router.get('/:postId', authMiddleware, async (req, res) => {
 })
 
 // DELETE POST
-
 router.delete('/:postId', authMiddleware, async (req, res) => {
   try {
     const { userId } = req
@@ -159,7 +156,6 @@ router.delete('/:postId', authMiddleware, async (req, res) => {
 })
 
 // LIKE A POST
-
 router.post('/like/:postId', authMiddleware, async (req, res) => {
   try {
     const { postId } = req.params
@@ -192,7 +188,6 @@ router.post('/like/:postId', authMiddleware, async (req, res) => {
 })
 
 // UNLIKE A POST
-
 router.put('/unlike/:postId', authMiddleware, async (req, res) => {
   try {
     const { postId } = req.params
@@ -227,7 +222,6 @@ router.put('/unlike/:postId', authMiddleware, async (req, res) => {
 })
 
 // GET ALL LIKES OF A POST
-
 router.get('/like/:postId', authMiddleware, async (req, res) => {
   try {
     const { postId } = req.params
@@ -244,8 +238,115 @@ router.get('/like/:postId', authMiddleware, async (req, res) => {
   }
 })
 
-// CREATE A COMMENT
+//LIKE A COMMENT
+router.post('/like/:postId/:commentId', authMiddleware, async (req, res) => {
+  try {
+    const { postId, commentId } = req.params
+    const { userId } = req
 
+    const post = await PostModel.findById(postId)
+    if (!post) {
+      return res.status(404).send('No Post found')
+    }
+
+    const comment = post.comments.find((comment) => comment._id === commentId)
+    if (!comment) {
+      return res.status(404).send('No comment found')
+    }
+
+    const isLiked =
+      comment.likes.filter((like) => like.user.toString() === userId).length > 0
+
+    if (isLiked) {
+      return res.status(401).send('Comment already liked')
+    }
+
+    await comment.likes.unshift({ user: userId })
+    await post.save()
+
+    if (comment.user.toString() !== userId) {
+      await newCommentLikeNotification(
+        postId,
+        comment.text,
+        userId,
+        comment.user.toString()
+      )
+    }
+
+    return res.status(200).send('Comment liked')
+  } catch (error) {
+    console.error(error)
+    return res.status(500).send(`Server error`)
+  }
+})
+
+//UNLIKE A COMMENT
+router.put('/unlike/:postId/:commentId', authMiddleware, async (req, res) => {
+  try {
+    const { postId, commentId } = req.params
+    const { userId } = req
+
+    const post = await PostModel.findById(postId)
+    if (!post) {
+      return res.status(404).send('Post not found')
+    }
+
+    const comment = post.comments.find((comment) => comment._id === commentId)
+    if (!comment) {
+      return res.status(404).send('No comment found')
+    }
+
+    const notLiked =
+      post.likes.filter((like) => like.user.toString() === userId).length === 0
+
+    if (notLiked) {
+      return res.status(401).send('Comment not liked before')
+    }
+
+    const index = comment.likes.map((like) => like.user.toString()).indexOf(userId)
+
+    await comment.likes.splice(index, 1)
+    await post.save()
+
+    if (comment.user.toString() !== userId) {
+      await removeCommentLikeNotification(
+        postId,
+        comment.text,
+        userId,
+        comment.user.toString()
+      )
+    }
+
+    return res.status(200).send('Comment Unliked')
+  } catch (error) {
+    console.error(error)
+    return res.status(500).send(`Server error`)
+  }
+})
+
+// GET ALL LIKES OF A COMMENT
+router.get('/like/:postId/:commentId', authMiddleware, async (req, res) => {
+  try {
+    const { postId, commentId } = req.params
+
+    const post = await PostModel.findById(postId).populate('comments.likes.user')
+    if (!post) {
+      return res.status(404).send('No post found')
+    }
+
+    const comment = post.comments.find((comment) => comment._id === commentId)
+    if (!comment) {
+      return res.status(404).send('No comment found')
+    }
+
+    return res.status(200).json(comment.likes)
+  } catch (error) {
+    console.error(error)
+    return res.status(500).send(`Server error`)
+  }
+})
+
+// CREATE A COMMENT
 router.post('/comment/:postId', authMiddleware, async (req, res) => {
   try {
     const { postId } = req.params
@@ -334,7 +435,6 @@ router.post('/reply/:postId/:commentId', authMiddleware, async (req, res) => {
 })
 
 // DELETE A COMMENT
-
 router.delete('/:postId/:commentId', authMiddleware, async (req, res) => {
   try {
     const { postId, commentId } = req.params
@@ -371,7 +471,6 @@ router.delete('/:postId/:commentId', authMiddleware, async (req, res) => {
 })
 
 //DELETE A REPLY
-
 router.delete('/:postId/:commentId/:replyId', authMiddleware, async (req, res) => {
   try {
     const { postId, commentId, replyId } = req.params

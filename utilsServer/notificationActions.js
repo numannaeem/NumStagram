@@ -161,6 +161,48 @@ const removeReplyNotification = async (postId, userId, replyId, userToNotifyId) 
   }
 }
 
+const newCommentLikeNotification = async (postId, text, userId, userToNotifyId) => {
+  try {
+    const userToNotify = await NotificationModel.findOne({ user: userToNotifyId })
+    const newNotif = {
+      type: 'newCommentLike',
+      user: userId,
+      post: postId,
+      text,
+      date: Date.now()
+    }
+    await userToNotify.notifications.unshift(newNotif)
+    await userToNotify.save()
+    await setNotificationToUnread(userToNotifyId)
+    return
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+
+const removeCommentLikeNotification = async (postId, text, userId, userToNotifyId) => {
+  try {
+    await NotificationModel.findOneAndUpdate(
+      { user: userToNotifyId },
+      {
+        $pull: {
+          notifications: {
+            type: 'newCommentLike',
+            user: userId,
+            post: postId,
+            text
+          }
+        }
+      }
+    )
+    return
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+
 const newFollowerNotification = async (userId, userToNotifyId) => {
   try {
     const userToNotify = await NotificationModel.findOne({ user: userToNotifyId })
@@ -224,5 +266,7 @@ module.exports = {
   removeFollowerNotification,
   newReplyNotification,
   removeReplyNotification,
-  newFollowRequestNotification
+  newFollowRequestNotification,
+  newCommentLikeNotification,
+  removeCommentLikeNotification
 }

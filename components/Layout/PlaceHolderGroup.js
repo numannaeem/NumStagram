@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 import {
   Placeholder,
   Divider,
@@ -7,11 +7,11 @@ import {
   Card,
   Container,
   Icon
-} from "semantic-ui-react";
-import { range } from "lodash";
+} from 'semantic-ui-react'
+import { range } from 'lodash'
 
 export const PlaceHolderPosts = () =>
-  range(1, 3).map(item => (
+  range(1, 3).map((item) => (
     <div key={item}>
       <Placeholder fluid>
         <Placeholder.Header image>
@@ -27,7 +27,7 @@ export const PlaceHolderPosts = () =>
       </Placeholder>
       <Divider hidden />
     </div>
-  ));
+  ))
 
 export const PlaceHolderSuggestions = () => (
   <>
@@ -57,10 +57,10 @@ export const PlaceHolderSuggestions = () => (
       </Card>
     </List.Item>
   </>
-);
+)
 
 export const PlaceHolderNotifications = () =>
-  range(1, 10).map(item => (
+  range(1, 10).map((item) => (
     <div key={item}>
       <Placeholder>
         <Placeholder.Header image>
@@ -70,20 +70,20 @@ export const PlaceHolderNotifications = () =>
       </Placeholder>
       <Divider hidden />
     </div>
-  ));
+  ))
 
 export const EndMessage = () => (
   <Container textAlign="center">
     <Icon name="check circle outline" size="large" />
     <p>You're all caught up!</p>
   </Container>
-);
+)
 
 export const LikesPlaceHolder = () =>
-  range(1, 6).map(item => (
-    <Placeholder key={item} style={{ minWidth: "200px" }}>
+  range(1, 6).map((item) => (
+    <Placeholder key={item} style={{ minWidth: '150px' }}>
       <Placeholder.Header image>
         <Placeholder.Line length="full" />
       </Placeholder.Header>
     </Placeholder>
-  ));
+  ))

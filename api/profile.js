@@ -404,6 +404,10 @@ router.post('/delete', authMiddleware, async (req, res) => {
       { $pull: { 'comments.$.replies': { user: userId } } }
     )
     await PostModel.updateMany(
+      { 'comments.likes.user': userId },
+      { $pull: { 'comments.$.likes': { user: userId } } }
+    )
+    await PostModel.updateMany(
       { 'likes.user': userId },
       { $pull: { likes: { user: userId } } }
     )

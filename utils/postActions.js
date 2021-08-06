@@ -52,6 +52,21 @@ export const likePost = async (postId, userId, setLikes, like = true) => {
     alert(catchErrors(error))
   }
 }
+export const likeComment = async (postId, commentId, userId, setLikes, like = true) => {
+  try {
+    if (like) {
+      await Axios.post(`/like/${postId}/${commentId}`)
+      setLikes((prev) => [...prev, { user: userId }])
+    }
+    //
+    else if (!like) {
+      await Axios.put(`/unlike/${postId}/${commentId}`)
+      setLikes((prev) => prev.filter((like) => like.user !== userId))
+    }
+  } catch (error) {
+    alert(catchErrors(error))
+  }
+}
 
 export const postComment = async (postId, user, text, setComments, setText) => {
   try {
