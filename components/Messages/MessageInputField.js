@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Form, Segment } from 'semantic-ui-react'
 
-function MessageInputField({ sendMsg }) {
+function MessageInputField({ sendMsg, dummy }) {
   const [text, setText] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -13,7 +13,7 @@ function MessageInputField({ sendMsg }) {
           onSubmit={(e) => {
             setLoading(true)
             e.preventDefault()
-            sendMsg(text)
+            !dummy && sendMsg(text)
             setText('')
             setLoading(false)
           }}

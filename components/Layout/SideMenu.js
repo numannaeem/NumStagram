@@ -14,7 +14,7 @@ function SideMenu({
 
   return (
     <List style={{ paddingTop: '1rem' }} size="big" verticalAlign="middle" selection>
-      <Link href="/">
+      <Link href="/" prefetch shallow>
         <List.Item active={isActive('/')}>
           <Icon name="home" size="large" {...(isActive('/') && { color: 'teal' })} />
           {pc && (
@@ -26,63 +26,59 @@ function SideMenu({
       </Link>
       <br />
 
-      <List.Item title="Messages" active={isActive('/messages')} as="a" href="/messages">
-        <Icon
-          name="comments outline"
-          size="large"
-          {...((isActive('/messages') && { color: 'teal' }) ||
-            (unreadMessage && { color: 'orange' }))}
-        />
-        {pc && (
-          <List.Content>
-            <List.Header content="Messages" />
-          </List.Content>
-        )}
-      </List.Item>
+      <Link href="/messages">
+        <List.Item title="Messages" active={isActive('/messages')}>
+          <Icon
+            name="comments outline"
+            size="large"
+            {...((isActive('/messages') && { color: 'teal' }) ||
+              (unreadMessage && { color: 'orange' }))}
+          />
+          {pc && (
+            <List.Content>
+              <List.Header content="Messages" />
+            </List.Content>
+          )}
+        </List.Item>
+      </Link>
       <br />
 
-      <List.Item
-        as="a"
-        href="/notifications"
-        title="Notifications"
-        active={isActive('/notifications')}
-      >
-        <Icon
-          name="bell outline"
-          size="large"
-          {...((isActive('/notifications') && { color: 'teal' }) ||
-            (unreadNotification && { color: 'orange' }))}
-        />
-        {pc && (
-          <List.Content>
-            <List.Header content="Notifications" />
-          </List.Content>
-        )}
-      </List.Item>
+      <Link href="/notifications">
+        <List.Item title="Notifications" active={isActive('/notifications')}>
+          <Icon
+            name="bell outline"
+            size="large"
+            {...((isActive('/notifications') && { color: 'teal' }) ||
+              (unreadNotification && { color: 'orange' }))}
+          />
+          {pc && (
+            <List.Content>
+              <List.Header content="Notifications" />
+            </List.Content>
+          )}
+        </List.Item>
+      </Link>
       <br />
 
-      <List.Item
-        as="a"
-        title="Account"
-        href={`/${username}`}
-        active={router.query.username === username}
-      >
-        <Icon
-          name="user"
-          size="large"
-          {...(router.query.username === username && { color: 'teal' })}
-        />
-        {pc && (
-          <List.Content>
-            <List.Header content="Account" />
-          </List.Content>
-        )}
-      </List.Item>
+      <Link href={`/${username}`}>
+        <List.Item title="Account" active={router.query.username === username}>
+          <Icon
+            name="user"
+            size="large"
+            {...(router.query.username === username && { color: 'teal' })}
+          />
+          {pc && (
+            <List.Content>
+              <List.Header content="Account" />
+            </List.Content>
+          )}
+        </List.Item>
+      </Link>
       <br />
 
       {tablet && (
         <>
-          <List.Item title="Search" active={isActive('/search')} as="a" href="/search">
+          <List.Item title="Search" active={isActive('/search')} as={Link} href="/search">
             <Icon
               name="search"
               size="large"

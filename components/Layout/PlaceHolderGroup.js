@@ -9,6 +9,8 @@ import {
   Icon
 } from 'semantic-ui-react'
 import { range } from 'lodash'
+import MessageInputField from '../Messages/MessageInputField'
+import Spinner from './Spinner'
 
 export const PlaceHolderPosts = () =>
   range(1, 3).map((item) => (
@@ -87,3 +89,41 @@ export const LikesPlaceHolder = () =>
       </Placeholder.Header>
     </Placeholder>
   ))
+export const ChatPlaceHolder = () => (
+  <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+    <div
+      style={{
+        position: 'sticky',
+        top: '0',
+        padding: '1rem',
+        borderBottom: '1px gray solid'
+      }}
+    >
+      <Placeholder>
+        <Placeholder.Header image>
+          <Placeholder.Line />
+          <Placeholder.Line />
+        </Placeholder.Header>
+      </Placeholder>
+    </div>
+    <div
+      style={{
+        flexGrow: '2',
+        padding: '0 2px',
+        width: '100%',
+        overflow: 'auto',
+        overflowX: 'hidden',
+        backgroundColor: 'whitesmoke',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}
+    >
+      <Spinner />
+    </div>
+
+    <div style={{ position: 'sticky', bottom: '0' }}>
+      <MessageInputField dummy />
+    </div>
+  </div>
+)

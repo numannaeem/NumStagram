@@ -190,29 +190,16 @@ router.put('/unfollow/:userToUnfollowId', authMiddleware, async (req, res) => {
   }
 })
 
-// //Send Request
-
-// router.post('/sendRequest/:userToSendReqId', authMiddleware, async (req, res) => {
-//   const { userToSendReqId } = req.params
-//   const { userId } = req
-//   try {
-//   } catch (error) {
-//     return res.status(500).send('Server Error')
-//   }
-// })
-
 router.delete('/rejectRequest/:userSentReqId', authMiddleware, async (req, res) => {
   const { userSentReqId } = req.params
   const { userId } = req
   try {
-    console.log('here')
     const userSentReq = await UserModel.findById(userSentReqId)
     const userGotNotif = await NotificationModel.findOne({ user: userId })
     userGotNotif.notifications = userGotNotif.notifications.filter(
       (n) => n.user.toString() !== userSentReqId && n.type === 'newFollowRequest'
     )
     await userGotNotif.save()
-    console.log('here')
 
     const index = userSentReq.followRequestsSent.map((r) => r.toString()).indexOf(userId)
     await userSentReq.followRequestsSent.splice(index, 1)

@@ -25,6 +25,7 @@ import getUserInfo from '../utils/getUserInfo'
 import newMsgSound from '../utils/newMsgSound'
 import cookie from 'js-cookie'
 import Link from 'next/link'
+import { ChatPlaceHolder } from '../components/Layout/PlaceHolderGroup'
 
 const scrollDivToBottom = (divRef) =>
   divRef.current?.scrollIntoView({ behaviour: 'smooth' })
@@ -35,6 +36,7 @@ function Messages({ chatsData, user, isMobile }) {
 
   const socket = useRef()
   const [connectedUsers, setConnectedUsers] = useState([])
+  const [loading, setLoading] = useState(false)
 
   const [messages, setMessages] = useState([])
   const [bannerData, setBannerData] = useState({
@@ -207,6 +209,7 @@ function Messages({ chatsData, user, isMobile }) {
   // LOAD MESSAGES useEffect
   useEffect(() => {
     const loadMessages = () => {
+      setLoading(true)
       socket.current.emit('loadMessages', {
         userId: user._id,
         messagesWith: router.query.message
@@ -222,7 +225,7 @@ function Messages({ chatsData, user, isMobile }) {
             connectedUsers?.filter((u) => u.userId === chat.messagesWith._id).length
           )
         })
-
+        setLoading(false)
         openChatId.current = chat.messagesWith._id
         divRef.current && scrollDivToBottom(divRef)
 
@@ -308,37 +311,41 @@ function Messages({ chatsData, user, isMobile }) {
               </Grid.Column>
 
               <Grid.Column width={10}>
-                {router.query.message && (
-                  <>
-                    <div>
-                      <Banner bannerData={bannerData} />
-                    </div>
-                    <div
-                      style={{
-                        padding: '0 2px',
-                        width: '100%',
-                        overflow: 'auto',
-                        overflowX: 'hidden',
-                        maxHeight: '32rem',
-                        height: '32rem',
-                        backgroundColor: 'whitesmoke'
-                      }}
-                    >
-                      {messages.length > 0 &&
-                        messages.map((message, i) => (
-                          <Message
-                            divRef={divRef}
-                            key={message._id}
-                            bannerProfilePic={bannerData.profilePicUrl}
-                            message={message}
-                            user={user}
-                            deleteMsg={deleteMsg}
-                          />
-                        ))}
-                    </div>
+                {loading ? (
+                  <ChatPlaceHolder />
+                ) : (
+                  router.query.message && (
+                    <>
+                      <div>
+                        <Banner bannerData={bannerData} />
+                      </div>
+                      <div
+                        style={{
+                          padding: '0 2px',
+                          width: '100%',
+                          overflow: 'auto',
+                          overflowX: 'hidden',
+                          maxHeight: '32rem',
+                          height: '32rem',
+                          backgroundColor: 'whitesmoke'
+                        }}
+                      >
+                        {messages.length > 0 &&
+                          messages.map((message, i) => (
+                            <Message
+                              divRef={divRef}
+                              key={message._id}
+                              bannerProfilePic={bannerData.profilePicUrl}
+                              message={message}
+                              user={user}
+                              deleteMsg={deleteMsg}
+                            />
+                          ))}
+                      </div>
 
-                    <MessageInputField sendMsg={sendMsg} />
-                  </>
+                      <MessageInputField sendMsg={sendMsg} />
+                    </>
+                  )
                 )}
               </Grid.Column>
             </Grid>
@@ -424,42 +431,45 @@ function Messages({ chatsData, user, isMobile }) {
         </div>
       )}
       <Transition.Group animation="fade right" duration={400}>
-        {Boolean(router.query.message) && (
-          <Container id="chat-container">
-            <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-              <div style={{ position: 'sticky', top: '0' }}>
-                <Banner isMobile bannerData={bannerData} />
-              </div>
-              <div
-                style={{
-                  flexGrow: '2',
-                  padding: '0 2px',
-                  width: '100%',
-                  overflow: 'auto',
-                  overflowX: 'hidden',
-                  backgroundColor: 'whitesmoke'
-                }}
-              >
-                {messages.length > 0 &&
-                  messages.map((message, i) => (
-                    <Message
-                      isMobile
-                      divRef={divRef}
-                      key={message._id}
-                      bannerProfilePic={bannerData.profilePicUrl}
-                      message={message}
-                      user={user}
-                      deleteMsg={deleteMsg}
-                    />
-                  ))}
-              </div>
+        {Boolean(router.query.message) &&
+          (loading ? (
+            <ChatPlaceHolder />
+          ) : (
+            <Container id="chat-container">
+              <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+                <div style={{ position: 'sticky', top: '0' }}>
+                  <Banner isMobile bannerData={bannerData} />
+                </div>
+                <div
+                  style={{
+                    flexGrow: '2',
+                    padding: '0 2px',
+                    width: '100%',
+                    overflow: 'auto',
+                    overflowX: 'hidden',
+                    backgroundColor: 'whitesmoke'
+                  }}
+                >
+                  {messages.length > 0 &&
+                    messages.map((message, i) => (
+                      <Message
+                        isMobile
+                        divRef={divRef}
+                        key={message._id}
+                        bannerProfilePic={bannerData.profilePicUrl}
+                        message={message}
+                        user={user}
+                        deleteMsg={deleteMsg}
+                      />
+                    ))}
+                </div>
 
-              <div style={{ position: 'sticky', bottom: '0' }}>
-                <MessageInputField sendMsg={sendMsg} />
+                <div style={{ position: 'sticky', bottom: '0' }}>
+                  <MessageInputField sendMsg={sendMsg} />
+                </div>
               </div>
-            </div>
-          </Container>
-        )}
+            </Container>
+          ))}
       </Transition.Group>
     </>
   )

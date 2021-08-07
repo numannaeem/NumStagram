@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Segment, Image, Grid, Divider, Header, Button, List } from 'semantic-ui-react'
+import { Segment, Image, Grid, Header, Button, List } from 'semantic-ui-react'
 import { followUser, unfollowUser, sendRequest } from '../../utils/profileActions'
 
 function ProfileHeader({
@@ -23,22 +23,67 @@ function ProfileHeader({
   return (
     <>
       <Segment raised color="teal" style={{ backgroundColor: '#ffffef' }}>
-        <Grid stackable>
-          <Grid.Column width={11}>
-            <Grid.Row>
+        <Grid>
+          <Grid.Row divided>
+            <Grid.Column mobile={4} largeScreen={3} widescreen={3}>
+              <Image size="tiny" circular src={profile.user.profilePicUrl} />
+            </Grid.Column>
+            <Grid.Column
+              verticalAlign="middle"
+              mobile={12}
+              largeScreen={13}
+              widescreen={13}
+              style={{ whiteSpace: 'pre-wrap' }}
+            >
               <Header
                 as="h2"
                 content={profile.user.name}
                 style={{ marginBottom: '5px' }}
               />
-            </Grid.Row>
-
-            <Grid.Row style={{ whiteSpace: 'pre-wrap' }} stretched>
               {profile.bio}
-              <Divider hidden />
+            </Grid.Column>
+          </Grid.Row>
+          {!ownAccount && (
+            <Grid.Row columns={1}>
+              <Grid.Column>
+                <Button
+                  size="small"
+                  compact
+                  loading={loading}
+                  disabled={loading || (privateAcc && followRequestSent)}
+                  content={
+                    isFollowing
+                      ? 'Following'
+                      : !privateAcc
+                      ? 'Follow'
+                      : followRequestSent
+                      ? 'Follow request sent'
+                      : 'Send follow request'
+                  }
+                  icon={
+                    isFollowing
+                      ? 'check circle'
+                      : privateAcc && followRequestSent
+                      ? 'clock outline'
+                      : 'add user'
+                  }
+                  color={isFollowing ? 'instagram' : 'twitter'}
+                  onClick={async () => {
+                    setLoading(true)
+                    isFollowing && profile.user.private && setPrivateAcc(true)
+                    isFollowing
+                      ? await unfollowUser(profile.user._id, setUserFollowStats)
+                      : privateAcc
+                      ? await sendRequest(profile.user._id, setFollowRequestSent)
+                      : await followUser(profile.user._id, setUserFollowStats)
+                    setLoading(false)
+                  }}
+                />
+              </Grid.Column>
             </Grid.Row>
-
-            <Grid.Row>
+          )}
+          <Grid.Row>
+            <Grid.Column>
               <List>
                 <List.Item>
                   <List.Icon name="mail" />
@@ -104,10 +149,10 @@ function ProfileHeader({
                   </>
                 ) : null}
               </List>
-            </Grid.Row>
-          </Grid.Column>
+            </Grid.Column>
+          </Grid.Row>
 
-          <Grid.Column width={5} style={{ textAlign: 'center' }}>
+          {/* <Grid.Column width={5} style={{ textAlign: 'center' }}>
             <Grid.Row verticalAlign="middle">
               <Image size="medium" avatar src={profile.user.profilePicUrl} />
             </Grid.Row>
@@ -147,7 +192,7 @@ function ProfileHeader({
                 }}
               />
             )}
-          </Grid.Column>
+          </Grid.Column> */}
         </Grid>
       </Segment>
     </>

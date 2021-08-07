@@ -297,7 +297,7 @@ router.put('/unlike/:postId/:commentId', authMiddleware, async (req, res) => {
     }
 
     const notLiked =
-      post.likes.filter((like) => like.user.toString() === userId).length === 0
+      comment.likes.filter((like) => like.user.toString() === userId).length === 0
 
     if (notLiked) {
       return res.status(401).send('Comment not liked before')
