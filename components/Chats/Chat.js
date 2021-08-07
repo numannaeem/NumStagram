@@ -3,7 +3,7 @@ import { Comment, Icon, List } from 'semantic-ui-react'
 import { useRouter } from 'next/router'
 import calculateTime from '../../utils/calculateTime'
 
-function Chat({ chat, connectedUsers, deleteChat }) {
+function Chat({ chat, connectedUsers, deleteChat, pc }) {
   const router = useRouter()
 
   const isOnline = Boolean(
@@ -15,9 +15,13 @@ function Chat({ chat, connectedUsers, deleteChat }) {
       active={router.query.message === chat.messagesWith}
       onClick={(e) => {
         e.stopPropagation()
-        router.push(`/messages?message=${chat.messagesWith}`, undefined, {
-          shallow: true
-        })
+        pc
+          ? router.replace(`/messages?message=${chat.messagesWith}`, undefined, {
+              shallow: true
+            })
+          : router.push(`/messages?message=${chat.messagesWith}`, undefined, {
+              shallow: true
+            })
       }}
     >
       <Comment>

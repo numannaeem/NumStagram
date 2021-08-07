@@ -1,5 +1,6 @@
 import React from 'react'
 import { Divider, Feed } from 'semantic-ui-react'
+import Link from 'next/link'
 import calculateTime from '../../utils/calculateTime'
 
 function ReplyNotification({ notification }) {
@@ -10,11 +11,11 @@ function ReplyNotification({ notification }) {
         <Feed.Content>
           <Feed.Summary>
             <>
-              <Feed.User as="a" href={`/${notification.user.username}`}>
+              <Feed.User as={Link} href={`/${notification.user.username}`}>
                 {notification.user.name}
               </Feed.User>{' '}
               replied to you comment on{' '}
-              <a href={`/post/${notification.post._id}`}>this post.</a>
+              <Link href={`/post/${notification.post._id}`}>this post.</Link>
               <Feed.Date>{calculateTime(notification.date)}</Feed.Date>
             </>
           </Feed.Summary>

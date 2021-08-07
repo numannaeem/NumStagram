@@ -9,7 +9,7 @@ function Banner({ bannerData, isMobile }) {
       <Grid>
         <Grid.Column>
           {isMobile && (
-            <Link shallow={true} href="/messages" style={{ color: 'black' }}>
+            <Link shallow={true} replace href="/messages" style={{ color: 'black' }}>
               <Icon size="big" name="angle left" />
             </Link>
           )}

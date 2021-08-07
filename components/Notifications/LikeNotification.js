@@ -1,6 +1,7 @@
-import React from "react";
-import { Feed, Divider } from "semantic-ui-react";
-import calculateTime from "../../utils/calculateTime";
+import React from 'react'
+import Link from 'next/link'
+import { Feed, Divider } from 'semantic-ui-react'
+import calculateTime from '../../utils/calculateTime'
 
 function LikeNotification({ notification }) {
   return (
@@ -10,10 +11,10 @@ function LikeNotification({ notification }) {
         <Feed.Content>
           <Feed.Summary>
             <>
-              <Feed.User as="a" href={`/${notification.user.username}`}>
+              <Feed.User as={Link} href={`/${notification.user.username}`}>
                 {notification.user.name}
-              </Feed.User>{" "}
-              liked your <a href={`/post/${notification.post._id}`}>post.</a>
+              </Feed.User>{' '}
+              liked your <Link href={`/post/${notification.post._id}`}>post.</Link>
               <Feed.Date>{calculateTime(notification.date)}</Feed.Date>
             </>
           </Feed.Summary>
@@ -29,7 +30,7 @@ function LikeNotification({ notification }) {
       </Feed.Event>
       <Divider />
     </>
-  );
+  )
 }
 
-export default LikeNotification;
+export default LikeNotification

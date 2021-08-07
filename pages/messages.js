@@ -156,7 +156,7 @@ function Messages({ chatsData, user, isMobile }) {
       })
 
       if (!isMobile && chats.length > 0 && !router.query.message) {
-        router.push(`/messages?message=${chats[0].messagesWith}`, undefined, {
+        router.replace(`/messages?message=${chats[0].messagesWith}`, undefined, {
           shallow: true
         })
       }
@@ -294,6 +294,7 @@ function Messages({ chatsData, user, isMobile }) {
                       <List divided selection>
                         {chats.map((chat) => (
                           <Chat
+                            pc
                             key={chat.messagesWith}
                             chat={chat}
                             connectedUsers={connectedUsers}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Feed, Button, Divider } from 'semantic-ui-react'
 import calculateTime from '../../utils/calculateTime'
+import Link from 'next/link'
 import { followUser, unfollowUser, sendRequest } from '../../utils/profileActions'
 
 function FollowerNotification({
@@ -29,7 +30,7 @@ function FollowerNotification({
         <Feed.Content>
           <Feed.Summary>
             <>
-              <Feed.User as="a" href={`/${notification.user.username}`}>
+              <Feed.User as={Link} href={`/${notification.user.username}`}>
                 {notification.user.name}
               </Feed.User>{' '}
               started following you.

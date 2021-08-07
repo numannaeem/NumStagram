@@ -5,7 +5,7 @@ import { HeaderMessage, FooterMessage } from '../components/Common/WelcomeMessag
 import axios from 'axios'
 import baseUrl from '../utils/baseUrl'
 import { registerUser } from '../utils/authUser'
-import uploadPic from '../utils/uploadPicToCloudinary'
+import { uploadAvatar } from '../utils/uploadPicToCloudinary'
 import SignupImage from '../components/Common/SignupImage'
 const regexUserName = /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/
 let cancel
@@ -105,7 +105,7 @@ function Signup() {
 
     let profilePicUrl
     if (media !== null) {
-      profilePicUrl = await uploadPic(media)
+      profilePicUrl = await uploadAvatar(media)
     }
 
     if (media !== null && !profilePicUrl) {

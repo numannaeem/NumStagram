@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react'
 import { Form, Button, Message, Image } from 'semantic-ui-react'
 import CommonInputs from '../Common/CommonInputs'
 import SignupImage from '../Common/SignupImage'
-import uploadPic from '../../utils/uploadPicToCloudinary'
+import { uploadAvatar } from '../../utils/uploadPicToCloudinary'
 import { profileUpdate } from '../../utils/profileActions'
 
 function UpdateProfile({ Profile }) {
@@ -23,7 +23,6 @@ function UpdateProfile({ Profile }) {
   const [loading, setLoading] = useState(false)
   const [editDP, setEditDP] = useState(false)
   const [showSocialLinks, setShowSocialLinks] = useState(false)
-
   const [highlighted, setHighlighted] = useState(false)
   const inputRef = useRef()
   const [media, setMedia] = useState(null)
@@ -56,7 +55,7 @@ function UpdateProfile({ Profile }) {
             profilePicUrl = profile.profilePicUrl
           }
           if (media) {
-            profilePicUrl = await uploadPic(media)
+            profilePicUrl = await uploadAvatar(media)
           }
 
           if (media && !profilePicUrl) {
@@ -104,7 +103,7 @@ function UpdateProfile({ Profile }) {
         <Button
           color="green"
           icon="save"
-          disabled={profile.bio === '' || loading}
+          disabled={loading}
           content="Save changes"
           type="submit"
         />
