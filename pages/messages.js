@@ -292,9 +292,9 @@ function Messages({ chatsData, user, isMobile }) {
                       }}
                     >
                       <List divided selection>
-                        {chats.map((chat, i) => (
+                        {chats.map((chat) => (
                           <Chat
-                            key={i}
+                            key={chat.messagesWith}
                             chat={chat}
                             connectedUsers={connectedUsers}
                             deleteChat={deleteChat}
@@ -327,7 +327,7 @@ function Messages({ chatsData, user, isMobile }) {
                         messages.map((message, i) => (
                           <Message
                             divRef={divRef}
-                            key={i}
+                            key={message._id}
                             bannerProfilePic={bannerData.profilePicUrl}
                             message={message}
                             user={user}
@@ -399,9 +399,9 @@ function Messages({ chatsData, user, isMobile }) {
                 <Comment.Group>
                   <Segment basic>
                     <List divided selection>
-                      {chats.map((chat, i) => (
+                      {chats.map((chat) => (
                         <Chat
-                          key={i}
+                          key={chat.messagesWith}
                           chat={chat}
                           connectedUsers={connectedUsers}
                           deleteChat={deleteChat}
@@ -444,7 +444,7 @@ function Messages({ chatsData, user, isMobile }) {
                     <Message
                       isMobile
                       divRef={divRef}
-                      key={i}
+                      key={message._id}
                       bannerProfilePic={bannerData.profilePicUrl}
                       message={message}
                       user={user}

@@ -33,7 +33,7 @@ function PostPage({ post, errorLoading, user }) {
 
   return (
     <div style={{ minHeight: '105vh' }}>
-      <Container text>
+      <Container>
         <Segment basic>
           <Card color="teal" fluid>
             {post.picUrl && (

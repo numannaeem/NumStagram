@@ -6,6 +6,7 @@ const HeadTags = () => (
       <meta name="viewport" content="width=device-width" />
       <meta charSet="UTF-8" />
       <link rel="icon" href="/favicon.ico" sizes="16*16" type="image/png" />
+      <link rel="apple-touch-icon" href="/android-chrome-192x192.png"></link>
 
       <link rel="stylesheet" type="text/css" href="/listMessages.css" />
 

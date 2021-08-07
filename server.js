@@ -6,6 +6,7 @@ const dev = process.env.NODE_ENV !== 'production'
 const nextApp = next({ dev })
 const io = require('socket.io')(server)
 const handle = nextApp.getRequestHandler()
+const path = require('path')
 require('dotenv').config({ path: './config.env' })
 const connectDb = require('./utilsServer/connectDb')
 // const { addUser, removeUser, findConnectedUser } = require('./utilsServer/roomActions')
@@ -130,6 +131,9 @@ nextApp.prepare().then(() => {
       else next()
     })
   }
+
+  app.get('/service-worker.js', express.static(path.join(__dirname, '.next')))
+
   app.use('/api/signup', require('./api/signup'))
   app.use('/api/auth', require('./api/auth'))
   app.use('/api/search', require('./api/search'))

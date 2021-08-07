@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "nodemon server.js",
     "build": "next build",
+    "server": "npm run build && SET NODE_ENV=production&& node server.js",
     "start": "NODE_ENV=production node server.js"
   },
   "dependencies": {
@@ -21,6 +22,7 @@
     "moment": "^2.24.0",
     "mongoose": "^5.9.14",
     "next": "^10.0.3",
+    "next-offline": "^5.0.5",
     "nodemailer": "^6.4.8",
     "nodemailer-sendgrid-transport": "^0.2.0",
     "nodemon": "^2.0.12",
