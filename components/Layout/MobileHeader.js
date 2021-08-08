@@ -11,7 +11,9 @@ function MobileHeader({ user: { unreadNotification, email, unreadMessage, userna
   return (
     <>
       <Menu
+        inverted
         style={{
+          backgroundColor: '#0c594b',
           display: 'flex',
           position: 'sticky',
           top: '0',
@@ -21,7 +23,7 @@ function MobileHeader({ user: { unreadNotification, email, unreadMessage, userna
         fluid
         borderless
       >
-        <Container text style={{ justifyContent: 'space-between' }}>
+        <Container text textAlign="center" style={{ justifyContent: 'space-between' }}>
           <Link href="/" shallow>
             <Menu.Item header active={isActive('/')}>
               <Icon name="rss" size="large" />

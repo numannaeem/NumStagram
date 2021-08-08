@@ -3,16 +3,14 @@
 }
 
 #nprogress .bar {
-  background: var(--progressBar);
-
   position: fixed;
   z-index: 1031;
   top: 0;
   left: 0;
-  background-color: red;
+  background-color: rgb(211, 37, 255);
 
   width: 100%;
-  height: 2px;
+  height: 3px;
 }
 
 #nprogress .peg {
@@ -21,7 +19,7 @@
   right: 0px;
   width: 100px;
   height: 100%;
-  box-shadow: 0 0 10px var(--progressBar), 0 0 5px var(--progressBar);
+  box-shadow: 0 0 10px 1px rgb(247, 0, 255);
   opacity: 1;
 
   -webkit-transform: rotate(3deg) translate(0px, -4px);

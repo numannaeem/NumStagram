@@ -152,7 +152,7 @@ function PostPage({ post, user, errorLoading }) {
 
   return (
     <>
-      <Segment basic>
+      <Segment basic style={{ minHeight: '100vh' }}>
         <Card color="teal" fluid>
           <Card.Content>
             <Image floated="left" src={post.user.profilePicUrl} avatar circular />
