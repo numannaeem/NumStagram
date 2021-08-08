@@ -115,6 +115,7 @@ function Messages({ chatsData, user, isMobile }) {
           const ifPreviouslyMessaged =
             (await chats.filter((chat) => chat.messagesWith === newMsg.sender).length) > 0
           if (ifPreviouslyMessaged) {
+            console.log('heree')
             setChats((prev) => {
               const previousChat = prev.find(
                 (chat) => chat.messagesWith === newMsg.sender

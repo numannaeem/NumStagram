@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Popup, Button } from 'semantic-ui-react'
 import calculateTime from '../../utils/calculateTime'
+import Linkify from 'linkifyjs/react'
 
 function Message({ message, user, deleteMsg, bannerProfilePic, divRef, isMobile }) {
   const [deleteIcon, showDeleteIcon] = useState(false)
@@ -24,7 +25,9 @@ function Message({ message, user, deleteMsg, bannerProfilePic, divRef, isMobile 
         />
 
         <div className={ifYouSender ? 'ownBubble own' : 'otherBubble other'}>
-          {message.msg}
+          <Linkify options={{ target: '_blank', className: 'chat-link' }}>
+            {message.msg}
+          </Linkify>
         </div>
       </div>
 

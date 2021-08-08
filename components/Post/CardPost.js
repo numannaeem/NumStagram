@@ -19,6 +19,7 @@ import LikesList from './LikesList'
 import ImageModal from './ImageModal'
 import NoImageModal from './NoImageModal'
 import ImageOnlyModal from './ImageOnlyModal'
+import Linkify from 'linkifyjs/react'
 
 function CardPost({ post, user, setPosts, setShowToastr }) {
   const [likes, setLikes] = useState(post.likes)
@@ -131,7 +132,7 @@ function CardPost({ post, user, setPosts, setShowToastr }) {
                 wordSpacing: '0.35px'
               }}
             >
-              {post.text}
+              <Linkify options={{ target: 'blank' }}>{post.text}</Linkify>
             </Card.Description>
           </Card.Content>
           {post.picUrl && (

@@ -7,8 +7,13 @@ html {
 * {
   -webkit-tap-highlight-color: transparent !important;
 }
-:root {
-  --progressBar: #54d1db;
+
+.chat-link {
+  color: rgb(140, 213, 255);
+}
+
+.chat-link:hover {
+  color: rgb(20, 102, 255);
 }
 
 #logo {
