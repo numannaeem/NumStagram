@@ -22,7 +22,7 @@ function MobileHeader({ user: { unreadNotification, email, unreadMessage, userna
         borderless
       >
         <Container text style={{ justifyContent: 'space-between' }}>
-          <Link href="/">
+          <Link href="/" shallow>
             <Menu.Item header active={isActive('/')}>
               <Icon name="rss" size="large" />
             </Menu.Item>

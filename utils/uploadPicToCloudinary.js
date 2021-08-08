@@ -8,7 +8,7 @@ const uploadPic = async (media) => {
     form.append('cloud_name', 'num4n')
 
     const res = await axios.post(process.env.CLOUDINARY_URL, form)
-    return res.data.url
+    return res.data.secure_url
   } catch (error) {
     return null
   }
@@ -22,7 +22,7 @@ export const uploadAvatar = async (media) => {
     form.append('cloud_name', 'num4n')
 
     const res = await axios.post(process.env.CLOUDINARY_URL, form)
-    return res.data.url
+    return res.data.secure_url
   } catch (error) {
     return null
   }

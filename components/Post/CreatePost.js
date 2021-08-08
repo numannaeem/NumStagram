@@ -7,8 +7,7 @@ import {
   Icon,
   Transition,
   Grid,
-  Container,
-  Divider
+  Container
 } from 'semantic-ui-react'
 import uploadPic from '../../utils/uploadPicToCloudinary'
 import { submitNewPost } from '../../utils/postActions'
@@ -89,6 +88,7 @@ function CreatePost({ user, setPosts }) {
       setError
     )
 
+    setTouched(false)
     setMedia(null)
     setMediaPreview(null)
     setLoading(false)
@@ -113,7 +113,7 @@ function CreatePost({ user, setPosts }) {
         </big>
         <Icon size="large" color="grey" name={`angle ${touched ? 'up' : 'down'}`} />
       </div>
-      <Form error={error !== null} onSubmit={handleSubmit}>
+      <Form error={error !== null} loading={loading} onSubmit={handleSubmit}>
         <Message error onDismiss={() => setError(null)} content={error} header="Oops!" />
 
         <Form.Group>
@@ -121,9 +121,9 @@ function CreatePost({ user, setPosts }) {
             placeholder="What's happening?"
             name="text"
             required
+            onFocus={() => !touched && setTouched(true)}
             value={newPost.text}
             onChange={(e) => {
-              !touched && setTouched(true)
               handleChange(e)
             }}
             rows={4}
@@ -229,7 +229,7 @@ function CreatePost({ user, setPosts }) {
           <Button.Group style={{ marginRight: '5px' }}>
             <Button
               content="Cancel"
-              disabled={(!media && !newPost.text.trim().length) || loading}
+              disabled={(!touched && !media && !newPost.text.trim().length) || loading}
               onClick={() => {
                 setMedia(null)
                 setMediaPreview(null)
@@ -246,6 +246,7 @@ function CreatePost({ user, setPosts }) {
               color="teal"
               icon="send"
               loading={loading}
+              type="submit"
             />
           </Button.Group>
         </div>

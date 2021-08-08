@@ -14,7 +14,7 @@ function SideMenu({
 
   return (
     <List style={{ paddingTop: '1rem' }} size="big" verticalAlign="middle" selection>
-      <Link href="/" prefetch shallow>
+      <Link href="/" shallow>
         <List.Item active={isActive('/')}>
           <Icon name="home" size="large" {...(isActive('/') && { color: 'teal' })} />
           {pc && (
@@ -78,13 +78,15 @@ function SideMenu({
 
       {tablet && (
         <>
-          <List.Item title="Search" active={isActive('/search')} as={Link} href="/search">
-            <Icon
-              name="search"
-              size="large"
-              {...(isActive('/search') && { color: 'teal' })}
-            />
-          </List.Item>
+          <Link href="/search" shallow>
+            <List.Item title="Search" active={isActive('/search')}>
+              <Icon
+                name="search"
+                size="large"
+                {...(isActive('/search') && { color: 'teal' })}
+              />
+            </List.Item>
+          </Link>
           <br />
         </>
       )}
