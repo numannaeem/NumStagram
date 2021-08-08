@@ -433,7 +433,7 @@ function Messages({ chatsData, user, isMobile }) {
       <Transition.Group animation="fade right" duration={400}>
         {Boolean(router.query.message) &&
           (loading ? (
-            <ChatPlaceHolder />
+            <ChatPlaceHolder mobile />
           ) : (
             <Container id="chat-container">
               <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>

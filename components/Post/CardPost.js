@@ -79,7 +79,7 @@ function CardPost({ post, user, setPosts, setShowToastr }) {
       <>
         <Card color="teal" fluid>
           <Card.Content>
-            <Image floated="left" src={post.user.profilePicUrl} avatar circular />
+            <Image floated="left" src={post.user.profilePicUrl} avatar />
 
             {(user.role === 'root' || post.user._id === user._id) && (
               <>
@@ -135,15 +135,22 @@ function CardPost({ post, user, setPosts, setShowToastr }) {
             </Card.Description>
           </Card.Content>
           {post.picUrl && (
-            <div style={{ position: 'relative' }}>
-              <Image
+            <div
+              style={{
+                position: 'relative',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              <img
                 onDoubleClick={async () => {
                   if (!liking) {
                     clearTimeout(timer)
                     prevent = true
                     if (!isLiked) {
                       setShowHeart(true)
-                      setTimeout(() => setShowHeart(false), 500)
+                      setTimeout(() => setShowHeart(false), 700)
                     }
                     setLiking(true)
                     await likePost(post._id, user._id, setLikes, isLiked ? false : true)
@@ -152,6 +159,8 @@ function CardPost({ post, user, setPosts, setShowToastr }) {
                 }}
                 src={post.picUrl}
                 style={{
+                  objectFit: 'cover',
+                  minWidth: '100%',
                   cursor: 'pointer',
                   maxHeight: '70vh',
                   overflow: 'hidden'
@@ -165,7 +174,7 @@ function CardPost({ post, user, setPosts, setShowToastr }) {
                   }, delay)
                 }}
               />
-              <Transition.Group animation="fade" duration={500}>
+              <Transition.Group animation="fade" duration={400}>
                 {showHeart && (
                   <Icon
                     size="huge"

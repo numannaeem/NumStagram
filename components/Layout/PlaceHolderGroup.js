@@ -89,41 +89,80 @@ export const LikesPlaceHolder = () =>
       </Placeholder.Header>
     </Placeholder>
   ))
-export const ChatPlaceHolder = () => (
-  <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-    <div
-      style={{
-        position: 'sticky',
-        top: '0',
-        padding: '1rem',
-        borderBottom: '1px gray solid'
-      }}
-    >
-      <Placeholder>
-        <Placeholder.Header image>
-          <Placeholder.Line />
-          <Placeholder.Line />
-        </Placeholder.Header>
-      </Placeholder>
-    </div>
-    <div
-      style={{
-        flexGrow: '2',
-        padding: '0 2px',
-        width: '100%',
-        overflow: 'auto',
-        overflowX: 'hidden',
-        backgroundColor: 'whitesmoke',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-      }}
-    >
-      <Spinner />
-    </div>
+export const ChatPlaceHolder = ({ mobile }) =>
+  mobile ? (
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+      <div
+        style={{
+          position: 'sticky',
+          top: '0',
+          padding: '1rem',
+          borderBottom: '1px gray solid'
+        }}
+      >
+        <Placeholder>
+          <Placeholder.Header image>
+            <Placeholder.Line />
+            <Placeholder.Line />
+          </Placeholder.Header>
+        </Placeholder>
+      </div>
+      <div
+        style={{
+          flexGrow: '2',
+          padding: '0 2px',
+          width: '100%',
+          overflow: 'auto',
+          overflowX: 'hidden',
+          backgroundColor: 'whitesmoke',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        <Spinner />
+      </div>
 
-    <div style={{ position: 'sticky', bottom: '0' }}>
-      <MessageInputField dummy />
+      <div style={{ position: 'sticky', bottom: '0' }}>
+        <MessageInputField dummy />
+      </div>
     </div>
-  </div>
-)
+  ) : (
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <div
+        style={{
+          position: 'sticky',
+          top: '0',
+          padding: '1rem',
+          border: '1px lightgray solid',
+          borderTop: '2px solid #00b5ad'
+        }}
+      >
+        <Placeholder>
+          <Placeholder.Header image>
+            <Placeholder.Line />
+          </Placeholder.Header>
+        </Placeholder>
+      </div>
+      <div
+        style={{
+          padding: '0 2px',
+          width: '100%',
+          overflow: 'auto',
+          overflowX: 'hidden',
+          maxHeight: '32rem',
+          height: '32rem',
+          backgroundColor: 'whitesmoke',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        <Spinner />
+      </div>
+
+      <div style={{ position: 'sticky', bottom: '0' }}>
+        <MessageInputField dummy />
+      </div>
+    </div>
+  )
