@@ -46,8 +46,8 @@ function Notifications({ user, notifications, userFollowStats }) {
 
   return (
     <>
-      <Container style={{ marginTop: '1.5rem' }}>
-        {notifs.length > 0 ? (
+      {notifs.length > 0 ? (
+        <Segment basic>
           <Segment color="teal" raised>
             <div
               style={{
@@ -129,13 +129,13 @@ function Notifications({ user, notifications, userFollowStats }) {
               )}
             </div>
           </Segment>
-        ) : (
-          <Segment basic style={{ paddingTop: '0', minHeight: '100vh' }}>
-            <NoNotifications />
-          </Segment>
-        )}
-        <Divider hidden />
-      </Container>
+        </Segment>
+      ) : (
+        <Segment basic style={{ paddingTop: '0', minHeight: '100vh' }}>
+          <NoNotifications />
+        </Segment>
+      )}
+      <Divider hidden />
     </>
   )
 }
