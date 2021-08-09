@@ -14,16 +14,21 @@ function SideMenu({
 
   return (
     <List style={{ paddingTop: '1rem' }} size="big" verticalAlign="middle" selection>
-      <Link href="/" shallow>
-        <List.Item active={isActive('/')}>
-          <Icon name="home" size="large" {...(isActive('/') && { color: 'teal' })} />
-          {pc && (
-            <List.Content>
-              <List.Header content="Home" />
-            </List.Content>
-          )}
-        </List.Item>
-      </Link>
+      <List.Item
+        active={isActive('/')}
+        onClick={() =>
+          isActive('/')
+            ? window.scrollTo(0, 0)
+            : router.push('/', undefined, { shallow: true })
+        }
+      >
+        <Icon name="home" size="large" {...(isActive('/') && { color: 'teal' })} />
+        {pc && (
+          <List.Content>
+            <List.Header content="Home" />
+          </List.Content>
+        )}
+      </List.Item>
       <br />
 
       <Link href="/messages">

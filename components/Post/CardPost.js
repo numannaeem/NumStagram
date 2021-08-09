@@ -166,8 +166,7 @@ function CardPost({ post, user, setPosts, setShowToastr }) {
                   maxHeight: '70vh',
                   overflow: 'hidden'
                 }}
-                wrapped
-                alt="PostImage"
+                alt="Post Image"
                 onClick={() => {
                   timer = setTimeout(() => {
                     !prevent && setShowImageModal(true)

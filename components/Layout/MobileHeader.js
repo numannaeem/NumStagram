@@ -23,19 +23,30 @@ function MobileHeader({ user: { unreadNotification, email, unreadMessage, userna
         fluid
         borderless
       >
-        <Container text textAlign="center" style={{ justifyContent: 'space-between' }}>
-          <Link href="/" shallow>
-            <Menu.Item header active={isActive('/')}>
-              <Icon name="rss" size="large" />
-            </Menu.Item>
-          </Link>
+        <Container
+          className="mobile-header"
+          text
+          textAlign="center"
+          style={{ justifyContent: 'space-between' }}
+        >
+          <Menu.Item
+            header
+            onClick={() =>
+              isActive('/')
+                ? window.scrollTo(0, 0)
+                : router.push('/', undefined, { shallow: true })
+            }
+            active={isActive('/')}
+          >
+            <Icon name="rss" size="large" />
+          </Menu.Item>
 
           <Link href="/messages">
             <Menu.Item header active={isActive('/messages')}>
               <Icon
                 name="comments outline"
                 size="large"
-                {...(unreadMessage && { color: 'orange' })}
+                {...(unreadMessage && { color: 'yellow' })}
               />
             </Menu.Item>
           </Link>
@@ -45,7 +56,7 @@ function MobileHeader({ user: { unreadNotification, email, unreadMessage, userna
               <Icon
                 name="bell outline"
                 size="large"
-                {...(unreadNotification && { color: 'orange' })}
+                {...(unreadNotification && { color: 'yellow' })}
               />
             </Menu.Item>
           </Link>

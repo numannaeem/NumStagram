@@ -88,7 +88,7 @@ const newCommentNotification = async (
     }
     await userToNotify.notifications.unshift(newNotif)
     await userToNotify.save()
-    await setNotificationToUnread(userToNotifyId)
+    setNotificationToUnread(userToNotifyId)
     return
   } catch (error) {
     console.error(error)
@@ -131,7 +131,7 @@ const newReplyNotification = async (postId, userId, replyId, userToNotifyId, tex
     }
     await userToNotify.notifications.unshift(newNotif)
     await userToNotify.save()
-    await setNotificationToUnread(userToNotifyId)
+    setNotificationToUnread(userToNotifyId)
     return
   } catch (error) {
     console.error(error)
@@ -173,7 +173,7 @@ const newCommentLikeNotification = async (postId, text, userId, userToNotifyId) 
     }
     await userToNotify.notifications.unshift(newNotif)
     await userToNotify.save()
-    await setNotificationToUnread(userToNotifyId)
+    setNotificationToUnread(userToNotifyId)
     return
   } catch (error) {
     console.error(error)
@@ -215,7 +215,7 @@ const newFollowerNotification = async (userId, userToNotifyId) => {
     await userToNotify.notifications.unshift(newNotif)
     await userToNotify.save()
 
-    await setNotificationToUnread(userToNotifyId)
+    setNotificationToUnread(userToNotifyId)
     return
   } catch (error) {
     console.error(error)
@@ -249,7 +249,7 @@ const newFollowRequestNotification = async (userId, userToNotifyId) => {
     await userToNotify.notifications.unshift(newNotif)
     await userToNotify.save()
 
-    await setNotificationToUnread(userToNotifyId)
+    setNotificationToUnread(userToNotifyId)
     return
   } catch (error) {
     console.error(error)

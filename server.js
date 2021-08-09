@@ -95,7 +95,7 @@ io.on('connection', (socket) => {
     if (receiverSocket) {
       io.to(receiverSocket).emit('newMsgReceived', { newMsg })
     } else {
-      await setMsgToUnread(msgSendToUserId)
+      setMsgToUnread(msgSendToUserId)
     }
     if (!error) {
       socket.emit('msgSent', { newMsg })
@@ -115,7 +115,7 @@ io.on('connection', (socket) => {
     if (receiverSocket) {
       io.to(receiverSocket).emit('newMsgReceived', { newMsg })
     } else {
-      await setMsgToUnread(msgSendToUserId)
+      setMsgToUnread(msgSendToUserId)
     }
     if (!error) {
       socket.emit('msgSentFromNotification')
