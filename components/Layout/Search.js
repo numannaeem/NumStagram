@@ -87,7 +87,9 @@ function SearchComponent({ user, autofocus, size, newUsers, userFollowStats }) {
         onResultSelect={(e, data) => Router.push(`/${data.result.username}`)}
       />
       <Divider hidden />
-      <NewUsers user={user} newUsers={newUsers} userFollowStats={userFollowStats} />
+      {newUsers?.length > 0 && (
+        <NewUsers user={user} newUsers={newUsers} userFollowStats={userFollowStats} />
+      )}
     </>
   )
 }

@@ -30,10 +30,8 @@ function NewUsers({ newUsers, user, userFollowStats }) {
             ))}
         </List>
       ) : (
-        <p style={{ textAlign: 'center', color: 'gray' }}>
-          <big>
-            <i>No new users</i>
-          </big>
+        <p style={{ marginTop: '0.7rem', color: 'gray' }}>
+          <i>No new users </i>😕
         </p>
       )}
     </Segment>
