@@ -3,7 +3,7 @@ import { Feed, Button, Divider } from 'semantic-ui-react'
 import calculateTime from '../../utils/calculateTime'
 import { acceptRequest, rejectRequest } from '../../utils/profileActions'
 
-function FollowRequestNotification({ notification, setUserFollowStats, setNotifs }) {
+function FollowRequestNotification ({ notification, setUserFollowStats, setNotifs }) {
   const [disabled, setDisabled] = useState(false)
 
   return (
@@ -13,7 +13,7 @@ function FollowRequestNotification({ notification, setUserFollowStats, setNotifs
         <Feed.Content>
           <Feed.Summary>
             <>
-              <Feed.User as="a" href={`/${notification.user.username}`}>
+              <Feed.User as='a' href={`/${notification.user.username}`}>
                 {notification.user.name}
               </Feed.User>{' '}
               has requested to follow you.
@@ -21,33 +21,35 @@ function FollowRequestNotification({ notification, setUserFollowStats, setNotifs
             </>
           </Feed.Summary>
         </Feed.Content>
-        <div className="followRequestNotification">
+        <div className='followRequestNotification'>
           <Button
-            size="small"
+            size='small'
             compact
-            color="red"
+            color='red'
             inverted
             content={'Decline'}
             disabled={disabled}
             onClick={async () => {
               setDisabled(true)
-              await rejectRequest(notification.user._id)
-              setNotifs((prev) => prev.filter((n) => n._id !== notification._id))
+              await rejectRequest(notification.user._id).then(() => {
+                setNotifs(prev => prev.filter(n => n._id !== notification._id))
+              })
               setDisabled(false)
             }}
           />
           <Button
-            className="mobileFollowReqBtn"
-            size="small"
+            className='mobileFollowReqBtn'
+            size='small'
             compact
-            color="green"
+            color='green'
             inverted
             content={'Accept'}
             disabled={disabled}
             onClick={async () => {
               setDisabled(true)
-              await acceptRequest(notification.user._id, setUserFollowStats)
-              setNotifs((prev) => prev.filter((n) => n._id !== notification._id))
+              await acceptRequest(notification.user._id, setUserFollowStats).then(() => {
+                setNotifs(prev => prev.filter(n => n._id !== notification._id))
+              })
               setDisabled(false)
             }}
           />
