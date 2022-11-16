@@ -7,6 +7,7 @@ const nextApp = next({ dev })
 const io = require('socket.io')(server)
 const handle = nextApp.getRequestHandler()
 const path = require('path')
+const cors = require('cors')
 require('dotenv').config({ path: './config.env' })
 const connectDb = require('./utilsServer/connectDb')
 // const { addUser, removeUser, findConnectedUser } = require('./utilsServer/roomActions')
@@ -18,10 +19,12 @@ const {
 } = require('./utilsServer/messageActions')
 
 connectDb()
+
+app.use(cors())
 app.use(express.json())
 const PORT = process.env.PORT || 3000
 
-const findConnectedUser = (userId) => {
+const findConnectedUser = userId => {
   const sockets = io.sockets.sockets
   for (var socketId in sockets) {
     let userToFindId = io.sockets.connected[socketId].username
@@ -29,7 +32,7 @@ const findConnectedUser = (userId) => {
   }
 }
 
-io.on('connection', (socket) => {
+io.on('connection', socket => {
   socket.on('join', async ({ userId }) => {
     socket.username = userId
     console.log(userId + ' joined')
@@ -54,7 +57,7 @@ io.on('connection', (socket) => {
       const sockets = io.sockets.sockets
       for (var socketId in sockets) {
         let userId = io.sockets.connected[socketId].username
-        if (userId && !users.find((socket) => socket.userId === userId)) {
+        if (userId && !users.find(socket => socket.userId === userId)) {
           users.push({ userId, socketId })
         }
       }
@@ -145,7 +148,7 @@ nextApp.prepare().then(() => {
 
   app.all('*', (req, res) => handle(req, res))
 
-  server.listen(PORT, (err) => {
+  server.listen(PORT, err => {
     if (err) throw err
     console.log('Express server running')
   })
