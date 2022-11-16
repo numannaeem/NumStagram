@@ -20,7 +20,7 @@ const {
 
 connectDb()
 
-app.use(cors())
+app.use(cors({ origin: 'https://numstagram.numxn.me' }))
 app.use(express.json())
 const PORT = process.env.PORT || 3000
 
