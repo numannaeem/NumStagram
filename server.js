@@ -7,7 +7,6 @@ const nextApp = next({ dev })
 const io = require('socket.io')(server)
 const handle = nextApp.getRequestHandler()
 const path = require('path')
-const cors = require('cors')
 require('dotenv').config({ path: './config.env' })
 const connectDb = require('./utilsServer/connectDb')
 // const { addUser, removeUser, findConnectedUser } = require('./utilsServer/roomActions')
@@ -20,7 +19,6 @@ const {
 
 connectDb()
 
-app.use(cors({ origin: 'https://numstagram.numxn.me' }))
 app.use(express.json())
 const PORT = process.env.PORT || 3000
 
