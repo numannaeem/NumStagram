@@ -6,7 +6,7 @@
     "dev": "nodemon server.js",
     "build": "next build",
     "server": "npm run build && SET NODE_ENV=production&& node server.js",
-    "start": "NODE_ENV=production node server.js"
+    "start": "SET NODE_ENV=production && node server.js"
   },
   "dependencies": {
     "@artsy/fresnel": "^1.2.2",
