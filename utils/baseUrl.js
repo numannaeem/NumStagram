@@ -1,6 +1,6 @@
 const baseUrl =
   process.env.NODE_ENV === 'production'
-    ? 'https://www.numstagram.numxn.me'
+    ? 'https://numstagram.onrender.com'
     : 'http://localhost:3000'
 
 module.exports = baseUrl
